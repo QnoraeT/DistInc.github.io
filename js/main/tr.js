@@ -9,7 +9,7 @@ function updateTempTR() {
 }
 
 function getTimeCubeGain() {
-	let gain = new ExpantaNum(1);
+	let gain = new ExpantaNum(100);
 	if (modeActive("hard")) gain = gain.div(3);
 	if (modeActive("easy")) gain = gain.times(5).times(player.pathogens.amount.plus(1));
 	if (player.tr.upgrades.includes(1) && !HCCBA("noTRU")) gain = gain.times(tr1Eff());

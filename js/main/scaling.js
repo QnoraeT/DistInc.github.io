@@ -96,7 +96,7 @@ function getScalingStart(type, name) {
 }
 
 function getScalingPower(type, name) {
-	let power = new ExpantaNum(1)
+	let power = new ExpantaNum(0.1)
 	if (name=="rank") {
 		if (type=="scaled") {
 			if (tmp.pathogens) power = power.times(ExpantaNum.sub(1, tmp.pathogens[14].eff()))
