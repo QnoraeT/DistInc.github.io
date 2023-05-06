@@ -21,29 +21,44 @@ const SCALING_STARTS = {
 		tier: new ExpantaNum(12),
 		rf: new ExpantaNum(75),
 		fn: new ExpantaNum(15),
+			bf: new ExpantaNum(55),
 		efn: new ExpantaNum(60),
 		pathogenUpg: new ExpantaNum(40),
 		darkCore: new ExpantaNum(20),
 		endorsements: new ExpantaNum(50),
 		enlightenments: new ExpantaNum(20),
 		spectralGems: new ExpantaNum(16),
-		dervBoost: new ExpantaNum(14)
+		dervBoost: new ExpantaNum(14),
 	},
 	hyper: {
 		rank: new ExpantaNum(160),
 		rankCheap: new ExpantaNum(35),
 		tier: new ExpantaNum(16),
 		rf: new ExpantaNum(120),
+			bf: new ExpantaNum(100),
 		fn: new ExpantaNum(40),
+			efn: new ExpantaNum(1000),
 		pathogenUpg: new ExpantaNum(65),
-		darkCore: new ExpantaNum(40)
+			darkCore: new ExpantaNum(40),
+			dervBoost: new ExpantaNum(30),
+			endorsements: new ExpantaNum(400),
 	},
 	atomic: { 
 		rank: new ExpantaNum(800), 
+			rankCheap: new ExpantaNum(120),
 		tier: new ExpantaNum(40), 
 		rf: new ExpantaNum(300),
+			bf: new ExpantaNum(4000),
 		fn: new ExpantaNum(35000),
-	}
+			efn: new ExpantaNum(40000),
+			pathogenUpg: new ExpantaNum(200),
+			dervBoost: new ExpantaNum(100),
+			endorsements: new ExpantaNum(2000),
+	},
+	supercritical: {
+			rank: new ExpantaNum(60000), 
+			tier: new ExpantaNum(2000), 
+	},
 };
 const SCALING_RES = {
 	rank: function (n = 0) {

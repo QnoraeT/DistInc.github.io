@@ -80,23 +80,27 @@ function getScalingStart(type, name) {
 				start = start.min(35)
 				if (tmp.ach[153].has) start = start.plus(TREE_UPGS[7].effect(ExpantaNum.add(player.elementary.theory.tree.upgrades[7]||0, TREE_UPGS[11].effect(player.elementary.theory.tree.upgrades[11]||0))).div(10))
 			}
-			if (player.elementary.foam.unl && tmp.elm ? tmp.elm.qf : false) start = start.plus(tmp.elm.qf.boost10)
+			if (player.elementary.foam.unl && tmp.elm ? tmp.elm.qf : false) start = start.plus(tmp.elm.qf.boost10);
 		}
 	} else if (name=="enlightenments") {
 		if (type=="scaled") {
-			if (modeActive("extreme")) start = start.sub(4)
+			if (modeActive("extreme")) start = start.sub(4);
 		}
 	} else if (name=="dervBoost") {
 		if (type=="superscaled") {
 			if (player.elementary.entropy.upgrades.includes(32)) start = start.plus(2);
 		}
 	}
-	if (type!=="atomic") if (Object.values(SCALING_STARTS)[Object.keys(SCALING_STARTS).indexOf(type)+1][name]!==undefined) start = start.min(getScalingStart(Object.keys(SCALING_STARTS)[Object.keys(SCALING_STARTS).indexOf(type)+1], name))
+	if (type!=="supercritical") {
+		if (Object.values(SCALING_STARTS)[Object.keys(SCALING_STARTS).indexOf(type)+1][name]!==undefined) {
+			start = start.min(getScalingStart(Object.keys(SCALING_STARTS)[Object.keys(SCALING_STARTS).indexOf(type)+1], name));
+		}
+	}
 	return start
 }
 
 function getScalingPower(type, name) {
-	let power = new ExpantaNum(0.1)
+	let power = new ExpantaNum(1)
 	if (name=="rank") {
 		if (type=="scaled") {
 			if (tmp.pathogens) power = power.times(ExpantaNum.sub(1, tmp.pathogens[14].eff()))
@@ -168,7 +172,7 @@ function getScalingPower(type, name) {
 			if (tmp.pathogens) power = power.times(ExpantaNum.sub(1, tmp.pathogens[15].eff()))
 		}
 	}
-	if (type=="hyper"&&name!="darkCore") power = power.max(0.5)
+	if (type=="hyper"&&name!="darkCore"&&power.lte(0.5)) power = ExpantaNum.div(1, softcap(ExpantaNum.div(1, power), "EP", 1, 2))
 	return power
 }
 

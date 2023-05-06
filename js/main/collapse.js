@@ -9,7 +9,7 @@ function getCadaverEffSoftcapStart() {
 
 function getCadaverEffSoftcapPower() {
 	let pow = new ExpantaNum(1);
-	if (tmp.inf) if (tmp.inf.upgs.has("8;5")) pow = pow.times(0.2);
+	if (tmp.inf) if (tmp.inf.upgs.has("8;5")) pow = pow.times(0.9);
 	return pow;
 }
 
@@ -20,10 +20,7 @@ function getCadaverEff() {
 		.pow(player.collapse.cadavers.plus(1).logBase(2))
 		.plus(player.collapse.cadavers.sqrt());
 	if (eff.gte(scs) && scp.gt(0))
-		eff = eff
-			.log10()
-			.pow(scp.pow(-1))
-			.times(scs.div(scs.log10().pow(scp.pow(-1))));
+		eff = softcap(eff, "EP", scp, scs, 4) // exponent 4th rooted
 	eff = eff.pow(
 		tmp.elm && player.elementary.times.gt(0) ? tmp.elm.ferm.leptonR("muon").max(1) : 1
 	);

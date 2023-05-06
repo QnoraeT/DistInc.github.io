@@ -896,7 +896,7 @@ function updateStatisticsHTML(){
 		for (let i=0;i<Object.keys(SCALING_STARTS).length;i++) {
 			let name = Object.keys(SCALING_STARTS)[i]
 			let tt = ""
-			if (name=="hyper") tt = "Note: Hyper scaling cannot go below 50% strength :)\n"
+			if (name=="hyper") tt = "Hyper scaling can go below 50% strength, but it is (obscured) instead.\n"
 			for (let r=0;r<Object.keys(SCALING_RES).length;r++) { // NESTED LOOP, REMOVE TO REDUCE LAG
 				let func = Object.values(SCALING_RES)[r]
 				let key = Object.keys(SCALING_RES)[r]
@@ -906,7 +906,7 @@ function updateStatisticsHTML(){
 				if (amt.gte(getScalingStart(name, key))) tt += capitalFirst(REAL_SCALING_NAMES[key])+" ("+showNum(getScalingPowerDisplay(name, key).times(100))+"%): Starts at "+showNum(getScalingStart(name, key))+"\n"
 			}
 			let blank = ""
-			if (name=="hyper") blank = "Note: Hyper scaling cannot go below 50% strength :)\n"
+			if (name=="hyper") blank = "Hyper scaling can go below 50% strength, but it is (obscured) instead.\n"
 			tmp.el[name+"Stat"].changeStyle("visibility", tt==blank?"hidden":"visible")
 			if (tt!=blank) statScalingsShown = true
 			tmp.el[name+"Stat"].setAttr("widetooltip", tt)

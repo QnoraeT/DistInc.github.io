@@ -579,17 +579,17 @@
   Q.generalLogarithm=Q.log10=function (x){
     return new OmegaNum(x).log10();
   };
-  P.logarithm=P.logBase=function (base){
+  P.logarithm=P.logBase=P.log=function (base){
     if (base===undefined) base=Math.E;
     return this.log10().div(OmegaNum.log10(base));
   };
-  Q.logarithm=Q.logBase=function (x,base){
+  Q.logarithm=Q.logBase=Q.log=function (x,base){
     return new OmegaNum(x).logBase(base);
   };
-  P.naturalLogarithm=P.log=P.ln=function (){
+  P.naturalLogarithm=P.ln=function (){
     return this.logBase(Math.E);
   };
-  Q.naturalLogarithm=Q.log=Q.ln=function (x){
+  Q.naturalLogarithm=Q.ln=function (x){
     return new OmegaNum(x).ln();
   };
   //All of these are from Patashu's break_eternity.js

@@ -12,10 +12,27 @@ const DISTANCES = {
 	Gpc: 3.086e25,
 	uni: 4.4e26,
 	mlt: "4.4e1000000026",
+	mgv: "ee24",
+	giv: "ee39",
+	tev: "ee54",
+	pev: "ee69",
+	exv: "ee84",
+	zev: "ee99",
+	yov: "ee114",
+	arvs: "ee129",
+	
 };
 
 const DISTANCE_TYPES = {
 	mlt: "log",
+	mgv: "log",
+	giv: "log",
+	tev: "log",
+	pev: "log",
+	exv: "log",
+	zev: "log",
+	yov: "log",
+	arvs: "log^2",
 }
 
 const TIMES = {

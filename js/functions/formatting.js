@@ -86,6 +86,7 @@ function formatDistance(x, fc=multiverseCapped()) {
 			return "??? uni"
 		}
 		if (DISTANCE_TYPES[name]=="log") return showNum(x.log10().div(val.log10())) + " " + name; 
+		if (DISTANCE_TYPES[name]=="log^2") return showNum(x.log10().log10().sub(9).div(15).add(2)) + " " + name; 
 		return showNum(x.div(val)) + " " + name;
 	}
 }

@@ -234,7 +234,7 @@ const INF_UPGS = {
 		"8;2": "Accelerational Energy & Purge Power gain are synergized.",
 		"8;3": "Heavenly Chip & Demonic Soul gain are boosted by Endorsements.",
 		"8;4": "The Time Doesn't Exist reward softcap start is multiplied by your Purge Power ^17.",
-		"8;5": "The Cadaver effect softcap is 80% weaker.",
+		"8;5": "The Cadaver effect softcap is 10% weaker.",
 		"8;6": "Scaled Dark Core & Hyper Rank scaling is weaker based on Endorsements.",
 		"8;7": "Scaled Pathogen Upgrade scaling is 84% weaker.",
 		"8;8": "inf8;1 & inf3;8 are stronger based on your Purge Power.",
