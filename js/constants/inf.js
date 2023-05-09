@@ -391,15 +391,15 @@ const INF_UPGS = {
 			return ret;
 		},
 		"1;2": function () {
-			let exp = player.inf.knowledge.plus(1).slog(2);
-			let ret = player.inf.knowledge.plus(1).log10().plus(1).pow(exp);
-			return ret;
+			let e = player.inf.knowledge
+			let ex = ExpantaNum.div(9, e.add(1).log(10).div(100).pow(4).add(1).pow(6))
+			let exp = e.plus(1).log(10).add(1).log(ex.add(1)).add(1).add(1);
+			let ret = ExpantaNum.pow(10, softcap(e.plus(1).log10().plus(1).pow(exp).log(10), "EP", 1, 350000, 3.5))
+			return ret
 		},
 		"1;8": function () {
 			let e = tmp.accEn ? tmp.accEn : new ExpantaNum(0);
-			let ret = e.plus(1).pow(0.08);
-			if (ret.gte(2)) ret = ret.logBase(2).times(2).min(ret);
-			if (ret.gte(14)) ret = ret.sub(4).slog(10).plus(13).min(ret);
+			let ret = e.max(2e23).log(2e23).root(10).mul(11.5).add(1);
 			return ret;
 		},
 		"1;9": function () {
@@ -408,14 +408,13 @@ const INF_UPGS = {
 			return ret;
 		},
 		"1;10": function() {
-			let ret = player.inf.knowledge.plus(1).times(10).slog(10).div(10)
-			if (ret.gte(0.9)) ret = ret.div(10).plus(0.89)
-			if (ret.gte(0.975)) ret = new ExpantaNum(0.975)
+			let ret = ExpantaNum.sub(1, ExpantaNum.div(1, player.inf.knowledge.add(1).log(10).add(1).log(10).add(1).root(4)))
+			ret = new ExpantaNum(0)
 			return ret
 		},
 		"2;1": function () {
-			let ret = player.inf.knowledge.plus(1).slog(10).sqrt();
-			if (ret.gte(1.1)) ret = ret.pow(0.001).times(ExpantaNum.pow(1.1, 0.999));
+			let ret = player.inf.knowledge.plus(1).log(10).sqrt();
+			if (ret.gte(1.1)) ret = softcap(ret, "E", 1, 1.1)
 			return ret.max(1);
 		},
 		"2;2": function () {
@@ -501,17 +500,17 @@ const INF_UPGS = {
 			return ret;
 		},
 		"5;6": function () {
-			let base = player.inf.knowledge.div(1e9).plus(1).slog(10).plus(1);
+			let base = player.inf.knowledge.div(1e9).plus(1).log(10).plus(1).log(10).add(1).pow(1.1);
 			let exp = player.inf.knowledge.plus(1).log10().plus(1).logBase(13).plus(1);
 			let ret = base.pow(exp);
-			if (ret.lt(9)) ret = ret.sqrt()
-			else ret = ret.div(3)
+			if (ret.lt(9)) ret = softcap(ret, "P", 1, 9, 2)
+			ret = ret.div(3)
 			return ret;
 		},
 		"5;7": function () {
 			let mv = tmp.maxVel ? tmp.maxVel : new ExpantaNum(0);
-			let ret = mv.plus(1).slog(10);
-			if (ret.gte(4)) ret = ret.sqrt().times(2);
+			let ret = mv.plus(1).log(10).add(1).log(10);
+			if (ret.gte(4)) ret = softcap(ret, "P", 1, 4, 2)
 			return ret;
 		},
 		"5;10": function() {
@@ -662,6 +661,7 @@ const INF_UPGS = {
 			if (type=="pth") {
 				let ret = player.inf.ascension.power.plus(1).times(10).slog(10).pow(0.15).div(10)
 				if (ret.gte(0.9)) ret = new ExpantaNum(0.9)
+				ret = new ExpantaNum(0)
 				return ret;
 			} else if (type=="snp") {
 				if (hasMltMilestone(16)) return ExpantaNum.pow(10, player.distance.log10().root(1.15)).max(player.distance.plus(1).log10().plus(1).pow(10))

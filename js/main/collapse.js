@@ -42,7 +42,7 @@ function hasCollapseMilestone(n) {
 	return player.collapse.lifeEssence.gte(ESSENCE_MILESTONES[n].req);
 }
 
-function calcCollpaseSCS(){
+function calcCollapseSCS(){ // nice typo
 	tmp.collapse.sc = new ExpantaNum(LAYER_SC["collapse"]);
 	if (tmp.pathogens && player.pathogens.unl) tmp.collapse.sc = tmp.collapse.sc.times(tmp.pathogens[9].eff());
 	if (tmp.inf) tmp.collapse.sc = tmp.collapse.sc.times(tmp.inf.asc.perkEff(4));
@@ -65,7 +65,7 @@ function updateTempCollapse() {
 			tmp.inf.derv.resetDervs();
 		};
 	}
-	calcCollpaseSCS()
+	calcCollapseSCS()
 	tmp.collapse.lrm = new ExpantaNum(1);
 	if (modeActive("hard")) tmp.collapse.lrm = tmp.collapse.lrm.div(50);
 	tmp.collapse.can = player.distance.gte(ExpantaNum.mul(LAYER_REQS["collapse"][1], tmp.collapse.lrm));
@@ -83,24 +83,21 @@ function collapseMile1Eff() {
 
 function collapseMile5Eff() {
 	let eff = player.tr.cubes.plus(1).log10().plus(1).log10().plus(1);
-	if (eff.gte(2.5)) eff = eff.logBase(2.5).plus(1.5)
 	return eff
 }
 
 function collapseMile8Eff() {
 	let eff = (tmp.timeSpeed ? tmp.timeSpeed : new ExpantaNum(1)).plus(1).logBase(2).max(1);
-	if (eff.gte(50)) eff = eff.times(2).log10().times(25);
 	return eff
 }
 
 function collapseMile10Eff() {
-	let exp = 8
-	if (modeActive("extreme")) exp = 3
+	let exp = (modeActive("extreme"))?3:8
 	let eff = player.collapse.lifeEssence.plus(1).log10().plus(1).sqrt().pow(exp);
-	if (eff.gte(40)) eff = eff.times(2.5).log10().times(20);
+	if (eff.gte(40)) eff = softcap(eff, "E", 1, 40)
 	if (hasDE(5)) if ((player.elementary.theory.tree.upgrades[27]||new ExpantaNum(0)).gte(1)) {
 		eff = player.collapse.lifeEssence.plus(1).pow(0.1)
-		if (eff.gte(40)) eff = eff.pow(0.2).times(Math.pow(40, 0.8))
+		if (eff.gte(40)) eff = softcap(eff, "P", 1, 40, 2.5)
 	}
 	return eff
 }

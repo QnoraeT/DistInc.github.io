@@ -2,23 +2,15 @@ function updateTempTiers() {
 	if (!tmp.tiers) tmp.tiers = {};
 	tmp.tiers.fp = getTierFP();
 	tmp.tiers.bc = getTierBaseCost();
-	let scal
-	scal = player.tier
-	scal = doScaling("tier", "supercritical", scal, false)
-	scal = doScaling("tier", "atomic", scal, false)
-	scal = doScaling("tier", "hyper", scal, false)
-	scal = doScaling("tier", "superscaled", scal, false)
-	scal = doScaling("tier", "scaled", scal, false)
-	scal = new ExpantaNum(tmp.tiers.bc).plus(player.tier.div(tmp.tiers.fp).pow(2));
-	tmp.tiers.req = scal
-	scal = player.rank.sub(tmp.tiers.bc).max(0).sqrt().times(tmp.tiers.fp)
-	scal = doScaling("tier", "scaled", scal, true)
-	scal = doScaling("tier", "superscaled", scal, true)
-	scal = doScaling("tier", "hyper", scal, true)
-	scal = doScaling("tier", "atomic", scal, true)
-	scal = doScaling("tier", "supercritical", scal, true)
-	scal = scal.plus(1).round();
-	tmp.tiers.bulk = scal
+	let scalTier
+	scalTier = player.tier
+	scalTier = doAllScaling(scalTier, "tier", false)
+	scalTier = new ExpantaNum(tmp.tiers.bc).plus(scalTier.div(tmp.tiers.fp).pow(2));
+	tmp.tiers.req = scalTier
+	scalTier = player.rank.sub(tmp.tiers.bc).max(0).sqrt().times(tmp.tiers.fp)
+	scalTier = doAllScaling(scalTier, "tier", true)
+	scalTier = scalTier.plus(1).round();
+	tmp.tiers.bulk = scalTier
 	tmp.tiers.desc = player.tier.lt(Number.MAX_VALUE)
 		? TIER_DESCS[player.tier.toNumber()]
 			? TIER_DESCS[player.tier.toNumber()]
@@ -61,7 +53,6 @@ function getTierBaseCost() {
 
 function tier2Eff() {
 	let tier = player.tier;
-	if (tier.gte(10)) tier = tier.log10().times(10);
 	return ExpantaNum.pow(1.1, tier);
 }
 

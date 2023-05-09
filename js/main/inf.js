@@ -202,66 +202,18 @@ function updateTempInfLayer() {
 	tmp.inf.emPow = new ExpantaNum(1);
 	if (player.mlt.times.gt(0) && tmp.mlt) tmp.inf.emPow = tmp.inf.emPow.times(tmp.mlt.quilts[2].eff)
 	calcKnowledgeGain()
-	
-
-	tmp.inf.req = ExpantaNum.pow(tmp.inf.bc, ExpantaNum.pow(ExpantaNum.pow(1.1, tmp.inf.fp), player.inf.endorsements));
-	if (player.distance.lt(tmp.inf.bc)) tmp.inf.bulk = new ExpantaNum(0);
-	else tmp.inf.bulk = player.distance
-			.plus(1)
-			.logBase(tmp.inf.bc)
-			.logBase(ExpantaNum.pow(1.1, tmp.inf.fp))
-			.plus(1)
-			.floor();
-	if (scalingActive("endorsements", player.inf.endorsements.max(tmp.inf.bulk), "scaled")) {
-		let start = getScalingStart("scaled", "endorsements");
-		let power = getScalingPower("scaled", "endorsements");
-		let exp = ExpantaNum.pow(1.5, power);
-		tmp.inf.req = ExpantaNum.pow(
-			tmp.inf.bc,
-			ExpantaNum.pow(
-				ExpantaNum.pow(1.1, tmp.inf.fp),
-				player.inf.endorsements.pow(exp).div(start.pow(exp.sub(1)))
-			)
-		);
-		if (tmp.inf.bulk.gt(0))
-			tmp.inf.bulk = player.distance
-				.plus(1)
-				.logBase(tmp.inf.bc)
-				.logBase(ExpantaNum.pow(1.1, tmp.inf.fp))
-				.times(start.pow(exp.sub(1)))
-				.pow(exp.pow(-1))
-				.plus(1)
-				.floor();
-	}
-	if (scalingActive("endorsements", player.inf.endorsements.max(tmp.inf.bulk), "superscaled")) {
-		let start2 = getScalingStart("superscaled", "endorsements");
-		let power2 = getScalingPower("superscaled", "endorsements");
-		let exp2 = ExpantaNum.pow(2.5, power2);
-		let start = getScalingStart("scaled", "endorsements");
-		let power = getScalingPower("scaled", "endorsements");
-		let exp = ExpantaNum.pow(1.5, power);
-		tmp.inf.req = ExpantaNum.pow(
-			tmp.inf.bc,
-			ExpantaNum.pow(
-				ExpantaNum.pow(1.1, tmp.inf.fp),
-				player.inf.endorsements
-					.pow(exp2)
-					.div(start2.pow(exp2.sub(1)))
-					.pow(exp)
-					.div(start.pow(exp.sub(1)))
-			)
-		);
-		if (tmp.inf.bulk.gt(0))
-			tmp.inf.bulk = player.distance
-				.plus(1)
-				.logBase(tmp.inf.bc)
-				.logBase(ExpantaNum.pow(1.1, tmp.inf.fp))
-				.times(start.pow(exp.sub(1)))
-				.pow(exp.pow(-1))
-				.times(start2.pow(exp2.sub(1)))
-				.pow(exp2.pow(-1))
-				.plus(1)
-				.floor();
+	let scalEnd
+	scalEnd = player.inf.endorsements
+	scalEnd = doAllScaling(scalEnd, "endorsements", false, [1.5, 2.5, 1.1, 4, 6])
+	scalEnd = ExpantaNum.pow(tmp.inf.bc, ExpantaNum.pow(ExpantaNum.pow(1.1, tmp.inf.fp), scalEnd));
+	tmp.inf.req = scalEnd
+	if (player.distance.lt(tmp.inf.bc)) {
+		tmp.inf.bulk = new ExpantaNum(0);
+	} else {
+		scalEnd = player.distance.plus(1).logBase(tmp.inf.bc).logBase(ExpantaNum.pow(1.1, tmp.inf.fp))
+		scalEnd = doAllScaling(scalEnd, "endorsements", true, [1.5, 2.5, 1.1, 4, 6])
+		scalEnd = scalEnd.plus(1).floor();
+		tmp.inf.bulk = scalEnd
 	}
 	tmp.inf.can = player.distance.gte(tmp.inf.req);
 	tmp.inf.layer = new Layer("inf", tmp.inf.can, "forced", true);
@@ -446,83 +398,17 @@ function updateTempEnlightenments() {
 	if (!tmp.inf.asc.costData) tmp.inf.asc.costData = { base: new ExpantaNum(modeActive('extreme')?1.5:2.5), start: new ExpantaNum(modeActive("extreme")?100:500), exp: new ExpantaNum(modeActive('extreme')?2:1.5) };
 	if (!tmp.inf.asc.enlCost) tmp.inf.asc.enlCost = function (n) {
 		let enl = player.inf.ascension.enlightenments[n - 1];
-		let cost = tmp.inf.asc.costData.base.pow(enl.pow(tmp.inf.asc.costData.exp)).times(tmp.inf.asc.costData.start);
-		if (scalingActive("enlightenments", enl, "scaled")) {
-			let start = getScalingStart("scaled", "enlightenments");
-			let power = getScalingPower("scaled", "enlightenments");
-			let exp = ExpantaNum.pow(2, power);
-			cost = tmp.inf.asc.costData.base
-				.pow(
-					enl
-						.pow(exp)
-						.div(start.pow(exp.sub(1)))
-						.pow(tmp.inf.asc.costData.exp)
-				)
-				.times(tmp.inf.asc.costData.start);
-		}
-		if (scalingActive("enlightenments", enl, "superscaled")) {
-			let start2 = getScalingStart("superscaled", "enlightenments");
-			let power2 = getScalingPower("superscaled", "enlightenments");
-			let exp2 = ExpantaNum.pow(3, power2);
-			let start = getScalingStart("scaled", "enlightenments");
-			let power = getScalingPower("scaled", "enlightenments");
-			let exp = ExpantaNum.pow(2, power);
-			cost = tmp.inf.asc.costData.base
-				.pow(
-					enl
-						.pow(exp2)
-						.div(start2.pow(exp2.sub(1)))
-						.pow(exp)
-						.div(start.pow(exp.sub(1)))
-						.pow(tmp.inf.asc.costData.exp)
-				)
-				.times(tmp.inf.asc.costData.start);
-		}
-		return cost;
+		let scalTenl = enl
+		scalTenl = doAllScaling(scalTenl, "enlightenments", false)
+		scalTenl = tmp.inf.asc.costData.base.pow(scalTenl.pow(tmp.inf.asc.costData.exp)).times(tmp.inf.asc.costData.start);
+		return scalTenl;
 	};
 	if (!tmp.inf.asc.enlBulk) tmp.inf.asc.enlBulk = function (n) {
 		let ap = player.inf.ascension.power;
-		let bulk = ap
-			.div(tmp.inf.asc.costData.start)
-			.max(1)
-			.logBase(tmp.inf.asc.costData.base)
-			.pow(tmp.inf.asc.costData.exp.pow(-1))
-			.plus(1)
-			.floor();
-		if (scalingActive("enlightenments", player.inf.ascension.enlightenments[n - 1].max(bulk), "scaled")) {
-			let start = getScalingStart("scaled", "enlightenments");
-			let power = getScalingPower("scaled", "enlightenments");
-			let exp = ExpantaNum.pow(2, power);
-			bulk = ap
-				.div(tmp.inf.asc.costData.start)
-				.max(1)
-				.logBase(tmp.inf.asc.costData.base)
-				.pow(tmp.inf.asc.costData.exp.pow(-1))
-				.times(start.pow(exp.sub(1)))
-				.pow(exp.pow(-1))
-				.plus(1)
-				.floor();
-		}
-		if (scalingActive("enlightenments", player.inf.ascension.enlightenments[n - 1].max(bulk), "superscaled")) {
-			let start2 = getScalingStart("superscaled", "enlightenments");
-			let power2 = getScalingPower("superscaled", "enlightenments");
-			let exp2 = ExpantaNum.pow(3, power2);
-			let start = getScalingStart("scaled", "enlightenments");
-			let power = getScalingPower("scaled", "enlightenments");
-			let exp = ExpantaNum.pow(2, power);
-			bulk = ap
-				.div(tmp.inf.asc.costData.start)
-				.max(1)
-				.logBase(tmp.inf.asc.costData.base)
-				.pow(tmp.inf.asc.costData.exp.pow(-1))
-				.times(start.pow(exp.sub(1)))
-				.pow(exp.pow(-1))
-				.times(start2.pow(exp2.sub(1)))
-				.pow(exp2.pow(-1))
-				.plus(1)
-				.floor();
-		}
-		return bulk;
+		let scalEB = ap.div(tmp.inf.asc.costData.start).max(1).logBase(tmp.inf.asc.costData.base).pow(tmp.inf.asc.costData.exp.pow(-1));
+			scalEB = doAllScaling(scalEB, "enlightenments", true)
+			scalEB = scalEB.plus(1).floor();
+		return scalEB;
 	};
 	if (!tmp.inf.asc.buyEnl) tmp.inf.asc.buyEnl = function (n, manual=false) {
 		let ap = player.inf.ascension.power;
@@ -630,53 +516,62 @@ function updateTempPantheon() {
 	if (mltRewardActive(5) && tmp.inf.pantheon.hauntingEnergyBoost) tmp.inf.pantheon.gemExp = tmp.inf.pantheon.gemExp.sub(ExpantaNum.sub(2, ExpantaNum.div(2, tmp.inf.pantheon.hauntingEnergyBoost)))
 	tmp.inf.pantheon.next = tmp.inf.pantheon.totalGems.plus(1).pow(tmp.inf.pantheon.gemExp).plus(tmp.inf.pantheon.bc).sub(1);
 	tmp.inf.pantheon.bulk = player.inf.endorsements.sub(tmp.inf.pantheon.bc).add(1).root(tmp.inf.pantheon.gemExp).floor();
-	if (scalingActive("spectralGems", tmp.inf.pantheon.totalGems.max(tmp.inf.pantheon.bulk), "scaled")) {
-		let start = getScalingStart("scaled", "spectralGems");
-		let power = getScalingPower("scaled", "spectralGems");
-		let exp = ExpantaNum.pow(2, power);
-		tmp.inf.pantheon.next = tmp.inf.pantheon.totalGems.max(start)
-			.pow(exp)
-			.div(start.pow(exp.sub(1)))
-			.plus(1)
-			.pow(tmp.inf.pantheon.gemExp)
-			.plus(tmp.inf.pantheon.bc)
-			.sub(1);
-		tmp.inf.pantheon.bulk = player.inf.endorsements
-			.sub(tmp.inf.pantheon.bc)
-			.add(1)
-			.root(tmp.inf.pantheon.gemExp)
-			.times(start.pow(exp.sub(1)))
-			.pow(exp.pow(-1))
-			.plus(1)
-			.floor();
-	}
-	if (scalingActive("spectralGems", tmp.inf.pantheon.totalGems.max(tmp.inf.pantheon.bulk), "superscaled")) {
-		let start2 = getScalingStart("superscaled", "spectralGems");
-		let power2 = getScalingPower("superscaled", "spectralGems");
-		let exp2 = ExpantaNum.pow(3, power2);
-		let start = getScalingStart("scaled", "spectralGems");
-		let power = getScalingPower("scaled", "spectralGems");
-		let exp = ExpantaNum.pow(2, power);
-		tmp.inf.pantheon.next = tmp.inf.pantheon.totalGems.max(start2)
-			.pow(exp2)
-			.div(start2.pow(exp2.sub(1)))
-			.pow(exp)
-			.div(start.pow(exp.sub(1)))
-			.plus(1)
-			.pow(tmp.inf.pantheon.gemExp)
-			.plus(tmp.inf.pantheon.bc)
-			.sub(1);
-		tmp.inf.pantheon.bulk = player.inf.endorsements
-			.sub(tmp.inf.pantheon.bc)
-			.add(1)
-			.root(tmp.inf.pantheon.gemExp)
-			.times(start.pow(exp.sub(1)))
-			.pow(exp.pow(-1))
-			.times(start2.pow(exp2.sub(1)))
-			.pow(exp2.pow(-1))
-			.plus(1)
-			.floor();
-	}
+	let scalSG
+	scalSG = tmp.inf.pantheon.totalGems
+	scalSG = doAllScaling(scalSG, "spectralGems", false)
+	scalSG = scalSG.plus(1).pow(tmp.inf.pantheon.gemExp).plus(tmp.inf.pantheon.bc).sub(1);
+	tmp.inf.pantheon.next = scalSG
+	scalSG = player.inf.endorsements.sub(tmp.inf.pantheon.bc).add(1).root(tmp.inf.pantheon.gemExp).floor();
+	scalSG = doAllScaling(scalSG, "spectralGems", true)
+	scalSG = scalSG.plus(1).floor();
+	tmp.inf.pantheon.bulk = scalSG
+	// if (scalingActive("spectralGems", tmp.inf.pantheon.totalGems.max(tmp.inf.pantheon.bulk), "scaled")) {
+	// 	let start = getScalingStart("scaled", "spectralGems");
+	// 	let power = getScalingPower("scaled", "spectralGems");
+	// 	let exp = ExpantaNum.pow(2, power);
+	// 	tmp.inf.pantheon.next = tmp.inf.pantheon.totalGems.max(start)
+	// 		.pow(exp)
+	// 		.div(start.pow(exp.sub(1)))
+	// 		.plus(1)
+	// 		.pow(tmp.inf.pantheon.gemExp)
+	// 		.plus(tmp.inf.pantheon.bc)
+	// 		.sub(1);
+	// 	tmp.inf.pantheon.bulk = player.inf.endorsements
+	// 		.sub(tmp.inf.pantheon.bc)
+	// 		.add(1)
+	// 		.root(tmp.inf.pantheon.gemExp)
+	// 		.times(start.pow(exp.sub(1)))
+	// 		.pow(exp.pow(-1))
+	// 		.plus(1)
+	// 		.floor();
+	// }
+	// if (scalingActive("spectralGems", tmp.inf.pantheon.totalGems.max(tmp.inf.pantheon.bulk), "superscaled")) {
+	// 	let start2 = getScalingStart("superscaled", "spectralGems");
+	// 	let power2 = getScalingPower("superscaled", "spectralGems");
+	// 	let exp2 = ExpantaNum.pow(3, power2);
+	// 	let start = getScalingStart("scaled", "spectralGems");
+	// 	let power = getScalingPower("scaled", "spectralGems");
+	// 	let exp = ExpantaNum.pow(2, power);
+	// 	tmp.inf.pantheon.next = tmp.inf.pantheon.totalGems.max(start2)
+	// 		.pow(exp2)
+	// 		.div(start2.pow(exp2.sub(1)))
+	// 		.pow(exp)
+	// 		.div(start.pow(exp.sub(1)))
+	// 		.plus(1)
+	// 		.pow(tmp.inf.pantheon.gemExp)
+	// 		.plus(tmp.inf.pantheon.bc)
+	// 		.sub(1);
+	// 	tmp.inf.pantheon.bulk = player.inf.endorsements
+	// 		.sub(tmp.inf.pantheon.bc)
+	// 		.add(1)
+	// 		.root(tmp.inf.pantheon.gemExp)
+	// 		.times(start.pow(exp.sub(1)))
+	// 		.pow(exp.pow(-1))
+	// 		.times(start2.pow(exp2.sub(1)))
+	// 		.pow(exp2.pow(-1))
+	// 		.plus(1)
+	// 		.floor();
+	// }
 	if (!tmp.inf.pantheon.collect) tmp.inf.pantheon.collect = function () {
 		let diff = tmp.inf.pantheon.bulk.sub(tmp.inf.pantheon.totalGems);
 		if (diff.lt(1)) return;
@@ -877,57 +772,64 @@ function updateTempDerivatives() {
 	};
 	tmp.inf.derv.costBase = new ExpantaNum(modeActive("extreme")?4e34:2.5e29)
 	tmp.inf.derv.costLB = new ExpantaNum(modeActive("extreme")?2.5:2)
-	tmp.inf.derv.unlCost = ExpantaNum.pow(tmp.inf.derv.costLB, player.inf.derivatives.unlocks.pow(3)).times(tmp.inf.derv.costBase);
-	tmp.inf.derv.unlBulk = player.inf.knowledge.div(tmp.inf.derv.costBase).max(1).logBase(tmp.inf.derv.costLB).cbrt().plus(1).floor();
-	if (scalingActive("dervBoost", player.inf.derivatives.unlocks.max(tmp.inf.derv.unlBulk), "scaled")) {
-		let start = getScalingStart("scaled", "dervBoost");
-		let power = getScalingPower("scaled", "dervBoost");
-		let exp = ExpantaNum.pow(2, power);
-		tmp.inf.derv.unlCost = ExpantaNum.pow(
-			tmp.inf.derv.costLB,
-			player.inf.derivatives.unlocks
-				.pow(exp)
-				.div(start.pow(exp.sub(1)))
-				.pow(3)
-		).times(tmp.inf.derv.costBase);
-		tmp.inf.derv.unlBulk = player.inf.knowledge
-			.div(tmp.inf.derv.costBase)
-			.max(1)
-			.logBase(tmp.inf.derv.costLB)
-			.cbrt()
-			.times(start.pow(exp.sub(1)))
-			.pow(exp.pow(-1))
-			.plus(1)
-			.floor();
-	}
-	if (scalingActive("dervBoost", player.inf.derivatives.unlocks.max(tmp.inf.derv.unlBulk), "superscaled")) {
-		let start2 = getScalingStart("superscaled", "dervBoost");
-		let power2 = getScalingPower("superscaled", "dervBoost");
-		let exp2 = ExpantaNum.pow(3, power2);
-		let start = getScalingStart("scaled", "dervBoost");
-		let power = getScalingPower("scaled", "dervBoost");
-		let exp = ExpantaNum.pow(2, power);
-		tmp.inf.derv.unlCost = ExpantaNum.pow(
-			tmp.inf.derv.costLB,
-			player.inf.derivatives.unlocks
-				.pow(exp2)
-				.div(start2.pow(exp2.sub(1)))
-				.pow(exp)
-				.div(start.pow(exp.sub(1)))
-				.pow(3)
-		).times(tmp.inf.derv.costBase);
-		tmp.inf.derv.unlBulk = player.inf.knowledge
-			.div(tmp.inf.derv.costBase)
-			.max(1)
-			.logBase(tmp.inf.derv.costLB)
-			.cbrt()
-			.times(start.pow(exp.sub(1)))
-			.pow(exp.pow(-1))
-			.times(start2.pow(exp2.sub(1)))
-			.pow(exp2.pow(-1))
-			.plus(1)
-			.floor();
-	}
+	let scalDerv
+	scalDerv = player.inf.derivatives.unlocks
+	scalDerv = doAllScaling(scalDerv, "dervBoost", false)
+	scalDerv = ExpantaNum.pow(tmp.inf.derv.costLB, scalDerv.pow(3)).times(tmp.inf.derv.costBase);
+	tmp.inf.derv.unlCost = scalDerv
+	scalDerv = player.inf.knowledge.div(tmp.inf.derv.costBase).max(1).logBase(tmp.inf.derv.costLB).cbrt().plus(1).floor();
+	scalDerv = doAllScaling(scalDerv, "dervBoost", true)
+	scaDervl = scalDerv.plus(1).floor();
+	tmp.inf.derv.unlBulk = scalDerv
+	// if (scalingActive("dervBoost", player.inf.derivatives.unlocks.max(tmp.inf.derv.unlBulk), "scaled")) {
+	// 	let start = getScalingStart("scaled", "dervBoost");
+	// 	let power = getScalingPower("scaled", "dervBoost");
+	// 	let exp = ExpantaNum.pow(2, power);
+	// 	tmp.inf.derv.unlCost = ExpantaNum.pow(
+	// 		tmp.inf.derv.costLB,
+	// 		player.inf.derivatives.unlocks
+	// 			.pow(exp)
+	// 			.div(start.pow(exp.sub(1)))
+	// 			.pow(3)
+	// 	).times(tmp.inf.derv.costBase);
+	// 	tmp.inf.derv.unlBulk = player.inf.knowledge
+	// 		.div(tmp.inf.derv.costBase)
+	// 		.max(1)
+	// 		.logBase(tmp.inf.derv.costLB)
+	// 		.cbrt()
+	// 		.times(start.pow(exp.sub(1)))
+	// 		.pow(exp.pow(-1))
+	// 		.plus(1)
+	// 		.floor();
+	// }
+	// if (scalingActive("dervBoost", player.inf.derivatives.unlocks.max(tmp.inf.derv.unlBulk), "superscaled")) {
+	// 	let start2 = getScalingStart("superscaled", "dervBoost");
+	// 	let power2 = getScalingPower("superscaled", "dervBoost");
+	// 	let exp2 = ExpantaNum.pow(3, power2);
+	// 	let start = getScalingStart("scaled", "dervBoost");
+	// 	let power = getScalingPower("scaled", "dervBoost");
+	// 	let exp = ExpantaNum.pow(2, power);
+	// 	tmp.inf.derv.unlCost = ExpantaNum.pow(
+	// 		tmp.inf.derv.costLB,
+	// 		player.inf.derivatives.unlocks
+	// 			.pow(exp2)
+	// 			.div(start2.pow(exp2.sub(1)))
+	// 			.pow(exp)
+	// 			.div(start.pow(exp.sub(1)))
+	// 			.pow(3)
+	// 	).times(tmp.inf.derv.costBase);
+	// 	tmp.inf.derv.unlBulk = player.inf.knowledge
+	// 		.div(tmp.inf.derv.costBase)
+	// 		.max(1)
+	// 		.logBase(tmp.inf.derv.costLB)
+	// 		.cbrt()
+	// 		.times(start.pow(exp.sub(1)))
+	// 		.pow(exp.pow(-1))
+	// 		.times(start2.pow(exp2.sub(1)))
+	// 		.pow(exp2.pow(-1))
+	// 		.plus(1)
+	// 		.floor();
+	// }
 	if (!tmp.inf.derv.doUnl) tmp.inf.derv.doUnl = function () {
 		if (player.inf.knowledge.lt(tmp.inf.derv.unlCost)) return;
 		player.inf.knowledge = player.inf.knowledge.sub(tmp.inf.derv.unlCost);

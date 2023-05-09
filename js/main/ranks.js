@@ -2,30 +2,22 @@ function updateTempRanks() {
 	if (!tmp.ranks) tmp.ranks = {};
 	let fp = getRankFP()
 	let bc = getRankBaseCost()
-	let scal
-	scal = player.rank
-	scal = doScaling("rank", "supercritical", scal, false)
-	scal = doScaling("rank", "atomic", scal, false)
-	scal = doScaling("rank", "hyper", scal, false)
-	scal = doScaling("rank", "superscaled", scal, false)
-	scal = doScaling("rank", "scaled", scal, false)
-	scal = new ExpantaNum(bc).times(ExpantaNum.pow(2, scal.div(fp).max(1).sub(1).pow(2)));
-	tmp.ranks.req = scal
-	scal = player.distance.div(bc).max(1).logBase(2).sqrt().add(1).mul(fp)
-	scal = doScaling("rank", "scaled", scal, true)
-	scal = doScaling("rank", "superscaled", scal, true)
-	scal = doScaling("rank", "hyper", scal, true)
-	scal = doScaling("rank", "atomic", scal, true)
-	scal = doScaling("rank", "supercritical", scal, true)
-	scal = scal.plus(1).round();
-	tmp.ranks.bulk = scal
+	let scalRank
+	scalRank = player.rank
+	scalRank = doAllScaling(scalRank, "rank", false)
+	scalRank = new ExpantaNum(bc).times(ExpantaNum.pow(2, scalRank.div(fp).max(1).sub(1).pow(2)));
+	tmp.ranks.req = scalRank
+	scalRank = player.distance.div(bc).max(1).logBase(2).sqrt().add(1).mul(fp)
+	scalRank = doAllScaling(scalRank, "rank", true)
+	scalRank = scalRank.plus(1).round();
+	tmp.ranks.bulk = scalRank
 	tmp.ranks.desc = player.rank.lt(Number.MAX_VALUE)
 		? RANK_DESCS[player.rank.toNumber()]
 			? RANK_DESCS[player.rank.toNumber()]
 			: DEFAULT_RANK_DESC
 		: DEFAULT_RANK_DESC;
 	tmp.ranks.canRankUp = player.distance.gte(tmp.ranks.req);
-	if (nerfActive("noRank")) tmp.ranks.canRankUp = false;
+	if (nerfActive("noRank")) {tmp.ranks.canRankUp = false;}
 	tmp.ranks.layer = new Layer("rank", tmp.ranks.canRankUp, "semi-forced");
 	if (!tmp.rank) tmp.rank = {};
 	if (!tmp.rank.onReset) tmp.rank.onReset = function (prev) {
@@ -80,7 +72,7 @@ function rank14Eff() {
 
 function rank40Eff() {
 	let eff = primesLTE(player.automation.scraps).max(1);
-	if (eff.gte(1e9)) eff = softcap(softcap(eff, "EP", 1, 1e9, 2), "E", 1, 1e9, 2)
+	if (eff.gte(1e9)) eff = softcap(eff, "E", 1, 1e9, 2)
 	return eff;
 }
 

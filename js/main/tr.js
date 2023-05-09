@@ -3,7 +3,7 @@ function updateTempTR() {
 	tmp.tr.txt = player.tr.active ? "Bring Time back to normal." : "Reverse Time.";
 	tmp.tr.esc = new ExpantaNum(1e20);
 	cubes = player.tr.cubes;
-	if (cubes.gte(tmp.tr.esc)) cubes = cubes.cbrt().times(Math.pow(tmp.tr.esc, 2 / 3));
+	if (cubes.gte(tmp.tr.esc)) cubes = softcap(cubes, "P", 1, tmp.tr.esc, 3)
 	tmp.tr.eff = cubes.plus(1).log10().plus(1).logBase(2);
 	if (tmp.inf) if (tmp.inf.stadium.completed("reality")) tmp.tr.eff = tmp.tr.eff.times(mltRewardActive(1)?8:3);
 }
@@ -62,7 +62,7 @@ function tr2Eff() {
 
 function tr4Eff() {
 	let r = player.rockets
-	if (r.gte(1e10)) r = r.pow(0.1).times(1e9)
+	if (r.gte(1e10)) r = softcap(r, "EP", 1, 1e10, 1.5) // exponent ^2/3 after 1e10
 	return ExpantaNum.pow(1.33, r.plus(1).log10())
 }
 
@@ -91,7 +91,7 @@ function tr9Eff() {
 
 function tr10Eff() {
 	let cubes = player.tr.cubes
-	if (cubes.gte(1e10)) cubes = cubes.pow(0.1).times(1e9)
+	if (cubes.gte(1e100)) cubes = softcap(cubes, "EP", 1, 1e100, 1.25)
 	return ExpantaNum.pow(1.1, cubes.plus(1).log10())
 }
 
@@ -125,7 +125,7 @@ function tr14Eff() {
 
 function tr15Eff() {
 	let eff = ExpantaNum.pow(1.2, player.dc.cores)
-	if (eff.gte(10)) eff = eff.log10().times(10)
+	if (eff.gte(10)) eff = softcap(eff, "P", 1, 10, 3.5)
 	return eff
 }
 

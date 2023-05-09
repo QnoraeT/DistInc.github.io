@@ -45,7 +45,7 @@ const SCALING_STARTS = {
 	},
 	atomic: { 
 		rank: new ExpantaNum(800), 
-			rankCheap: new ExpantaNum(120),
+			rankCheap: new ExpantaNum(1600),
 		tier: new ExpantaNum(40), 
 		rf: new ExpantaNum(300),
 			bf: new ExpantaNum(4000),
@@ -58,6 +58,7 @@ const SCALING_STARTS = {
 	supercritical: {
 			rank: new ExpantaNum(60000), 
 			tier: new ExpantaNum(2000), 
+			rf: new ExpantaNum(10000),
 	},
 };
 const SCALING_RES = {

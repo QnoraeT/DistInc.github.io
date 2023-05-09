@@ -29,24 +29,16 @@ function updateFurnaceUpgradeCosts() {
 	};
 	
 	for (let n = 1; n <= 5; n++) {
-			let scal
+			let scalFN
 			let specialScale = [2, 3, 1.1, 5, 7]
-			scal = player.furnace.upgrades[n - 1]
-			scal = doScaling("fn", "supercritical", scal, false, specialScale)
-			scal = doScaling("fn", "atomic", scal, false, specialScale)
-			scal = doScaling("fn", "hyper", scal, false, specialScale)
-			scal = doScaling("fn", "superscaled", scal, false, specialScale)
-			scal = doScaling("fn", "scaled", scal, false, specialScale)
-			scal = ExpantaNum.pow(tmp.fn.upgs[n].base.div(10), scal.pow(tmp.fn.bfEff.times(2))).times(tmp.fn.upgs[n].base);
-			tmp.fn.upgs[n].cost = scal
-			scal = player.furnace.coal.div(tmp.fn.upgs[n].base).logBase(tmp.fn.upgs[n].base.div(10)).pow(tmp.fn.bfEff.times(2).pow(-1));
-			scal = doScaling("fn", "scaled", scal, true, specialScale)
-			scal = doScaling("fn", "superscaled", scal, true, specialScale)
-			scal = doScaling("fn", "hyper", scal, true, specialScale)
-			scal = doScaling("fn", "atomic", scal, true, specialScale)
-			scal = doScaling("fn", "supercritical", scal, true, specialScale)
-			scal = scal.plus(1).floor();
-			tmp.fn.upgs[n].bulk = scal
+			scalFN = player.furnace.upgrades[n - 1]
+			scalFN = doAllScaling(scalFN, "fn", false, specialScale)
+			scalFN = ExpantaNum.pow(tmp.fn.upgs[n].base.div(10), scalFN.pow(tmp.fn.bfEff.times(2))).times(tmp.fn.upgs[n].base);
+			tmp.fn.upgs[n].cost = scalFN
+			scalFN = player.furnace.coal.div(tmp.fn.upgs[n].base).logBase(tmp.fn.upgs[n].base.div(10)).pow(tmp.fn.bfEff.times(2).pow(-1));
+			scalFN = doAllScaling(scalFN, "fn", true, specialScale)
+			scalFN = scalFN.plus(1).floor();
+			tmp.fn.upgs[n].bulk = scalFN
 		if (!tmp.fn.upgs[n].buy) tmp.fn.upgs[n].buy = function () {
 			if (player.furnace.coal.lt(tmp.fn.upgs[n].cost)) return;
 			player.furnace.coal = player.furnace.coal.sub(tmp.fn.upgs[n].cost);

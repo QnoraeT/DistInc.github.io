@@ -258,77 +258,15 @@ function getPathogenUpgData(i) {
 	let upg = PTH_UPGS[i];
 	let cost = upg.start.times(ExpantaNum.pow(upg.inc, player.pathogens.upgrades[i]))
 	let bulk = player.pathogens.amount.div(upg.start).max(1).logBase(upg.inc).add(1);
-	let start = getScalingStart("scaled", "pathogenUpg");
-	let power = getScalingPower("scaled", "pathogenUpg");
-	let exp = ExpantaNum.pow(3, power);
-	if (scalingActive("pathogenUpg", player.pathogens.upgrades[i].max(bulk), "scaled")) {
-		cost = upg.start.times(
-			ExpantaNum.pow(
-				upg.inc,
-				player.pathogens.upgrades[i].pow(exp).div(start.pow(exp.sub(1)))
-			)
-		);
-		bulk = player.pathogens.amount
-			.div(upg.start)
-			.max(1)
-			.logBase(upg.inc)
-			.times(start.pow(exp.sub(1)))
-			.pow(exp.pow(-1))
-			.add(1);
-	}
-	let start2 = getScalingStart("superscaled", "pathogenUpg");
-	let power2 = getScalingPower("superscaled", "pathogenUpg");
-	let exp2 = ExpantaNum.pow(5, power2);
-	if (scalingActive("pathogenUpg", player.pathogens.upgrades[i].max(bulk), "superscaled")) {
-		cost = upg.start.times(
-			ExpantaNum.pow(
-				upg.inc,
-				player.pathogens.upgrades[i]
-					.pow(exp2)
-					.div(start2.pow(exp2.sub(1)))
-					.pow(exp)
-					.div(start.pow(exp.sub(1)))
-			)
-		);
-		bulk = player.pathogens.amount
-			.div(upg.start)
-			.max(1)
-			.logBase(upg.inc)
-			.times(start.pow(exp.sub(1)))
-			.pow(exp.pow(-1))
-			.times(start2.pow(exp2.sub(1)))
-			.pow(exp2.pow(-1))
-			.add(1);
-	}
-	let start3 = getScalingStart("hyper", "pathogenUpg");
-	let power3 = getScalingPower("hyper", "pathogenUpg");
-	let base3 = ExpantaNum.pow(1.025, power3);
-	if (scalingActive("pathogenUpg", player.pathogens.upgrades[i].max(bulk), "hyper")) {
-		cost = upg.start.times(
-			ExpantaNum.pow(
-				upg.inc,
-				ExpantaNum.pow(base3, player.pathogens.upgrades[i].sub(start3))
-					.times(start3)
-					.pow(exp2)
-					.div(start2.pow(exp2.sub(1)))
-					.pow(exp)
-					.div(start.pow(exp.sub(1)))
-			)
-		);
-		bulk = player.pathogens.amount
-			.div(upg.start)
-			.max(1)
-			.logBase(upg.inc)
-			.times(start.pow(exp.sub(1)))
-			.pow(exp.pow(-1))
-			.times(start2.pow(exp2.sub(1)))
-			.pow(exp2.pow(-1))
-			.div(start3)
-			.max(1)
-			.logBase(base3)
-			.plus(start3)
-			.add(1);
-	}
+	let scalPath
+	scalPath = player.pathogens.upgrades[i]
+	scalPath = doAllScaling(scalPath, "pathogenUpg", false, [3, 5, 1.025, 6, 4])
+	scalPath = upg.start.times(ExpantaNum.pow(upg.inc, scalPath))
+	cost = scalPath
+	scalPath = player.pathogens.amount.div(upg.start).max(1).logBase(upg.inc).add(1);
+	scalPath = doAllScaling(scalPath, "pathogenUpg", true, [3, 5, 1.025, 6, 4])
+	scalPath = scalPath.plus(1).round();
+	bulk = scalPath
 	return {cost: cost, bulk: bulk}
 }
 

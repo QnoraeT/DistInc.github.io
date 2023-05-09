@@ -45,12 +45,11 @@ function updateTempTimeSpeed() {
 	if (player.tr.upgrades.includes(34) && !HCCBA("noTRU") && modeActive("extreme")) tmp.timeSpeed = tmp.timeSpeed.times(TR_UPGS[34].current())
 	if (nerfActive("nerfTS")) tmp.timeSpeed = tmp.timeSpeed.pow(0.1);
 	if (player.tr.upgrades.includes(30) && !HCCBA("noTRU") && modeActive("extreme"))
-		tmp.timeSpeed = tmp.timeSpeed.pow(player.pathogens.amount.plus(1).log10().plus(1).times(10).slog(10).pow(1.2));
+		tmp.timeSpeed = tmp.timeSpeed.pow(player.pathogens.amount.plus(1).log10().plus(1).times(10).log(10).pow(0.5));
 	if (tmp.rockets) tmp.timeSpeed = tmp.timeSpeed.times(tmp.rockets.tsPow)
 	if (player.mlt.times.gt(0) && tmp.mlt) tmp.timeSpeed = tmp.timeSpeed.times(tmp.mlt.quilts[1].eff);
 	if (modeActive("extreme") && tmp.timeSpeed.gte(Number.MAX_VALUE)) {
-		if (player.tr.upgrades.includes(31) && !HCCBA("noTRU")) tmp.timeSpeed = tmp.timeSpeed.pow(0.725).times(Math.pow(Number.MAX_VALUE, 0.275))
-		else tmp.timeSpeed = tmp.timeSpeed.sqrt().times(Math.sqrt(Number.MAX_VALUE))
+		tmp.timeSpeed = softcap(tmp.timeSpeed, "P", (player.tr.upgrades.includes(31) && !HCCBA("noTRU"))?0.45:1, Number.MAX_VALUE, 2)
 	}
 	if (modeActive("extreme")) if (tmp.fn) tmp.timeSpeed = tmp.timeSpeed.times(tmp.fn.enh.eff2)
 	if (((player.elementary.theory.active&&player.elementary.theory.depth.gte(player.modes==[]?25:20))||HCTVal("tv").gte(player.modes==[]?25:20)) && tmp.elm) tmp.timeSpeed = tmp.timeSpeed.pow(tmp.elm.theory.nerf)
@@ -58,6 +57,6 @@ function updateTempTimeSpeed() {
 	if (mltActive(5)) tmp.timeSpeed = tmp.timeSpeed.root(modeActive("extreme")?Math.PI:3.6);
 	if (modeActive("extreme") && tmp.timeSpeed.gte(ExpantaNum.pow(DISTANCES.mlt, 300))) {
 		let mlt300 = ExpantaNum.pow(DISTANCES.mlt, 300);
-		tmp.timeSpeed = ExpantaNum.pow(mlt300, tmp.timeSpeed.logBase(mlt300).root(5))
+		tmp.timeSpeed = softcap(tmp.timeSpeed, "EP", 1, mlt300, 5)
 	}
 }

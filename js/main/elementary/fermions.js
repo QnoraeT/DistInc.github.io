@@ -72,26 +72,29 @@ function updateTempLeptons() {
 		let stacks = getLeptonStacks(tmp.elm.ferm.leptonRewards)
 		if (stacks.gte(8) && player.elementary.sky.amount.eq(0)) stacks = stacks.sqrt().times(Math.sqrt(8));
 		if (name == "electron")
-			return lpts.max(0)
-				.plus(1)
-				.times(10)
-				.slog(10)
-				.max(1)
-				.pow(ExpantaNum.mul(0.1, stacks.plus(1).log10().plus(1)))
-				.sub(1)
-				.div(10)
-				.max(0)
-				.plus(1);
-		else if (name == "muon") return lpts.times(ExpantaNum.pow(2.5, stacks)).plus(1).times(10).slog(10).sqrt().max(1);
+			return softcap(lpts.max(0)
+			.plus(1)
+			.times(10)
+			.log(10)
+			.max(1)
+			.pow(ExpantaNum.mul(0.1, stacks.plus(1).log10().plus(1).pow(2)))
+			.sub(1)
+			.div(10)
+			.max(0)
+			.plus(1)
+			.pow(2)
+			,"EP", 1, 2.5, 2) // exponent square rooted after 2.5
+		else if (name == "muon") return lpts.times(ExpantaNum.pow(2.5, stacks)).plus(1).times(10).log(10).root(6).max(1)
 		else if (name == "tau")
 			return ExpantaNum.pow(
 				player.inf.knowledge.max(0).plus(1).log10().plus(1).log10().plus(1),
 				lpts.max(0).times(ExpantaNum.pow(2.5, stacks)).plus(1).times(10).slog(10).div(5).max(0.2)
 			).min(lpts.plus(1));
 		else if (name == "netrion")
-			return lpts.max(0).times(ExpantaNum.pow(2, stacks)).plus(1).times(10).slog(10).max(1).sub(1).div(100).max(0).plus(1);
+			return lpts.max(0).times(ExpantaNum.pow(2, stacks)).plus(1).times(10).log(10).max(1).sub(1).div(100).max(0).root(1.5).plus(1);
 		else if (name == "vibrino")
-			return lpts.max(0).times(ExpantaNum.pow(1.4, stacks)).plus(1).times(16).slog(16).max(1).sub(1).div(250).max(0).plus(1);
+			return lpts.max(0).times(ExpantaNum.pow(1.4, stacks)).plus(1).times(16).log(16).max(1).sub(1).div(250).max(0).root(1.5).plus(1);
+			// please do not use slog ;_;
 		else if (name == "psi") return lpts.max(0).plus(1).log10().plus(1).pow(stacks.plus(0.5)).max(1);
 	};
 	if (!tmp.elm.ferm.leptonR) tmp.elm.ferm.leptonR = function (name) {

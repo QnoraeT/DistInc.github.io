@@ -26,17 +26,16 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
         case "LE":
             if (!inv)
                 temp = ExpantaNum.pow(ExpantaNum.pow(c, b), x.sub(a)).mul(a)
-                // y = a*h^(x-a)
-                // y = logh(x/a)+a
             else
                 temp = x.div(a).log(ExpantaNum.pow(c, b)).add(a)
-            return (arguments[2] == false)?(ExpantaNum.max(temp,x)):temp // lmao 
+            //return (!inv)?(ExpantaNum.max(temp,x)):temp
+            return temp // but why would you let hyper rocket fuel have the potential to scale way slower than normal
         case "E":
             if (!inv)
                 temp = ExpantaNum.pow(ExpantaNum.pow(c, b), x.div(a).sub(1)).mul(a)
             else
                 temp = x.div(a).log(ExpantaNum.pow(c, b)).add(1).mul(a)
-            return (arguments[2] == false)?(ExpantaNum.max(temp,x)):temp // lmao 
+            return (!inv)?(ExpantaNum.max(temp,x)):temp // lmao 
         case "EP": // a*b^(x+(cx)^2)) - exponential:polynomial
             if (!inv)
                 temp = b.pow(x.mul(c).pow(2).add(x)).mul(a)
@@ -75,7 +74,7 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
 }
 
 
-function softcap(amt, type, strength, start, powScale) {
+function softcap(amt, type, strength, start, powScale = 2) {
     let sta = new ExpantaNum(start)
     if (amt.gte(sta)){
         let str = new ExpantaNum(strength)
@@ -84,7 +83,6 @@ function softcap(amt, type, strength, start, powScale) {
             case "P": // polynomial
                 str = new ExpantaNum(powScale).pow(str)
                 temp = amt.root(str).mul(sta.pow(ExpantaNum.sub(1, ExpantaNum.div(1, str))))
-                // x^(1/s)*80^(1-(1/s))
                 return temp
             case "E": // exponential 
                 if (str.gt(1)){console.warn("Softcap \"E\" cannot work correctly with strength > 1 !");str=dOne}
@@ -93,7 +91,7 @@ function softcap(amt, type, strength, start, powScale) {
                 return temp
             case "EP":
                 str = new ExpantaNum(powScale).pow(str)
-                temp = ExpantaNum.pow(10, amt.log(10).root(str).mul(sta.log(10).pow(ExpantaNum.sub(1, ExpantaNum.div(1, str)))))
+                temp = ExpantaNum.pow(sta, amt.log(sta).root(str))
                 return temp
             default:
                 console.warn("Softcap type " + type + " is not defined!!")
@@ -103,28 +101,28 @@ function softcap(amt, type, strength, start, powScale) {
     return amt
 }
 
-function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5]){
+function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 = ["P", "P", "LE", "P", "E"]){
     let scaleSTR
     let scaleTYP
     switch (type){
         case "scaled":
-            scaleTYP = "P"
+            scaleTYP = special2[0]
             scaleSTR = special[0]
             break;
         case "superscaled":
-            scaleTYP = "P"
+            scaleTYP = special2[1]
             scaleSTR = special[1]
             break;
         case "hyper":
-            scaleTYP = "LE"
+            scaleTYP = special2[2]
             scaleSTR = special[2]
             break;
         case "atomic":
-            scaleTYP = "P"
+            scaleTYP = special2[3]
             scaleSTR = special[3]
             break;
         case "supercritical":
-            scaleTYP = "E"
+            scaleTYP = special2[4]
             scaleSTR = special[4]
             break;     
         default:
@@ -135,4 +133,22 @@ function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5]){
         return x
     }
     return amt
+}
+
+function doAllScaling(amt, name, inv, specialScale, specialType){
+    let scalS = amt
+    if (inv){
+        scalS = doScaling(name, "scaled", scalS, true, specialScale, specialType)
+        scalS = doScaling(name, "superscaled", scalS, true, specialScale, specialType)
+        scalS = doScaling(name, "hyper", scalS, true, specialScale, specialType)
+        scalS = doScaling(name, "atomic", scalS, true, specialScale, specialType)
+        scalS = doScaling(name, "supercritical", scalS, true, specialScale, specialType)
+    } else {
+        scalS = doScaling(name, "supercritical", scalS, false, specialScale, specialType)
+        scalS = doScaling(name, "atomic", scalS, false, specialScale, specialType)
+        scalS = doScaling(name, "hyper", scalS, false, specialScale, specialType)
+        scalS = doScaling(name, "superscaled", scalS, false, specialScale, specialType)
+        scalS = doScaling(name, "scaled", scalS, false, specialScale, specialType)
+    }
+    return scalS
 }

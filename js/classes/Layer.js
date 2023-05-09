@@ -22,7 +22,7 @@ class Layer {
 		if (gain.gte(sc)) gain = gain.sqrt().times(ExpantaNum.sqrt(sc));
 		if (tmp.lm) if (tmp.lm[this.name]) gain = gain.times(tmp.lm[this.name]);
 		if (this.name == "collapse"){
-			if (player.inf.pantheon.purge.active || HCCBA("purge")) gain = gain.plus(1).pow(gain.plus(1).times(10).slog(10).pow(-1)).min(gain)
+			if (player.inf.pantheon.purge.active || HCCBA("purge")) gain = softcap(gain, "EP", 1, 10, 1.5)
 			if (modeActive("extreme") && !modeActive("hikers_dream")) gain = gain.sub(2).max(0)
 		}
 		if (modeActive("hikers_dream") && player.elementary.theory.depth.gte(10) && player.elementary.theory.active && gain.gt(1)) gain = gain.pow(3).root(player.elementary.theory.depth)

@@ -22,19 +22,11 @@ function updateTempRankCheapCost(){
 	tmp.rankCheap.bc = new ExpantaNum(30);
 		let scal
 		scal = player.rankCheap
-		scal = doScaling("rankCheap", "supercritical", scal, false)
-		scal = doScaling("rankCheap", "atomic", scal, false)
-		scal = doScaling("rankCheap", "hyper", scal, false)
-		scal = doScaling("rankCheap", "superscaled", scal, false)
-		scal = doScaling("rankCheap", "scaled", scal, false)
+		scal = doAllScaling(scal, "rankCheap", false)
 		scal = new ExpantaNum(tmp.rankCheap.bc).times(ExpantaNum.pow(2, scal.div(tmp.rankCheap.fp).max(1).sub(1).pow(2)));
 		tmp.rankCheap.req = scal
 		scal = player.distance.div(tmp.rankCheap.bc).logBase(2).sqrt().plus(1).times(tmp.rankCheap.fp)
-		scal = doScaling("rankCheap", "scaled", scal, true)
-		scal = doScaling("rankCheap", "superscaled", scal, true)
-		scal = doScaling("rankCheap", "hyper", scal, true)
-		scal = doScaling("rankCheap", "atomic", scal, true)
-		scal = doScaling("rankCheap", "supercritical", scal, true)
+		scal = doAllScaling(scal, "rankCheap", true)
 		scal = scal.plus(1).round();
 		tmp.rankCheap.bulk = scal
 }

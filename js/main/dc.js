@@ -1,56 +1,15 @@
 function updateTempDarkCoreCost(){
-	let nAmt = player.dc.cores.max(tmp.dc.bulk)
-
-	let start = getScalingStart("scaled", "darkCore");
-	let power = scalingActive("darkCore", nAmt, "scaled") ? getScalingPower("scaled", "darkCore") : 0
-	let exp = ExpantaNum.pow(2, power);
-	let start2 = getScalingStart("superscaled", "darkCore");
-	let power2 = scalingActive("darkCore", nAmt, "superscaled") ? getScalingPower("superscaled", "darkCore") : 0
-	let exp2 = ExpantaNum.pow(3, power2);
-	let start3 = getScalingStart("hyper", "darkCore");
-	let power3 = getScalingPower("hyper", "darkCore");
-	let base3 = ExpantaNum.pow(1.03, power3);
-
+	let nAmt = player.dc.cores
 	let bcMult = modeActive("extreme") ? 0.25 : 10
-
-	let starting 
-	if (scalingActive("darkCore", nAmt, "hyper")) {
-		if (!(scalingActive("darkCore", player.dc.cores, "hyper")) && (!modeActive("extreme")&&!modeActive("hikers_dream"))) starting = player.dc.cores;
-		else starting = ExpantaNum.pow(base3, player.dc.cores.sub(start3)).times(start3)
-	} else {
-		starting = player.dc.cores
-	}
-
-	tmp.dc.coreCost = ExpantaNum.pow(
-		10,
-		ExpantaNum.pow(
-			10,
-			starting
-				.pow(exp2)
-				.div(start2.pow(exp2.sub(1)))
-				.pow(exp)
-				.div(start.pow(exp.sub(1)))
-				.div(50)
-				.plus(1)
-		)
-	).times(bcMult);
-	let starting2 = player.collapse.cadavers
-		.div(bcMult)
-		.max(1)
-		.log10()
-		.max(1)
-		.log10()
-		.sub(1)
-		.times(50)
-		.times(start.pow(exp.sub(1)))
-		.pow(exp.pow(-1))
-		.times(start2.pow(exp2.sub(1)))
-		.pow(exp2.pow(-1))
-	
-	if (scalingActive("darkCore", nAmt, "hyper")) {
-		if (!(scalingActive("darkCore", player.dc.cores, "hyper")) && (!modeActive("extreme")&&!modeActive("hikers_dream"))) tmp.dc.bulk = starting2.add(1);
-		else tmp.dc.bulk = starting2.div(start3).max(1).logBase(base3).add(start3).add(1);
-	} else tmp.dc.bulk = starting2.add(1);
+	let scalDc
+	scalDc = nAmt
+	scalDc = doAllScaling(scalDc, "darkCore", false, [2, 3, 1.03, 4, 5])
+	scalDc = ExpantaNum.pow(10,ExpantaNum.pow(10,scalDc.div(50).plus(1))).times(bcMult);
+	tmp.dc.coreCost = scalDc
+	scalDc = player.collapse.cadavers.div(bcMult).max(1).log10().max(1).log10().sub(1).times(50)
+	scalDc = doAllScaling(scalDc, "darkCore", true, [2, 3, 1.03, 4, 5])
+	scalDc = scalDc.plus(1).round();
+	tmp.dc.bulk = scalDc
 }
 
 function calcDarkFlow(){
