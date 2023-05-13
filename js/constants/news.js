@@ -123,7 +123,15 @@ const NEWS_DATA = {
 	m104: ["We're lucky that our universes were never infected, I'm sure there's some parallel multiverse out there where that's an issue..."],
 	m105: ["Some people say that each multiverse does not have its own High Gods. Those people tend not to survive very long around here."],
 	m106: ["Some people say that there is only one set of High Gods. Those people tend not to survive very long around here."],
-
+	m107: ["What in the world is this mod?"],
+	m108: ["It has become a tradition to mod Distance Incremental"],
+	m109: ["SuperLog is a bad thing !!!!"],
+	m110: ["Unfortunately, Pelle wasn't so good at decision making. During the final stage of Antimatter Dimensions, The [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] ... And then you get a lot of antimatter and you win!"],
+	m111: ["🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔍🔍🔍🔍🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍 - Almost every single BadBoyHalo donation back in 2019-2020"],
+	m112: ["Not like other lore based incrementals."],
+	m113: ["You have been " + ["Scaled", "Superscaled", "Hyper Scaled", "Atomic Scaled", "Trolled"][Math.floor(Math.random()*4)] + "."],
+	m114: ["Hey at least its not like Incremental Mass Rewritten (and it's forks) where its like: \"Due to Massive Meme overflow, we've decided to take away your admin powers, reducing your meme count by ^^0.74590.\"  Wait. Why am I making news? "],
+	
 	// Distance-based Conditions
 	d1: [
 		"You've travelled more than me today",

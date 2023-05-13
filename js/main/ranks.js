@@ -9,13 +9,18 @@ function updateTempRanks() {
 	tmp.ranks.req = scalRank
 	scalRank = player.distance.div(bc).max(1).logBase(2).sqrt().add(1).mul(fp)
 	scalRank = doAllScaling(scalRank, "rank", true)
-	scalRank = scalRank.plus(1).round();
+	scalRank = scalRank.plus(1).floor();
 	tmp.ranks.bulk = scalRank
-	tmp.ranks.desc = player.rank.lt(Number.MAX_VALUE)
-		? RANK_DESCS[player.rank.toNumber()]
-			? RANK_DESCS[player.rank.toNumber()]
-			: DEFAULT_RANK_DESC
-		: DEFAULT_RANK_DESC;
+	if (player.rank.gte(RANK_DESCS[Object.keys(RANK_DESCS).length-1].req)){
+		tmp.ranks.desc = DEFAULT_RANK_DESC
+	} else {
+		for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
+			if (player.rank.lt(RANK_DESCS[i].req)){
+				tmp.ranks.desc = RANK_DESCS[i].text + "  (Next reward at " + showNum(RANK_DESCS[i].req) + " ranks.)"
+				break;
+			}
+		}
+	}
 	tmp.ranks.canRankUp = player.distance.gte(tmp.ranks.req);
 	if (nerfActive("noRank")) {tmp.ranks.canRankUp = false;}
 	tmp.ranks.layer = new Layer("rank", tmp.ranks.canRankUp, "semi-forced");
@@ -72,7 +77,7 @@ function rank14Eff() {
 
 function rank40Eff() {
 	let eff = primesLTE(player.automation.scraps).max(1);
-	if (eff.gte(1e9)) eff = softcap(eff, "E", 1, 1e9, 2)
+	if (eff.gte(1e9)) eff = softcap(eff, "E", 1, 1e9)
 	return eff;
 }
 
@@ -82,4 +87,8 @@ function rank55Eff() {
 
 function rank111Eff() {
 	return ExpantaNum.pow(2, player.rank)
+}
+
+function rank1500Eff() {
+	return softcap(ExpantaNum.pow(10, player.elementary.particles.max(1e9).sub(1e9).add(1).log(10).pow(0.25)).sub(1).div(20), "EP", 1, 45, 2)
 }

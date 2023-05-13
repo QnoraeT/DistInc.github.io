@@ -80,12 +80,16 @@ function softcap(amt, type, strength, start, powScale = 2) {
         let str = new ExpantaNum(strength)
         let temp
         switch(type) {
+            case "D":
+                str = new ExpantaNum(powScale).pow(str)
+                temp = amt.div(str).add(sta.sub(sta.div(str)))
+                return temp
             case "P": // polynomial
                 str = new ExpantaNum(powScale).pow(str)
                 temp = amt.root(str).mul(sta.pow(ExpantaNum.sub(1, ExpantaNum.div(1, str))))
                 return temp
             case "E": // exponential 
-                if (str.gt(1)){console.warn("Softcap \"E\" cannot work correctly with strength > 1 !");str=dOne}
+                if (str.gt(1)){console.warn("Softcap \"E\" cannot work correctly with strength > 1 !");str=new ExpantaNum(1)}
                 str = ExpantaNum.sub(1, str)
                 temp = amt.log(sta.mul(amt.div(sta).pow(str))).add(1).pow(sta.mul(amt.div(sta).pow(str)).log(2))
                 return temp
@@ -106,24 +110,24 @@ function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 
     let scaleTYP
     switch (type){
         case "scaled":
-            scaleTYP = special2[0]
-            scaleSTR = special[0]
+            scaleTYP = special2[0] !== undefined?special2[0]:"P"
+            scaleSTR = special[0] !== undefined?special[0]:2
             break;
         case "superscaled":
-            scaleTYP = special2[1]
-            scaleSTR = special[1]
+            scaleTYP = special2[1] !== undefined?special2[1]:"P"
+            scaleSTR = special[1] !== undefined?special[1]:3
             break;
         case "hyper":
-            scaleTYP = special2[2]
-            scaleSTR = special[2]
+            scaleTYP = special2[2] !== undefined?special2[2]:"LE"
+            scaleSTR = special[2] !== undefined?special[2]:1.01
             break;
         case "atomic":
-            scaleTYP = special2[3]
-            scaleSTR = special[3]
+            scaleTYP = special2[3] !== undefined?special2[3]:"P"
+            scaleSTR = special[3] !== undefined?special[3]:4
             break;
         case "supercritical":
-            scaleTYP = special2[4]
-            scaleSTR = special[4]
+            scaleTYP = special2[4] !== undefined?special2[4]:"E"
+            scaleSTR = special[4] !== undefined?special[4]:5
             break;     
         default:
             throw new Error("type " + type + " doesn't exist!")

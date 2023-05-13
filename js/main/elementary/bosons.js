@@ -27,11 +27,26 @@ function updatePhotonCosts() {
 		4: ExpantaNum.pow(2, new ExpantaNum(player.elementary.bosons.gauge.photons.upgrades[3]||0).pow(1.1).times(ExpantaNum.pow(1.01, player.elementary.bosons.gauge.photons.upgrades[3]||0))).times(6e4),
 	};
 	for (let i=1;i<=4;i++) {
-		if (scalingActive("photons", player.elementary.bosons.gauge.photons.upgrades[i-1]||0, "scaled")) {
-			let power = getScalingPower("scaled", "photons")
-			let exp = ExpantaNum.pow(2, power)
-			tmp.elm.bos.photonCost[i] = PH_CST_SCLD[i](exp, getScalingStart("scaled", "photons"))
+		let scalPho
+		scalPho = player.elementary.bosons.gauge.photons.upgrades[i-1]
+		scalPho = doAllScaling(scalPho, "photons", false)
+		switch(i){
+			case 1:
+				scalPho = ExpantaNum.pow(5, scalPho.pow(2)).times(25)
+				break;
+			case 2:
+				scalPho = ExpantaNum.pow(4, scalPho.pow(2)).times(40)
+				break;
+			case 3:
+				scalPho = ExpantaNum.pow(10, scalPho).times(1e4)
+				break;
+			case 4:
+				scalPho = ExpantaNum.pow(2, scalPho.pow(1.1).times(ExpantaNum.pow(1.01, scalPho))).times(6e4)
+				break;
+			default:
+				throw new Error("what the hell? PH UPG#" + i + " doesn't exist")
 		}
+		tmp.elm.bos.photonCost[i] = scalPho
 	}
 }
 
@@ -55,45 +70,25 @@ function updateTempPhotons(gaugeSpeed) {
 		if (new ExpantaNum(player.elementary.bosons.gauge.photons.amount).lt(tmp.elm.bos.photonCost[x])) return;
 		let target;
 		if (max) {
-			let amt = player.elementary.bosons.gauge.photons.amount
+			let scalPho = player.elementary.bosons.gauge.photons.amount
 			switch(x) {
 				case 1: 
-					target = amt.div(25).max(1).logBase(5).sqrt().plus(1).floor();
-					if (scalingActive("photons", target, "scaled")) {
-						let power = getScalingPower("scaled", "photons")
-						let exp = ExpantaNum.pow(2, power)
-						let s = getScalingStart("scaled", "photons")
-						target = amt.div(25).max(1).logBase(5).sqrt().times(s.pow(exp.sub(1))).pow(exp.pow(-1)).plus(1).floor()
-					}
+					scalPho = scalPho.div(25).max(1).logBase(5).sqrt()
 					break;
 				case 2: 
-					target = amt.div(40).max(1).logBase(4).sqrt().plus(1).floor();
-					if (scalingActive("photons", target, "scaled")) {
-						let power = getScalingPower("scaled", "photons")
-						let exp = ExpantaNum.pow(2, power)
-						let s = getScalingStart("scaled", "photons")
-						target = amt.div(40).max(1).logBase(4).sqrt().times(s.pow(exp.sub(1))).pow(exp.pow(-1)).plus(1).floor()
-					}
+					scalPho = scalPho.div(40).max(1).logBase(4).sqrt()
 					break;
 				case 3: 
-					target = amt.div(1e4).max(1).log10().plus(1).floor();
-					if (scalingActive("photons", target, "scaled")) {
-						let power = getScalingPower("scaled", "photons")
-						let exp = ExpantaNum.pow(2, power)
-						let s = getScalingStart("scaled", "photons")
-						target = amt.div(1e4).max(1).log10().times(s.pow(exp.sub(1))).pow(exp.pow(-1)).plus(1).floor()
-					}
+					scalPho = scalPho.div(1e4).max(1).log10()
 					break;
 				case 4: 
-					target = ExpantaNum.mul(110.549, ExpantaNum.lambertw(ExpantaNum.mul(0.00904576, ExpantaNum.mul(1.4427, amt.times(0.000533333333333).max(1).logBase(Math.E).sub(5)).pow(1.1)))).plus(1).floor().max(0)
-					if (scalingActive("photons", target, "scaled")) {
-						let power = getScalingPower("scaled", "photons")
-						let exp = ExpantaNum.pow(2, power)
-						let s = getScalingStart("scaled", "photons")
-						target = ExpantaNum.mul(110.549, ExpantaNum.lambertw(ExpantaNum.mul(0.00904576, ExpantaNum.mul(1.4427, amt.times(0.000533333333333).max(1).logBase(Math.E).sub(5)).pow(1.1)))).times(s.pow(exp.sub(1))).pow(exp.pow(-1)).plus(1).floor().max(0)
-					}
+					scalPho = scalPho.div(1875).ln().mul(1.4427).sub(5).pow(10/11).mul(0.00904576).lambertw().mul(110.549)
 					break;
+				default:
+					throw new Error("what the hell? PH UPG#" + i + " doesn't exist")
 			}
+			scalPho = doAllScaling(scalPho, "photons", true)
+			target = scalPho.add(1).floor()
 		}
 		if (!max) player.elementary.bosons.gauge.photons.amount = new ExpantaNum(
 			player.elementary.bosons.gauge.photons.amount

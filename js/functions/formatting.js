@@ -18,13 +18,13 @@ function disp(val, places, locs, base) {
 	return s;
 }
 
-function showNum(val) {
+function showNum(val, notation = true) {
 	val = new ExpantaNum(val);
 	if (val.eq(NaN)) return "NaN";
 	if (val.gte(1/0)) return "Infinity";
 	if (val.eq(0)) return "0";
 	if (val.sign == -1) return "-" + showNum(val.abs());
-	return notations[player.options.not](new ExpantaNum(val), player.options.sf - 1, 2);
+	return notations[notation?player.options.not:"scientific"](new ExpantaNum(val), player.options.sf - 1, 2);
 }
 
 function addZeroes(orig, num, digits, roundWhole=false) {

@@ -130,6 +130,9 @@ function updateRanksHTML(){
 	tmp.el.rankDesc.setTxt(tmp.ranks.desc);
 	tmp.el.rankReq.setTxt(formatDistance(tmp.ranks.req));
 	tmp.el.rankName.setTxt(getScalingName("rank") + "Rank");
+	let scalType = getScalingId("rank")
+	tmp.el.rankName.changeStyle("color", SCALE_COLOR[scalType])
+	tmp.el.rankName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 }
 
 function updateTiersHTML(){
@@ -138,6 +141,9 @@ function updateTiersHTML(){
 	tmp.el.tierDesc.setTxt(tmp.tiers.desc);
 	tmp.el.tierReq.setTxt(showNum(tmp.tiers.req.ceil()));
 	tmp.el.tierName.setTxt(getScalingName("tier") + "Tier");
+	let scalType = getScalingId("tier")
+	tmp.el.tierName.changeStyle("color", SCALE_COLOR[scalType])
+	tmp.el.tierName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 }
 
 function updateMainHTML(){
@@ -178,6 +184,9 @@ function updateRocketsHTML(){
 		tmp.el.rfReq.setTxt(showNum(tmp.rf.req));
 		tmp.el.rfEff.setTxt(showNum(getFuelEff().sub(1).times(100)));
 		tmp.el.rfName.setTxt(getScalingName("rf") + "Rocket Fuel");
+		let scalType = getScalingId("rf")
+		tmp.el.rfName.changeStyle("color", SCALE_COLOR[scalType])
+		tmp.el.rfName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 		tmp.el.rf2.setTxt(showNum(getFuelEff2()));
 	}
 }
@@ -315,7 +324,7 @@ function updateTimeReversalHTML(){
 	}
 }
 
-function updateCollpaseHTML(){
+function updateCollapseHTML(){
 	if (player.tab == "collapse") {
 		tmp.el.collapseReset.setClasses({ btn: true, locked: !tmp.collapse.can, btndd: tmp.collapse.can });
 		tmp.el.cadaverGain.setTxt(showNum(tmp.collapse.layer.gain));
@@ -372,6 +381,9 @@ function upadtePathogenUpgradesHTML(){
 				showNum(tmp.pathogens[i].cost) +
 				" Pathogens."
 		);
+		let scalType = getScalingId("pathogenUpg", i)
+		tmp.el["pth" + i].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
+		tmp.el["pth" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 	}
 }
 
@@ -464,6 +476,9 @@ function updateDarkCircleHTML(){
 		});
 		tmp.el.arrowToDarkMatter.setHTML(tmp.dc.dmGain.gt(0) ? "&#8593;" : "");
 		tmp.el.darkFlow.setTxt(showNum(tmp.dc.flow));
+		let scalType = getScalingId("darkCore")
+		tmp.el.darkCore.changeStyle("color", SCALE_COLOR[scalType])
+		tmp.el.darkCore.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 	}
 }
 
@@ -492,7 +507,7 @@ function updateInfinitySubtabHTML(){
 	if (infTab == "infinity") {
 		tmp.el.endorsements.setTxt(showNum(player.inf.endorsements));
 		tmp.el.knowledgeBase.setTxt(showNum(tmp.inf.knowledgeBase));
-		tmp.el.nextEndorsement.setTxt(formatDistance(tmp.inf.req));
+		tmp.el.nextEndorsement.setTxt(formatDistance(player.distance) + " / " + formatDistance(tmp.inf.req));
 		tmp.el.knowledge.setTxt(showNum(player.inf.knowledge));
 		tmp.el.knowledgeGain.setTxt(formatGain(player.inf.knowledge, tmp.inf.knowledgeGain, "knowledge"));
 		for (let r = 1; r <= INF_UPGS.rows; r++) {
@@ -514,7 +529,9 @@ function updateInfinitySubtabHTML(){
 			}
 		}
 		tmp.el.endorsementName.setTxt(getScalingName("endorsements") + " ");
-		
+		let scalType = getScalingId("endorsements")
+		tmp.el.endorsementName.changeStyle("color", SCALE_COLOR[scalType])
+		tmp.el.endorsementName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 		let ach112 = ach112Eff()
 		tmp.el.tudeEff.setHTML(
 			tmp.ach[112].has ? "The Universe Doesn't Exist multiplier: " + showNum(ach112) + "x"+(ach112.gte(1e160)?" <span class='sc'>(softcapped)</span>":"")+"<br><br>" : ""
@@ -547,6 +564,9 @@ function updateAscensionHTML(){
 				});
 				let name = getScalingName("enlightenments", i);
 				tmp.el["enlScale" + i].setTxt(name == "" ? "" : name + " ");
+				let scalType = getScalingId("enlightenments", i)
+				tmp.el["enlScale" + i].changeStyle("color", SCALE_COLOR[scalType])
+				tmp.el["enlScale" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 			}
 			tmp.el.perkPower.setTxt("Perk Strength: " + showNum(tmp.inf.asc.perkStrength.times(100)) + "%");
 			tmp.el.perkPower.setDisplay(!tmp.inf.asc.perkStrength.eq(1));
@@ -648,6 +668,9 @@ function updateAngelsChipsHTML(){
 	tmp.el.nextSpectralGem.setTxt(showNum(tmp.inf.pantheon.next.ceil()));
 	let name = getScalingName("spectralGems");
 	tmp.el.spectralGemName.setTxt(name == "" ? "" : name + " ");
+	let scalType = getScalingId("spectralGems")
+	tmp.el.spectralGemName.changeStyle("color", SCALE_COLOR[scalType])
+	tmp.el.spectralGemName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 	tmp.el.respecSpectralGems.setClasses({
 		btn: true,
 		inf: player.inf.pantheon.angels.plus(player.inf.pantheon.demons).gt(0),
@@ -708,6 +731,9 @@ function updateDerivativeHTML(){
 		locked: player.inf.knowledge.lt(tmp.inf.derv.unlCost),
 		inf: player.inf.knowledge.gte(tmp.inf.derv.unlCost)
 	});
+	let scalType = getScalingId("dervBoost")
+	tmp.el.dervUnlock.changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
+	tmp.el.dervUnlock.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 }
 
 function updateAllInfinityHTML(){
@@ -742,6 +768,9 @@ function updateRankCheapenersHTML(){
 	tmp.el.rankCheapUp.setClasses({ btn: true, locked: !tmp.rankCheap.can });
 	tmp.el.rankCheapReq.setTxt(formatDistance(tmp.rankCheap.req));
 	tmp.el.rankCheapName.setTxt(getScalingName("rankCheap") + "Rank Cheapener");
+	let scalType = getScalingId("rankCheap")
+	tmp.el.rankCheapName.changeStyle("color", SCALE_COLOR[scalType])
+	tmp.el.rankCheapName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 }
 
 function updateNormalFurnace(){
@@ -760,6 +789,9 @@ function updateNormalFurnace(){
 			tmp.el["fnu" + i + "cost"].setTxt(showNum(tmp.fn.upgs[i].cost));
 			tmp.el["fnu" + i + "name"].setTxt(getScalingName("fn", i));
 			tmp.el["fnu" + i + "lvl"].setTxt(showNum(player.furnace.upgrades[i - 1]));
+			let scalType = getScalingId("fn", i)
+			tmp.el["fnu" + i + "name"].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
+			tmp.el["fnu" + i + "name"].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 		}
 		tmp.el.fnu4.setDisplay(player.tr.upgrades.includes(31))
 		tmp.el.fnu5.setDisplay(FCComp(5))
@@ -771,6 +803,9 @@ function updateNormalFurnace(){
 		tmp.el.bfReq.setTxt(showNum(tmp.fn.bfReq));
 		tmp.el.bfAmt.setTxt(showNum(player.furnace.blueFlame)+(tmp.fn.enh.eff.gt(0)?(" + "+showNum(tmp.fn.enh.eff)):""));
 		tmp.el.blueFlameName.setTxt(getScalingName("bf"))
+		let scalType = getScalingId("bf")
+		tmp.el.blueFlameName.changeStyle("color", SCALE_COLOR[scalType])
+		tmp.el.blueFlameName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 		tmp.el.bfEff.setTxt(showNum(ExpantaNum.sub(1, tmp.fn.bfEff).times(100)));
 		tmp.el.furnChalls.setDisplay(player.inf.endorsements.gte(10))
 		for (let i=1;i<=6;i++) {
@@ -801,6 +836,9 @@ function updateEnhanceFurnace(){
 			tmp.el["efnu" + i + "cost"].setTxt(showNum(tmp.fn.enh.upgs[i].cost));
 			tmp.el["efnu" + i + "name"].setTxt(getScalingName("efn", i));
 			tmp.el["efnu" + i + "lvl"].setTxt(showNum(player.furnace.enhancedUpgrades[i - 1])+(tmp.fn.enh.upgs[i].extra.gt(0)?(" + "+showNum(tmp.fn.enh.upgs[i].extra)):""));
+			let scalType = getScalingId("efn", i)
+			tmp.el["efnu" + i + "name"].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
+			tmp.el["efnu" + i + "name"].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 		}
 		tmp.el.efnu1eff.setTxt(showNum(tmp.fn.enh.upg1eff))
 		tmp.el.efnu2eff.setTxt(showNum(tmp.fn.enh.upg2eff.times(100)))
@@ -823,6 +861,10 @@ function updateMagma() {
 		})
 		tmp.el.magmaReq.setTxt(showNum(req))
 		tmp.el.magmaAmt.setTxt(showNum(player.magma.amount))
+		tmp.el.magmaDesc.setTxt(getScalingName("magma") + "Magma")
+		let scalType = getScalingId("magma")
+		tmp.el.magmaDesc.changeStyle("color", SCALE_COLOR[scalType])
+		tmp.el.magmaDesc.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 		tmp.el.magmaEff.setTxt(showNum(tmp.fn.magma.eff.sub(1).times(100)))
 		let req2 = getMagmaReformReq();
 		let req2b = getMagmaReformReq2();
@@ -835,6 +877,10 @@ function updateMagma() {
 		tmp.el.magmaReformReq2.setTxt(showNum(req2b));
 		tmp.el.rMagmaAmt.setTxt(showNum(player.magma.ref));
 		tmp.el.rMagmaEff.setHTML("<span class='magmaTxt'>"+showNum(tmp.fn.magma.eff2)+"x</span>"+(player.elementary.theory.tree.unl?(" (boosted by unspent Theory Points"+(player.elementary.theory.depth.gte(6)?(" and Primary String length)"):")")):""));
+		tmp.el.rMagmaDesc.setTxt(getScalingName("rmagma") + "Reformed Magma")
+		scalType = getScalingId("rmagma")
+		tmp.el.rMagmaDesc.changeStyle("color", SCALE_COLOR[scalType])
+		tmp.el.rMagmaDesc.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 	}
 }
 
@@ -906,7 +952,7 @@ function updateStatisticsHTML(){
 				if (amt.gte(getScalingStart(name, key))) tt += capitalFirst(REAL_SCALING_NAMES[key])+" ("+showNum(getScalingPowerDisplay(name, key).times(100))+"%): Starts at "+showNum(getScalingStart(name, key))+"\n"
 			}
 			let blank = ""
-			if (name=="hyper") blank = "Hyper scaling can go below 50% strength, but it is (obscured) instead.\n"
+			if (name=="hyper") blank = "Hyper scaling can go below 50% strength, but it is heavily (obscured) instead.\n"
 			tmp.el[name+"Stat"].changeStyle("visibility", tt==blank?"hidden":"visible")
 			if (tt!=blank) statScalingsShown = true
 			tmp.el[name+"Stat"].setAttr("widetooltip", tt)
@@ -915,14 +961,16 @@ function updateStatisticsHTML(){
 		if (statTab == "rankTiers") {
 			tmp.el.rankTierStats.setDisplay(player.rank.gt(1)||player.tier.gt(0))
 			for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
-				let ranks = Object.keys(RANK_DESCS)[i]
-				tmp.el["rankReward"+ranks].setDisplay(player.rank.gt(ranks))
-				if (tmp.el["rankEff"+ranks]) tmp.el["rankEff"+ranks].setTxt(showNum(window["rank"+ranks+"Eff"]()));
+				let ranks = RANK_DESCS[i]
+				let rankReq = ranks.req
+				tmp.el["rankReward"+showNum(rankReq, false)].setDisplay(player.rank.gt(rankReq))
+				if (tmp.el["rankEff"+showNum(rankReq, false)]) tmp.el["rankEff"+showNum(rankReq, false)].setTxt(showNum(window["rank"+showNum(rankReq, false)+"Eff"]()));
 			}
 			for (let i=0;i<Object.keys(TIER_DESCS).length;i++) {
-				let tiers = Object.keys(TIER_DESCS)[i]
-				tmp.el["tierReward"+tiers].setDisplay(player.tier.gt(tiers))
-				if (tmp.el["tierEff"+tiers]) tmp.el["tierEff"+tiers].setTxt(showNum(window["tier"+tiers+"Eff"]()));
+				let tiers = TIER_DESCS[i]
+				let tierReq = tiers.req
+				tmp.el["tierReward"+showNum(tierReq, false)].setDisplay(player.tier.gt(tierReq))
+				if (tmp.el["tierEff"+showNum(tierReq, false)]) tmp.el["tierEff"+showNum(tierReq, false)].setTxt(showNum(window["tier"+showNum(tierReq, false)+"Eff"]()));
 			}
 		}
 	}
@@ -1020,6 +1068,9 @@ function updatePhotonsHTML(){
 		tmp.el["photonLvl" + i].setTxt(getScalingName("photons", i)+"Level: "+showNum(player.elementary.bosons.gauge.photons.upgrades[i - 1]));
 		tmp.el["photonDesc" + i].setTxt(showNum(tmp.elm.bos.photonEff(i)) + "x");
 		tmp.el["photonCost" + i].setTxt(showNum(tmp.elm.bos.photonCost[i]));
+		let scalType = getScalingId("photons", i)
+		tmp.el["photonLvl" + i].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
+		tmp.el["photonLvl" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
 	}
 }
 
@@ -1109,7 +1160,7 @@ function updateElementaryMainDisplaysHTML(){
 	tmp.el.elmp.setTxt(showNum(player.elementary.particles));
 }
 
-function updateSuperSymetryHTML(){
+function updateSuperSymmetryHTML(){
 	if (thTab=="ss") {
 		tmp.el.ssUnl.setDisplay(!player.elementary.theory.supersymmetry.unl)
 		tmp.el.ssDiv.setDisplay(player.elementary.theory.supersymmetry.unl)
@@ -1260,7 +1311,7 @@ function updateTheoryverseMainHTML(){
 			tmp.el.theoriverse.setHTML(HCTVal("tv").gt(-1)?"Trapped in the Theoriverse!":hasMltMilestone(4)?("Theoriverse Depth: "+showNum(player.elementary.theory.depth)+("<br>Total TP: "+showNum(tmp.elm.theory.gainMult.times(ExpantaNum.sub(1, ExpantaNum.pow(2, player.elementary.theory.depth))).times(-1)))):(player.elementary.theory.active?("Exit The Theoriverse early for no reward."):("Enter The Theoriverse at Depth "+showNum(player.elementary.theory.depth))))
 			tmp.el.theoriverse.setTooltip(hasMltMilestone(4)?("Nerf: x^"+showNum(tmp.elm.theory.nerf)):("Entering The Theoriverse does an Elementary reset, and puts you in The Theoriverse, which will make all pre-Elementary resource generation (x^"+showNum(tmp.elm.theory.nerf)+")"))
 		}
-		updateSuperSymetryHTML()
+		updateSuperSymmetryHTML()
 		updateTheoryTreeHTML()
 		updateStringsHTML()
 		updatePreonsHTML()
@@ -1622,7 +1673,7 @@ function updateHTML() {
 	updateAchievementsHTML()
 	updateAutomationHTML()
 	updateTimeReversalHTML()
-	updateCollpaseHTML()
+	updateCollapseHTML() // lmao how
 	upadtePathogenHTML()
 	updateSoftcapsHTML()
 	updateDarkCircleHTML()

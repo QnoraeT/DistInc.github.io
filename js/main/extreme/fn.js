@@ -164,61 +164,17 @@ function updateEnhFurnUpgCosts() {
 		if (n==13) tmp.fn.enh.upgs[n].costAdj = new ExpantaNum(0.75);
 		if (FCComp(6)) tmp.fn.enh.upgs[n].costAdj = tmp.fn.enh.upgs[n].costAdj.times(tmp.fn.bfEff.root(100));
 		if (inFC(6)) tmp.fn.enh.upgs[n].costAdj = tmp.fn.enh.upgs[n].costAdj.div(10);
-		
-		tmp.fn.enh.upgs[n].cost = ExpantaNum.pow(
-			tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1),
-			player.furnace.enhancedUpgrades[n - 1]
-		).times(tmp.fn.enh.upgs[n].base);
-		tmp.fn.enh.upgs[n].bulk = player.furnace.enhancedCoal
-			.div(tmp.fn.enh.upgs[n].base)
-			.logBase(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1))
-			.plus(1)
-			.floor();
+		let scalEFN
+		scalEFN = player.furnace.enhancedUpgrades[n - 1]
+		scalEFN = doAllScaling(scalEFN, "efn", false)
+		scalEFN = ExpantaNum.pow(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1), scalEFN).times(tmp.fn.enh.upgs[n].base);
+		tmp.fn.enh.upgs[n].cost = scalEFN
+		scalEFN = player.furnace.enhancedCoal.div(tmp.fn.enh.upgs[n].base).logBase(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1))
+		scalEFN = doAllScaling(scalEFN, "efn", true)
+		scalEFN = scalEFN.plus(1).floor();
+		tmp.fn.enh.upgs[n].bulk = scalEFN
 		tmp.fn.enh.upgs[n].extra = (n<=9?((player.furnace.enhancedUpgrades[n+2]||new ExpantaNum(0)).plus(tmp.fn.enh.upgs[n+3]?(tmp.fn.enh.upgs[n+3].extra?tmp.fn.enh.upgs[n+3].extra:0):0).times(tmp.fn.enh.upgPow)):new ExpantaNum(0)).times((n>6)?2:1)
 		if (n<13) tmp.fn.enh.upgs[n].extra = tmp.fn.enh.upgs[n].extra.plus(player.furnace.enhancedUpgrades[12].times(tmp.fn.enh.upgPow))
-		if (scalingActive("efn", player.furnace.enhancedUpgrades[n - 1].max(tmp.fn.enh.upgs[n].bulk), "scaled")) {
-			let start = getScalingStart("scaled", "efn")
-			let power = getScalingPower("scaled", "efn")
-			let exp = ExpantaNum.pow(2, power);
-			tmp.fn.enh.upgs[n].cost = ExpantaNum.pow(
-				tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1),
-				player.furnace.enhancedUpgrades[n - 1]
-					.pow(exp)
-					.div(start.pow(exp.sub(1)))
-			).times(tmp.fn.enh.upgs[n].base);
-			tmp.fn.enh.upgs[n].bulk = player.furnace.enhancedCoal
-				.div(tmp.fn.enh.upgs[n].base)
-				.logBase(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1))
-				.times(start.pow(exp.sub(1)))
-				.pow(exp.pow(-1))
-				.plus(1)
-				.floor();
-		}
-		if (scalingActive("efn", player.furnace.enhancedUpgrades[n - 1].max(tmp.fn.enh.upgs[n].bulk), "superscaled")) {
-			let start2 = getScalingStart("superscaled", "efn")
-			let power2 = getScalingPower("superscaled", "efn")
-			let exp2 = ExpantaNum.pow(3, power2);
-			let start = getScalingStart("scaled", "efn")
-			let power = getScalingPower("scaled", "efn")
-			let exp = ExpantaNum.pow(2, power);
-			tmp.fn.enh.upgs[n].cost = ExpantaNum.pow(
-				tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1),
-				player.furnace.enhancedUpgrades[n - 1]
-					.pow(exp2)
-					.div(start2.pow(exp2.sub(1)))
-					.pow(exp)
-					.div(start.pow(exp.sub(1)))
-			).times(tmp.fn.enh.upgs[n].base);
-			tmp.fn.enh.upgs[n].bulk = player.furnace.enhancedCoal
-				.div(tmp.fn.enh.upgs[n].base)
-				.logBase(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1))
-				.times(start.pow(exp.sub(1)))
-				.pow(exp.pow(-1))
-				.times(start2.pow(exp2.sub(1)))
-				.pow(exp2.pow(-1))
-				.plus(1)
-				.floor();
-		}
 		if (!tmp.fn.enh.upgs[n].buy) tmp.fn.enh.upgs[n].buy = function () {
 			if (player.furnace.enhancedCoal.lt(tmp.fn.enh.upgs[n].cost)) return;
 			player.furnace.enhancedCoal = player.furnace.enhancedCoal.sub(tmp.fn.enh.upgs[n].cost);

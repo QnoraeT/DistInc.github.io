@@ -52,18 +52,27 @@ function setupHTML() {
 	let rankTierTable = new Element("rankTierStats")
 	table = "<div class='flexTopRow'><div class='flexContainer'>"
 	for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
-		let ranks = Object.keys(RANK_DESCS)[i]
-		table += "<div id='rankReward"+ranks+"' class='rtReward'>"
-		table += "Rank "+showNum(parseInt(ranks)+1)+": "+(RANK_DESCS[ranks][0].toUpperCase() + RANK_DESCS[ranks].slice(1))
-		if (window["rank"+ranks+"Eff"]) table += "<br>Currently: <b><span id='rankEff"+ranks+"'></span></b>x"
+		let ranks = RANK_DESCS[i]
+		table += "<div id='rankReward"+showNum(ranks.req, false)+"' class='rtReward'>"
+		table += "Rank "+showNum(ranks.req.add(1), false)+": "+(ranks.text[0].toUpperCase() + ranks.text.slice(1))
+		if (window["rank"+showNum(ranks.req, false)+"Eff"]) {
+			table += "<br>Currently: <b>"+ranks.effectType+"<span id='rankEff"+showNum(ranks.req, false)+"'></span></b>"
+		}
 		table += "</div>"
 	}
 	table += "</div><div class='flexContainer'>"
 	for (let i=0;i<Object.keys(TIER_DESCS).length;i++) {
-		let tiers = Object.keys(TIER_DESCS)[i]
-		table += "<div id='tierReward"+tiers+"' class='rtReward'>"
-		table += "Tier "+showNum(parseInt(tiers)+1)+": "+(TIER_DESCS[tiers][0].toUpperCase() + TIER_DESCS[tiers].slice(1))
-		if (window["tier"+tiers+"Eff"]) table += "<br>Currently: <b><span id='tierEff"+tiers+"'></span></b>x"
+		let tiers = TIER_DESCS[i]
+		table += "<div id='tierReward"+showNum(tiers.req, false)+"' class='rtReward'>"
+		table += "Tier "+showNum(tiers.req.add(1), false)+": "+(tiers.text[0].toUpperCase() + tiers.text.slice(1))
+		if (window["tier"+showNum(tiers.req, false)+"Eff"]) {
+			if (tiers.effectType == "% weaker"){
+				table += "<br>Currently: <b><span id='tierEff"+showNum(tiers.req, false)+"'></span></b>"+tiers.effectType
+			} else {
+				table += "<br>Currently: <b>"+tiers.effectType+"<span id='tierEff"+showNum(tiers.req, false)+"'></span></b>"
+			}
+
+		}
 		table += "</div>"
 	}
 	table += "</div></div>"

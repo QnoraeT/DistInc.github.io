@@ -76,7 +76,7 @@ function updateTempSupersymmetry() {
 	}
 	tmp.elm.theory.ss.wavelength = player.elementary.theory.supersymmetry.squarks.times(player.elementary.theory.supersymmetry.sleptons).times(player.elementary.theory.supersymmetry.neutralinos).times(player.elementary.theory.supersymmetry.charginos).pow(1/5)
 	tmp.elm.theory.ss.waveEff = tmp.elm.theory.ss.wavelength.plus(1).pow(2.25)
-	if (tmp.elm.theory.ss.waveEff.gte(1e13)) tmp.elm.theory.ss.waveEff = tmp.elm.theory.ss.waveEff.pow(1/4).times(Math.pow(1e13, 3/4))
+	if (tmp.elm.theory.ss.waveEff.gte(1e13)) tmp.elm.theory.ss.waveEff = softcap(tmp.elm.theory.ss.waveEff, "P", 1, 1e13, ExpantaNum.sub(4, ExpantaNum.div(3, tmp.elm.theory.ss.waveEff.log(1e13).pow(2).max(1))))
 	if (HCCBA("sprsym")) tmp.elm.theory.ss.waveEff = new ExpantaNum(1);
 }
 
@@ -167,8 +167,8 @@ function getStringEff(n) {
 	if (!player.elementary.theory.unl || !player.elementary.theory.strings.unl) return new ExpantaNum(1)
 	if (HCCBA("string")) if (HCTVal("string").gt(UNL_STR()-n)) return new ExpantaNum(1);
 	let ret = player.elementary.theory.strings.amounts[n-1].plus(1).pow(3/n)
-	if (ret.gte(1e6)) ret = ret.pow(1/3).times(ExpantaNum.pow(1e6, 2/3))
-	if (n==1 && ret.gte(1e9)) ret = ret.pow(0.1).times(Math.pow(1e9, 0.9))
+	if (ret.gte(1e6)) ret = softcap(ret, "P", 1, 1e6, 3)
+	if (n==1 && ret.gte(1e9)) ret = softcap(ret, "P", 1, 1e9, 10)
 	if (n==1 && player.elementary.entropy.upgrades.includes(18)) ret = ret.pow(5);
 	let finalExp = new ExpantaNum(1)
 	let ettu = player.elementary.theory.tree.upgrades
@@ -200,12 +200,8 @@ function getEntangleGain() {
 	let base = new ExpantaNum(1)
 	player.elementary.theory.strings.amounts.forEach(x => function() { base = base.times(ExpantaNum.add(x, 1)) }())
 	let gain = base.pow(1/7).sqrt()
-	if (gain.gte(1e7)) gain = gain.cbrt().times(Math.pow(1e7, 2/3))
-	if (gain.gte(1e9)) {
-		let exp = gain.plus(1).log10().sqrt().div(Math.sqrt(8)/4)
-		if (exp.gte(1e300)) exp = new ExpantaNum(1e300)
-		gain = gain.pow(exp.pow(-1)).times(ExpantaNum.pow(1e9, ExpantaNum.sub(1, exp.pow(-1))))
-	}
+	if (gain.gte(1e7)) gain = softcap(gain, "P", 1, 1e7, 3)
+	if (gain.gte(1e9)) gain = softcap(gain, "EP", 1, 1e9, 2)
 	gain = gain.times(TREE_UPGS[6].effect(player.elementary.theory.tree.upgrades[6]||0))
 	gain = gain.times(TREE_UPGS[30].effect(player.elementary.theory.tree.upgrades[30]||0))
 	if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.times(tmp.elm.qf.boost3)
@@ -320,7 +316,7 @@ function getAccelGain() {
 	if (!player.elementary.theory.accelerons.unl) return new ExpantaNum(0)
 	let gain = tmp.acc.plus(1).log10().div(1e6).sqrt()
 	gain = gain.times(TREE_UPGS[12].effect(player.elementary.theory.tree.upgrades[12]||0))
-	if (gain.gte(1e6)) gain = gain.cbrt().times(Math.pow(1e6, 2/3))
+	if (gain.gte(1e6)) gain = softcap(gain, "P", 1, 1e6, 3)
 	if (tmp.elm) gain = gain.times(tmp.elm.theory.speed)
 	if (hasMltMilestone(19)) {
 		if (modeActive("extreme")) {
@@ -338,7 +334,7 @@ function getAccelGain() {
 function getAccelEff() {
 	if (!player.elementary.theory.accelerons.unl) return new ExpantaNum(1)
 	let eff = player.elementary.theory.accelerons.amount.plus(1).pow(0.04)
-	if (eff.gte(2)) eff = eff.logBase(2).plus(1)
+	if (eff.gte(2)) eff = softcap(eff, "E", 1, 2)
 	return eff
 }
 
@@ -430,7 +426,7 @@ function unlockInflatons() {
 
 function getInflatonState() {
 	let x = player.elementary.theory.inflatons.amount.plus(1).log10()
-	if (x.gte(5.5)) x = x.sqrt().times(Math.sqrt(5.5)).plus(5.5).div(2)
+	if (x.gte(5.5)) x = softcap(x, "P", 1, 5.5, 2)
 	if (x.gte(1e6)) return 1
 	return -1*Math.cos(x.toNumber())
 }
@@ -438,7 +434,7 @@ function getInflatonState() {
 function getInflatonGain() {
 	let gain = player.elementary.theory.inflatons.amount.plus(1).pow(0.6)
 	gain = gain.times(player.elementary.theory.inflatons.amount.plus(1).pow((tmp.elm.hc.infState+1)/6))
-	if (gain.gte(5e4)) gain = gain.times(5e4).sqrt()
+	if (gain.gte(5e4)) gain = softcap(gain, "P", 1, 5e3, 2)
 	if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.times(tmp.elm.qf.boost4)
 	return gain
 }
@@ -452,10 +448,8 @@ function getInflatonEff1() {
 function getInflatonEff2() {
 	let amt = player.elementary.theory.inflatons.amount
 	let eff = new ExpantaNum(0)
-	if (amt.gte(1e3)) eff = eff.plus(1)
-	if (amt.gte(1e4)) eff = eff.plus(1)
-	if (amt.gte(1e5)) eff = eff.plus(1)
-	if (amt.gte(1e6)) eff = eff.plus(1)
+	// wtf was the previous code bruh :skull:
+	eff = amt.div(1e2).log(10).floor().min(4).max(0)
 	if (player.elementary.entropy.upgrades.includes(13)) eff = eff.plus(amt.div(1e6).max(1).log10())
 	eff = eff.plus(amt.plus(1).log10().plus(1).log10())
 	if (player.elementary.sky.unl && tmp.elm.sky) eff = eff.times(tmp.elm.sky.spinorEff[13])
@@ -467,6 +461,7 @@ function getInfatonEff2NextAt(){
 	let cur = getInflatonEff2()
 	if (cur.lt(4)) return new ExpantaNum(1e3).times(ExpantaNum.pow(10, cur))
 	//idk lol this function sucks maybe just use an alg
+	no
 }
 */
 

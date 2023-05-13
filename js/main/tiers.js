@@ -9,13 +9,18 @@ function updateTempTiers() {
 	tmp.tiers.req = scalTier
 	scalTier = player.rank.sub(tmp.tiers.bc).max(0).sqrt().times(tmp.tiers.fp)
 	scalTier = doAllScaling(scalTier, "tier", true)
-	scalTier = scalTier.plus(1).round();
+	scalTier = scalTier.plus(1).floor();
 	tmp.tiers.bulk = scalTier
-	tmp.tiers.desc = player.tier.lt(Number.MAX_VALUE)
-		? TIER_DESCS[player.tier.toNumber()]
-			? TIER_DESCS[player.tier.toNumber()]
-			: DEFAULT_TIER_DESC
-		: DEFAULT_TIER_DESC;
+	if (player.tier.gte(TIER_DESCS[Object.keys(TIER_DESCS).length-1].req)){
+		tmp.tiers.desc = DEFAULT_TIER_DESC
+	} else {
+		for (let i=0;i<Object.keys(TIER_DESCS).length;i++) {
+			if (player.tier.lt(TIER_DESCS[i].req)){
+				tmp.tiers.desc = TIER_DESCS[i].text + "  (Next reward at " + showNum(TIER_DESCS[i].req) + " tiers.)"
+				break;
+			}
+		}
+	}
 	tmp.tiers.canTierUp = player.rank.gte(tmp.tiers.req);
 	if (nerfActive("noTier")) tmp.tiers.canTierUp = false;
 	tmp.tiers.layer = new Layer("tier", tmp.tiers.canTierUp, "semi-forced");
@@ -62,4 +67,8 @@ function tier7Eff() {
 
 function tier9Eff() {
 	return player.automation.intelligence.plus(1).log10().plus(1).sqrt();
+}
+
+function tier50Eff() {
+	return ExpantaNum.sub(1, ExpantaNum.div(1, player.tier.div(50).pow(2))).mul(100)
 }

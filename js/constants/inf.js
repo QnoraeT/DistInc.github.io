@@ -392,9 +392,16 @@ const INF_UPGS = {
 		},
 		"1;2": function () {
 			let e = player.inf.knowledge
-			let ex = ExpantaNum.div(9, e.add(1).log(10).div(100).pow(4).add(1).pow(6))
-			let exp = e.plus(1).log(10).add(1).log(ex.add(1)).add(1).add(1);
-			let ret = ExpantaNum.pow(10, softcap(e.plus(1).log10().plus(1).pow(exp).log(10), "EP", 1, 350000, 3.5))
+			let ret
+			if (e.lte(1.797693e308)){
+				let ex = ExpantaNum.div(9, e.add(1).log(10).div(100).pow(4).add(1).pow(6)) // this goes to 0 and infinity bugs everything
+				let exp = e.plus(1).log(10).add(1).log(ex.add(1)).add(1).add(1);
+				ret = ExpantaNum.pow(10, softcap(e.plus(1).log10().plus(1).pow(exp).log(10), "EP", 1, 350000, 3.5))
+				ret = ExpantaNum.pow(10, ExpantaNum.pow(10, softcap(ret.log(10).log(10), "EP", 1, 7, 3)))
+			} else {
+				ret = ExpantaNum.pow(10, e.log(10).pow(2.7))
+				ret = softcap(ret, "EP", 1, "ee7", 2)
+			}
 			return ret
 		},
 		"1;8": function () {
@@ -409,7 +416,6 @@ const INF_UPGS = {
 		},
 		"1;10": function() {
 			let ret = ExpantaNum.sub(1, ExpantaNum.div(1, player.inf.knowledge.add(1).log(10).add(1).log(10).add(1).root(4)))
-			ret = new ExpantaNum(0)
 			return ret
 		},
 		"2;1": function () {
@@ -526,7 +532,6 @@ const INF_UPGS = {
 			let ret = tmp.maxVel.plus(1).pow(0.075);
 			if (modeActive("extreme")) ret = ret.pow(0.1)
 			if (modeActive("hikers_dream")) ret = ret.pow(2)
-			if (ret.gte("1e1000")) ret = ret.log10().pow(1000 / 3);
 			return ret;
 		},
 		"7;1": function () {
@@ -636,10 +641,8 @@ const INF_UPGS = {
 		},
 		"9;6": function () {
 			let d = player.inf.pantheon.demonicSouls;
-			let ret = d.plus(1).times(10).slog(10).div(10);
-			if (ret.gte(0.5)) ret = ret.div(10).plus(0.45);
-			if (ret.gte(0.75)) ret = ret.pow(2).div(0.75);
-			if (ret.gte(0.9)) ret = ExpantaNum.sub(1, ExpantaNum.div(1, ret.times(10).plus(1)));
+			let ret = d.plus(1).times(10).log(10).div(10).add(1).pow(0.5);
+			ret = ExpantaNum.sub(1, ExpantaNum.div(1, ret))
 			return ret;
 		},
 		"9;7": function () {
@@ -659,9 +662,8 @@ const INF_UPGS = {
 		},
 		"10;1": function(type) {
 			if (type=="pth") {
-				let ret = player.inf.ascension.power.plus(1).times(10).slog(10).pow(0.15).div(10)
-				if (ret.gte(0.9)) ret = new ExpantaNum(0.9)
-				ret = new ExpantaNum(0)
+				let ret = player.inf.ascension.power.plus(1).times(10).log(10).pow(0.5).div(10).add(1)
+				ret = ExpantaNum.sub(1, ExpantaNum.div(1, ret))
 				return ret;
 			} else if (type=="snp") {
 				if (hasMltMilestone(16)) return ExpantaNum.pow(10, player.distance.log10().root(1.15)).max(player.distance.plus(1).log10().plus(1).pow(10))

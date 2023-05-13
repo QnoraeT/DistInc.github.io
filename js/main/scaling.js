@@ -14,6 +14,17 @@ function getScalingName(name, x=0) {
 	return current;
 }
 
+function getScalingId(name, x=0) {
+	let cap = Object.keys(SCALING_STARTS).length;
+	let current = 0;
+	let amt = SCALING_RES[name](x);
+	for (let n = cap - 1; n >= 0; n--) {
+		if (scalingActive(name, amt, Object.keys(SCALING_STARTS)[n]))
+			return n + 1;
+	}
+	return current;
+}
+
 function getScalingStart(type, name) {
 	let start = new ExpantaNum(SCALING_STARTS[type][name])
 	if (name=="rank") {
@@ -89,6 +100,12 @@ function getScalingStart(type, name) {
 	} else if (name=="dervBoost") {
 		if (type=="superscaled") {
 			if (player.elementary.entropy.upgrades.includes(32)) start = start.plus(2);
+		}
+	} else if (name=="photons") {
+		if (type=="scaled") {
+			if (player.rank.gt(1500)){
+				start = start.add(rank1500Eff())
+			}
 		}
 	}
 	if (type!=="supercritical") {

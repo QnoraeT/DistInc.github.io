@@ -79,10 +79,11 @@ function updateElementaryLayer() {
 		gain = gain.times(tmp.higgs110?tmp.higgs110:1)
 		gain = gain.times(tmp.higgs300?tmp.higgs300:1)
 		gain = gain.times(tmp.lu4?tmp.lu4:1)
-		let exp = new ExpantaNum(1/4)
-		if (hasDE(5) && (player.elementary.theory.tree.upgrades[20]||new ExpantaNum(0)).gte(1)) exp = exp.times(2)
-		if (tmp.ach[172].has) exp = exp.plus(ExpantaNum.sub(.5, ExpantaNum.div(.5, player.elementary.times.plus(1).logBase(1e3).times(.2).plus(1))))
-		if (gain.gte(tmp.elm.softcap)) gain = gain.pow(exp).times(ExpantaNum.pow(tmp.elm.softcap, ExpantaNum.sub(1, exp)))
+		let exp = new ExpantaNum(1)
+		if (hasDE(5) && (player.elementary.theory.tree.upgrades[20]||new ExpantaNum(0)).gte(1)) exp = exp.times(0.5)
+		if (tmp.ach[172].has) exp = exp.div(player.elementary.times.plus(1).logBase(1e3).times(0.2).plus(1))
+		if (player.tier.gt(50)) exp = exp.mul(ExpantaNum.sub(1, tier50Eff().div(100)))
+		gain = softcap(gain, "P", exp, tmp.elm.softcap, 4)
 		if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.times(tmp.elm.qf.boost12) // not affected by softcap hehe
 	
 		if (modeActive("extreme")) gain = gain.div(3).plus(gain.gte(1)?1:0)
@@ -168,8 +169,8 @@ function updateTempPerkAccelerator() {
 	tmp.elm.pa = {}
 	tmp.elm.pa.active = tmp.elm.bos.hasHiggs("0;0;2")
 	tmp.elm.pa.stateStarts = {
-		weakened: new ExpantaNum(12.5e3),
-		broken: new ExpantaNum(1e6),
+		weakened: new ExpantaNum(1e5),
+		broken: new ExpantaNum(1e10),
 	}
 	if (player.elementary.theory.accelerons.unl) tmp.elm.pa.stateStarts.weakened = tmp.elm.pa.stateStarts.weakened.times(getAccelEff())
 	if (player.elementary.foam.unl && tmp.elm.qf) {
@@ -184,11 +185,10 @@ function updateTempPerkAccelerator() {
 	tmp.elm.pa.speedBoost = tmp.inf.asc.perkTimeO.div(10)
 	if (tmp.elm.pa.speedBoost.gte(tmp.elm.pa.stateStarts.weakened)) tmp.elm.pa.state = "weakened"
 	if (tmp.elm.pa.speedBoost.gte(tmp.elm.pa.stateStarts.broken)) tmp.elm.pa.state = "broken"
-	if (tmp.elm.pa.state=="weakened") tmp.elm.pa.speedBoost = tmp.elm.pa.speedBoost.sqrt().times(ExpantaNum.sqrt(tmp.elm.pa.stateStarts.weakened))
-	if (tmp.elm.pa.state=="broken") tmp.elm.pa.speedBoost = tmp.elm.pa.speedBoost.cbrt().times(ExpantaNum.pow(tmp.elm.pa.stateStarts.broken, 2/3))
+	if (tmp.elm.pa.state=="weakened") tmp.elm.pa.speedBoost = softcap(tmp.elm.pa.speedBoost, "P", 1, tmp.elm.pa.stateStarts.weakened, 2)
+	if (tmp.elm.pa.state=="broken") tmp.elm.pa.speedBoost = softcap(tmp.elm.pa.speedBoost, "EP", 1, tmp.elm.pa.stateStarts.broken, 2)
 	tmp.elm.pa.boost = tmp.inf.asc.perkTimeO.div(10).pow(0.07)
 	if (tmp.inf.upgs.has("10;8")) tmp.elm.pa.boost = tmp.elm.pa.boost.max(tmp.inf.asc.perkTimeO.div(10).pow(0.2))
-	if (tmp.elm.pa.boost.gte(6.75)) tmp.elm.pa.boost = tmp.elm.pa.boost.logBase(6.75).plus(5.75)
 	if (tmp.ach[174].has) tmp.elm.pa.boost = tmp.elm.pa.boost.pow(1.05)
 	if (player.elementary.sky.unl && tmp.elm.sky)  tmp.elm.pa.boost = tmp.elm.pa.boost.pow(tmp.elm.sky.pionEff[13])
 }

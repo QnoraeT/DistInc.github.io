@@ -1,3 +1,7 @@
+const SCALE_COLOR = ["#FFFFFF", "#0060FF", "#FFD000", "#FF0060", "#20BF3A", "#8636FF"]
+const SCALE_COLOR_DARK = ["#00000000", "#00358b", "#927700", "#880034", "#117421", "#471d85"]
+const SCALE_COLOR_BRIGHT = ["#FFFFFF", "#90c5ff", "#fff4a0", "#ff8ebc", "#80f090", "#c198ff"]
+const SCALE_TEXT_SHADOW = [1, 1, 1.25, 1.5, 1.8, 2]
 const SCALING_STARTS = {
 	scaled: {
 		rank: new ExpantaNum(50),
@@ -14,6 +18,8 @@ const SCALING_STARTS = {
 		spectralGems: new ExpantaNum(5),
 		dervBoost: new ExpantaNum(6),
 		photons: new ExpantaNum(15),
+			magma: new ExpantaNum(100),
+			rmagma: new ExpantaNum(25),
 	},
 	superscaled: {
 		rank: new ExpantaNum(100),
@@ -29,6 +35,7 @@ const SCALING_STARTS = {
 		enlightenments: new ExpantaNum(20),
 		spectralGems: new ExpantaNum(16),
 		dervBoost: new ExpantaNum(14),
+			photons: new ExpantaNum(60),
 	},
 	hyper: {
 		rank: new ExpantaNum(160),
@@ -42,10 +49,13 @@ const SCALING_STARTS = {
 			darkCore: new ExpantaNum(40),
 			dervBoost: new ExpantaNum(30),
 			endorsements: new ExpantaNum(400),
+			photons: new ExpantaNum(1600),
+			enlightenments: new ExpantaNum(80),
+			spectralGems: new ExpantaNum(95),
 	},
 	atomic: { 
 		rank: new ExpantaNum(800), 
-			rankCheap: new ExpantaNum(1600),
+			rankCheap: new ExpantaNum(1200),
 		tier: new ExpantaNum(40), 
 		rf: new ExpantaNum(300),
 			bf: new ExpantaNum(4000),
@@ -54,11 +64,19 @@ const SCALING_STARTS = {
 			pathogenUpg: new ExpantaNum(200),
 			dervBoost: new ExpantaNum(100),
 			endorsements: new ExpantaNum(2000),
+			photons: new ExpantaNum(9000),
+			enlightenments: new ExpantaNum(600),
+			spectralGems: new ExpantaNum(570),
+			darkCore: new ExpantaNum(75),
 	},
 	supercritical: {
 			rank: new ExpantaNum(60000), 
 			tier: new ExpantaNum(2000), 
 			rf: new ExpantaNum(10000),
+			fn: new ExpantaNum(100000),
+			photons: new ExpantaNum(250000),
+			spectralGems: new ExpantaNum(4600),
+			pathogenUpg: new ExpantaNum(999),
 	},
 };
 const SCALING_RES = {
@@ -104,6 +122,12 @@ const SCALING_RES = {
 	photons: function(n = 0) {
 		return player.elementary.bosons.gauge.photons.upgrades[n - 1];
 	},
+	magma: function(n = 0) {
+		return modeActive("extreme") ? player.magma.amount : new ExpantaNum(0);
+	},
+	rmagma: function(n = 0) {
+		return modeActive("extreme") ? player.magma.ref : new ExpantaNum(0);
+	},
 };
 const MULTI_SCALINGS = ["fn", "pathogenUpg", "enlightenments", "photons"]
 const SCALING_AMTS = {
@@ -128,4 +152,6 @@ const REAL_SCALING_NAMES = {
 	spectralGems: "spectral gems",
 	dervBoost: "derivative boosts",
 	photons: "photon upgrades",
+	magma: "magma",
+	rmagma: "reformed magma",
 }

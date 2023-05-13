@@ -96,8 +96,7 @@ function collapseMile10Eff() {
 	let eff = player.collapse.lifeEssence.plus(1).log10().plus(1).sqrt().pow(exp);
 	if (eff.gte(40)) eff = softcap(eff, "E", 1, 40)
 	if (hasDE(5)) if ((player.elementary.theory.tree.upgrades[27]||new ExpantaNum(0)).gte(1)) {
-		eff = player.collapse.lifeEssence.plus(1).pow(0.1)
-		if (eff.gte(40)) eff = softcap(eff, "P", 1, 40, 2.5)
+		eff = player.collapse.lifeEssence.plus(1).pow(ExpantaNum.div(1, player.collapse.lifeEssence.plus(1).log(10).add(1).log(10).pow(1.5).add(1)))
 	}
 	return eff
 }

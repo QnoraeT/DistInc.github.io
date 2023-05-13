@@ -33,13 +33,16 @@ function getMagmaReqScaling() {
 
 function getMagmaReq() {
 	if (!modeActive("extreme")) return new ExpantaNum(1/0);
-	let req = ExpantaNum.pow(10, ExpantaNum.pow(1.25, player.magma.amount.times(getMagmaReqScaling())).times(200))
+	let req = player.magma.amount
+	req = doAllScaling(req, "magma", false)
+	req = ExpantaNum.pow(10, ExpantaNum.pow(1.25, req.times(getMagmaReqScaling())).times(200))
 	return req;
 }
 
 function getMagmaBulk() {
 	if (!modeActive("extreme")) return new ExpantaNum(0);
 	let req = player.furnace.enhancedCoal.max(1).log10().div(200).max(1).logBase(1.25).div(getMagmaReqScaling())
+	req = doAllScaling(req, "magma", true)
 	return req.plus(1).floor();
 }
 
@@ -53,7 +56,8 @@ function magmaSearch(max=false) {
 function getMagmaReformReq() {
 	if (!modeActive("extreme")) return new ExpantaNum(1/0);
 	let r = player.magma.ref;
-	if (r.gte(28)) r = ExpantaNum.pow(1.1, r.sub(27)).times(28)
+	// if (r.gte(28)) r = ExpantaNum.pow(1.1, r.sub(27)).times(28) // this is basically a scaling
+	r = doAllScaling(r, "rmagma", false, [1.1], ["LE"])
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) r = r.pow(TREE_UPGS[34].effect(player.elementary.theory.tree.upgrades[34]||0))
 	let req = r.times(2).plus(1)
 	return req.round();
@@ -62,7 +66,8 @@ function getMagmaReformReq() {
 function getMagmaReformReq2() {
 	if (!modeActive("extreme")) return new ExpantaNum(1/0);
 	let r = player.magma.ref;
-	if (r.gte(26)) r = ExpantaNum.pow(1.5, r.sub(25)).times(26)
+	// if (r.gte(26)) r = ExpantaNum.pow(1.5, r.sub(25)).times(26)  this is basically a scaling
+	r = doAllScaling(r, "rmagma", false, [1.1], ["LE"])
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) r = r.pow(TREE_UPGS[36].effect(player.elementary.theory.tree.upgrades[36]||0))
 	let req = ExpantaNum.pow(1e20, r.pow(2)).times(1e60)
 	return req;
@@ -72,10 +77,10 @@ function getMagmaReformBulk() {
 	if (!modeActive("extreme")) return new ExpantaNum(0);
 	let ret1 = player.magma.amount.div(2);
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) ret1 = ret1.root(TREE_UPGS[34].effect(player.elementary.theory.tree.upgrades[34]||0));
-	if (ret1.gte(28)) ret1 = ret1.div(28).logBase(1.1).plus(27);
+	ret1 = doAllScaling(ret1, "rmagma", true)
 	let ret2 = player.inf.knowledge.div(1e60).max(1).logBase(1e20).sqrt();
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) ret2 = ret2.root(TREE_UPGS[36].effect(player.elementary.theory.tree.upgrades[36]||0));
-	if (ret2.gte(26)) ret2 = ret2.div(26).logBase(1.5).plus(25);
+	ret2 = doAllScaling(ret2, "rmagma", true)
 	
 	return ret1.min(ret2).plus(1).floor();
 }

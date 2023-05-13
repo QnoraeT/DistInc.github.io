@@ -1,40 +1,231 @@
 // Ranks
 
 const RANK_DESCS = {
-	1: "increase the maximum velocity by 1m/s.",
-	2: "increase the acceleration and maximum velocity by 10% for each rank up.",
-	3: "double your acceleration.",
-	4: "triple your acceleration & maximum velocity for each tier up.",
-	5: "increase the acceleration and maximum velocity by 97.5% for each rank up.",
-	8: "increase your maximum velocity by 10% for each rank up.",
-	10: "double your acceleration.",
-	14: "multiply your acceleration & maximum velocity by (n+1)^1.6, where n is your rocket fuel.",
-	15: "quadruple your acceleration.",
-	20: "double intelligence gain.",
-	25: "multiply your acceleration by 10.",
-	30: "triple intelligence gain.",
-	35: "time goes by 50% faster.",
-	40: "multiply intelligence gain by the number of primes less than or equal to your scrap amount (minimum 1, softcaps after 1,000,000,000 primes).",
-	45: "time goes by 80% faster.",
-	50: "multiply your acceleration by 15.",
-	55: "double your maximum velocity for each rank up.",
-	60: "double scrap gain.",
-	70: "time goes by 40% faster.",
-	75: "multiply your acceleration by 25.",
-	80: "time goes by 50% faster.",
-	90: "time goes by 75% faster.",
-	100: "double rocket gain.",
-	111: "double intelligence gain for each rank up.",
-	125: "time goes by 50% faster.",
-	150: "time goes by 55% faster.",
-	175: "time goes by 60% faster.",
-	200: "time goes by 70% faster.",
-	250: "time goes by 80% faster.",
-	300: "time goes by 90% faster.",
-	500: "time goes by 95% faster.",
-	1000: "time goes by 98% faster.",
-	10000: "time goes by 100% faster.",
-	15000: "dark flow is increased based off of your ranks (softcapped after 40k)",
+	0: {
+		text: "increase the maximum velocity by 1m/s.",
+		req: new ExpantaNum(1),
+		effectType: "x",
+	},
+	1: {
+		text: "increase the acceleration and maximum velocity by 10% for each rank up.",
+		req: new ExpantaNum(2),
+		effectType: "x",
+	},
+	2: {
+		text: "double your acceleration.",
+		req: new ExpantaNum(3),
+		effectType: "x",
+	},
+	3: {
+		text: "triple your acceleration & maximum velocity for each tier up.",
+		req: new ExpantaNum(4),
+		effectType: "x",
+	},
+	4: {
+		text: "increase the acceleration and maximum velocity by 97.5% for each rank up.",
+		req: new ExpantaNum(5),
+		effectType: "x",
+	},
+	5: {
+		text: "increase your maximum velocity by 10% for each rank up.",
+		req: new ExpantaNum(8),
+		effectType: "x",
+	},
+	6: {
+		text: "double your acceleration.",
+		req: new ExpantaNum(10),
+		effectType: "x",
+	},
+	7: {
+		text: "multiply your acceleration & maximum velocity by (n+1)^1.6, where n is your rocket fuel.",
+		req: new ExpantaNum(14),
+		effectType: "x",
+	},
+	8: {
+		text: "quadruple your acceleration.",
+		req: new ExpantaNum(15),
+		effectType: "x",
+	},
+	9: {
+		text: "double intelligence gain.",
+		req: new ExpantaNum(20),
+		effectType: "x",
+	},
+	10: {
+		text: "multiply your acceleration by 10.",
+		req: new ExpantaNum(25),
+		effectType: "x",
+	},
+	11: {
+		text: "triple intelligence gain.",
+		req: new ExpantaNum(30),
+		effectType: "x",
+	},
+	12: {
+		text: "time goes by 50% faster.",
+		req: new ExpantaNum(35),
+		effectType: "x",
+	},
+	13: {
+		text: "multiply intelligence gain by the number of primes less than or equal to your scrap amount (minimum 1, softcaps after 1,000,000,000 primes).",
+		req: new ExpantaNum(40),
+		effectType: "x",
+	},
+	14: {
+		text: "time goes by 80% faster.",
+		req: new ExpantaNum(45),
+		effectType: "x",
+	},
+	15: {
+		text: "multiply your acceleration by 15.",
+		req: new ExpantaNum(50),
+		effectType: "x",
+	},
+	16: {
+		text: "double your maximum velocity for each rank up.",
+		req: new ExpantaNum(55),
+		effectType: "x",
+	},
+	17: {
+		text: "double scrap gain.",
+		req: new ExpantaNum(60),
+		effectType: "x",
+	},
+	18: {
+		text: "time goes by 40% faster.",
+		req: new ExpantaNum(70),
+		effectType: "x",
+	},
+	19: {
+		text: "multiply your acceleration by 25.",
+		req: new ExpantaNum(75),
+		effectType: "x",
+	},
+	20: {
+		text: "time goes by 50% faster.",
+		req: new ExpantaNum(80),
+		effectType: "x",
+	},
+	21: {
+		text: "time goes by 75% faster.",
+		req: new ExpantaNum(90),
+		effectType: "x",
+	},
+	22: {
+		text: "double rocket gain.",
+		req: new ExpantaNum(100),
+		effectType: "x",
+	},
+	23: {
+		text: "double intelligence gain for each rank up.",
+		req: new ExpantaNum(111),
+		effectType: "x",
+	},
+	24: {
+		text: "time goes by 50% faster.",
+		req: new ExpantaNum(125),
+		effectType: "x",
+	},
+	25: {
+		text: "time goes by 55% faster.",
+		req: new ExpantaNum(150),
+		effectType: "x",
+	},
+	26: {
+		text: "time goes by 60% faster.",
+		req: new ExpantaNum(175),
+		effectType: "x",
+	},
+	27: {
+		text: "time goes by 70% faster.",
+		req: new ExpantaNum(200),
+		effectType: "x",
+	},
+	28: {
+		text: "time goes by 80% faster.",
+		req: new ExpantaNum(250),
+		effectType: "x",
+	},
+	29: {
+		text: "time goes by 90% faster.",
+		req: new ExpantaNum(300),
+		effectType: "x",
+	},
+	30: {
+		text: "time goes by 95% faster.",
+		req: new ExpantaNum(500),
+		effectType: "x",
+	},
+	31: {
+		text: "time goes by 98% faster.",
+		req: new ExpantaNum(1000),
+		effectType: "x",
+	},
+	32: {
+		text: "photon upgrades get scaled later based on your EP.",
+		req: new ExpantaNum(1500),
+		effectType: "+",
+	},
+	33: {
+		text: "foam cost scaling is weaker based off of your Hadronic Score",
+		req: new ExpantaNum(1750),
+		effectType: "% weaker",
+	},
+	34: {
+		text: "scaled Enlightenments are much weaker based off of your Ascension Power.",
+		req: new ExpantaNum(2000),
+		effectType: "% weaker",
+	},
+	35: {
+		text: "rocket Fuel uses a better effect formula, and its Atomic scaling is weaker based off of Rockets (after e1.0000e9 rockets)",
+		req: new ExpantaNum(2500),
+		effectType: "% weaker",
+	},
+	36: {
+		text: "all Rocket-related softcaps are weaker based off of Cadavers.",
+		req: new ExpantaNum(4000),
+		effectType: "% weaker",
+	},
+	37: {
+		text: "time Reversal Upgrades 1-15 uses better formulas boosted by Rank.",
+		req: new ExpantaNum(7500),
+		effectType: "x",
+	},
+	38: {
+		text: "time goes by 100% faster.",
+		req: new ExpantaNum(10000),
+		effectType: "x",
+	},
+	39: {
+		text: "dark flow is increased based off of your ranks (softcapped after 40,000 ranks)",
+		req: new ExpantaNum(15000),
+		effectType: "x",
+	},
+	40: {
+		text: "pathogen upgrade power softcap is 20% weaker.",
+		req: new ExpantaNum(22500),
+		effectType: "x",
+	},
+	41: {
+		text: "hyper Pathogen upgrades are weaker based off of your Ranks and EP.",
+		req: new ExpantaNum(40000),
+		effectType: "% weaker",
+	},
+	42: {
+		text: "pathogen gain related softcaps are 70% weaker",
+		req: new ExpantaNum(70000),
+		effectType: "x",
+	},
+	43: {
+		text: "superscaled Endorsements are weaker based off of your knowledge, starting at (X)",
+		req: new ExpantaNum(100000),
+		effectType: "% weaker",
+	},
+	44: {
+		text: "all Atomic scaling from pre-infinity is weaker based off of Time Cubes",
+		req: new ExpantaNum(150000),
+		effectType: "% weaker",
+	},
 };
 
 const DEFAULT_RANK_DESC = "rank up.";
@@ -42,24 +233,120 @@ const DEFAULT_RANK_DESC = "rank up.";
 // Tiers
 
 const TIER_DESCS = {
-	0: "make the rank requirement formula 25% slower.",
-	1: "double your acceleration and quintuple your maximum velocity if you are at least Rank 3.",
-	2: "make the rank requirement formula 10% slower for each tier up.",
-	3: "triple your acceleration.",
-	4: "double intelligence gain.",
-	5: "quintuple your acceleration.",
-	6: "time goes by 50% faster.",
-	7: "time goes by 10% faster for each rocket fuel.",
-	8: "multiply your acceleration by 10.",
-	9: "intelligence boosts maximum velocity.",
-	10: "multiply your acceleration by 15.",
-	12: "triple intelligence gain.",
-	13: "quadruple intelligence gain.",
-	15: "multiply your acceleration by 25.",
-	16: "time goes by 60% faster.",
-	18: "time goes by 80% faster.",
-	20: "time goes by 100% faster.",
-	50: "EP softcap gets weakened based off of your tiers",
+	0: {
+		text: "make the rank requirement formula 25% slower.",
+		req: new ExpantaNum(0),
+		effectType: "x",
+	},
+	1: {
+		text: "double your acceleration and quintuple your maximum velocity if you are at least Rank 3.",
+		req: new ExpantaNum(1),
+		effectType: "x",
+	},
+	2: {
+		text: "make the rank requirement formula 10% slower for each tier up.",
+		req: new ExpantaNum(2),
+		effectType: "x",
+	},
+	3: {
+		text: "triple your acceleration.",
+		req: new ExpantaNum(3),
+		effectType: "x",
+	},
+	4: {
+		text: "double intelligence gain.",
+		req: new ExpantaNum(4),
+		effectType: "x",
+	},
+	5: {
+		text: "quintuple your acceleration.",
+		req: new ExpantaNum(5),
+	},
+	6: {
+		text: "time goes by 50% faster.",
+		req: new ExpantaNum(6),
+		effectType: "x",
+	},
+	7: {
+		text: "time goes by 10% faster for each rocket fuel.",
+		req: new ExpantaNum(7),
+		effectType: "x",
+	},
+	8: {
+		text: "multiply your acceleration by 10.",
+		req: new ExpantaNum(8),
+		effectType: "x",
+	},
+	9: {
+		text: "intelligence boosts maximum velocity.",
+		req: new ExpantaNum(9),
+		effectType: "x",
+	},
+	10: {
+		text: "multiply your acceleration by 15.",
+		req: new ExpantaNum(10),
+		effectType: "x",
+	},
+	11: {
+		text: "triple intelligence gain.",
+		req: new ExpantaNum(12),
+		effectType: "x",
+	},
+	12: {
+		text: "quadruple intelligence gain.",
+		req: new ExpantaNum(13),
+		effectType: "x",
+	},
+	13: {
+		text: "multiply your acceleration by 25.",
+		req: new ExpantaNum(15),
+		effectType: "x",
+	},
+	14: {
+		text: "time goes by 60% faster.",
+		req: new ExpantaNum(16),
+		effectType: "x",
+	},
+	15: {
+		text: "time goes by 80% faster.",
+		req: new ExpantaNum(18),
+		effectType: "x",
+	},
+	16: {
+		text: "time goes by 100% faster.",
+		req: new ExpantaNum(20),
+		effectType: "x",
+	},
+	17: {
+		text: "EP softcap gets weakened based off of your tiers.",
+		req: new ExpantaNum(50),
+		effectType: "% weaker",
+	},
+	18: {
+		text: "hyper Rank Cheapener starts later based off of your Magma.",
+		req: new ExpantaNum(60),
+		effectType: "+",
+	},
+	19: {
+		text: "compressed supersymmetrical wave's softcap scaling is 50% weaker.",
+		req: new ExpantaNum(72),
+		effectType: "x",
+	},
+	20: {
+		text: "atomic Rocket Fuel is weaker based off of your Rockets and the product of Ranks and Tiers.",
+		req: new ExpantaNum(85),
+		effectType: "% weaker",
+	},
+	21: {
+		text: "hyper Dark Cores and Scaled Derivative Boosts are weaker based off of your Cadavers.",
+		req: new ExpantaNum(100),
+		effectType: "% weaker",
+	},
+	22: {
+		text: "all furnace related scalings (before Atomic and Magma) is weaker based off of time in Elementary reset.",
+		req: new ExpantaNum(120),
+		effectType: "% weaker",
+	},
 };
 
 const DEFAULT_TIER_DESC = "tier up.";
