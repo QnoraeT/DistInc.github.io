@@ -53,25 +53,28 @@ function setupHTML() {
 	table = "<div class='flexTopRow'><div class='flexContainer'>"
 	for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
 		let ranks = RANK_DESCS[i]
-		table += "<div id='rankReward"+showNum(ranks.req, false)+"' class='rtReward'>"
+		table += "<div id='rankReward"+showNum(ranks.req, false).replace(/\./g, "_")+"' class='rtReward'>"
 		table += "Rank "+showNum(ranks.req.add(1), false)+": "+(ranks.text[0].toUpperCase() + ranks.text.slice(1))
 		if (window["rank"+showNum(ranks.req, false)+"Eff"]) {
-			table += "<br>Currently: <b>"+ranks.effectType+"<span id='rankEff"+showNum(ranks.req, false)+"'></span></b>"
+			if (ranks.effectType == "% weaker"){
+				table += "<br>Currently: <b><span id='rankEff"+showNum(ranks.req, false).replace(/\./g, "_");+"'></span></b>"+ranks.effectType
+			} else {
+				table += "<br>Currently: <b>"+ranks.effectType+"<span id='rankEff"+showNum(ranks.req, false).replace(/\./g, "_")+"'></span></b>"
+			}
 		}
 		table += "</div>"
 	}
 	table += "</div><div class='flexContainer'>"
 	for (let i=0;i<Object.keys(TIER_DESCS).length;i++) {
 		let tiers = TIER_DESCS[i]
-		table += "<div id='tierReward"+showNum(tiers.req, false)+"' class='rtReward'>"
+		table += "<div id='tierReward"+showNum(tiers.req, false).replace(/\./g, "_")+"' class='rtReward'>"
 		table += "Tier "+showNum(tiers.req.add(1), false)+": "+(tiers.text[0].toUpperCase() + tiers.text.slice(1))
 		if (window["tier"+showNum(tiers.req, false)+"Eff"]) {
 			if (tiers.effectType == "% weaker"){
-				table += "<br>Currently: <b><span id='tierEff"+showNum(tiers.req, false)+"'></span></b>"+tiers.effectType
+				table += "<br>Currently: <b><span id='tierEff"+showNum(tiers.req, false).replace(/\./g, "_")+"'></span></b>"+tiers.effectType
 			} else {
-				table += "<br>Currently: <b>"+tiers.effectType+"<span id='tierEff"+showNum(tiers.req, false)+"'></span></b>"
+				table += "<br>Currently: <b>"+tiers.effectType+"<span id='tierEff"+showNum(tiers.req, false).replace(/\./g, "_")+"'></span></b>"
 			}
-
 		}
 		table += "</div>"
 	}

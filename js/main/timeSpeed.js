@@ -31,7 +31,7 @@ function updateTempTimeSpeed() {
 	if (player.rank.gt(1000)) tmp.timeSpeed = tmp.timeSpeed.times(1.98);
 	if (player.rank.gt(10000)) tmp.timeSpeed = tmp.timeSpeed.times(2);
 	if (player.tier.gt(6)) tmp.timeSpeed = tmp.timeSpeed.times(1.5);
-	if (player.tier.gt(7)) tmp.timeSpeed = tmp.timeSpeed.times(tier7Eff());
+	if (player.tier.gt(7)) tmp.timeSpeed = tmp.timeSpeed.times(tierEffects(7));
 	if (player.tier.gt(16)) tmp.timeSpeed = tmp.timeSpeed.times(1.6);
 	if (player.tier.gt(18)) tmp.timeSpeed = tmp.timeSpeed.times(1.8);
 	if (player.tier.gt(20)) tmp.timeSpeed = tmp.timeSpeed.times(2);

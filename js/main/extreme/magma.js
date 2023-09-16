@@ -77,10 +77,10 @@ function getMagmaReformBulk() {
 	if (!modeActive("extreme")) return new ExpantaNum(0);
 	let ret1 = player.magma.amount.div(2);
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) ret1 = ret1.root(TREE_UPGS[34].effect(player.elementary.theory.tree.upgrades[34]||0));
-	ret1 = doAllScaling(ret1, "rmagma", true)
+	ret1 = doAllScaling(ret1, "rmagma", true);
 	let ret2 = player.inf.knowledge.div(1e60).max(1).logBase(1e20).sqrt();
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) ret2 = ret2.root(TREE_UPGS[36].effect(player.elementary.theory.tree.upgrades[36]||0));
-	ret2 = doAllScaling(ret2, "rmagma", true)
+	ret2 = doAllScaling(ret2, "rmagma", true);
 	
 	return ret1.min(ret2).plus(1).floor();
 }

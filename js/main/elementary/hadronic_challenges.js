@@ -9,16 +9,18 @@ function updateTempHC() {
 	if (player.elementary.foam.unl && tmp.elm.qf) tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.times(tmp.elm.qf.boost7)
 	if (modeActive("hikers_dream") && player.energyUpgs.includes(27)) tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.times(tmp.hd.enerUpgs[27])
 	
-	tmp.elm.hc.hadInterval = ExpantaNum.add(1, ExpantaNum.div(9, player.elementary.hc.best.plus(1).log(Math.E).plus(1)).div(200))
-	if (ExpantaNum.gte(player.elementary.theory.tree.upgrades[33]||0, 1)) tmp.elm.hc.hadInterval = tmp.elm.hc.hadInterval.sub(1).div(2).plus(1)
-	if (player.elementary.entropy.upgrades.includes(19) && tmp.elm.entropy) tmp.elm.hc.hadInterval = tmp.elm.hc.hadInterval.root(tmp.elm.entropy.upgEff[19])
-	if (hasDE(7)) tmp.elm.hc.hadInterval = tmp.elm.hc.hadInterval.root(getAccelEff())
-
-	tmp.elm.hc.hadronEff = player.elementary.hc.hadrons.max(1).logBase(tmp.elm.hc.hadInterval).floor().times(tmp.elm.hc.hadronBulk)
-	tmp.elm.hc.next = ExpantaNum.pow(tmp.elm.hc.hadInterval, new ExpantaNum(player.elementary.hc.claimed||0).div(tmp.elm.hc.hadronBulk).plus(1))
+	tmp.elm.hc.hadIntervalRecip = player.elementary.hc.best.add(1).ln().add(1).mul(200/9)
+	if (ExpantaNum.gte(player.elementary.theory.tree.upgrades[33]||0, 1)) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(2)
+	if (player.elementary.entropy.upgrades.includes(19) && tmp.elm.entropy) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(tmp.elm.entropy.upgEff[19])
+	if (hasDE(7)) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(getAccelEff())
+	tmp.elm.hc.hadronEff = player.elementary.hc.hadrons.log(10).mul(tmp.elm.hc.hadIntervalRecip).floor().times(tmp.elm.hc.hadronBulk)
+	// y = R*log(x)
+	// y = 10^(x/R)
+	tmp.elm.hc.next = Decimal.pow(10, new ExpantaNum(player.elementary.hc.claimed||0).div(tmp.elm.hc.hadIntervalRecip.mul(tmp.elm.hc.hadronBulk)))
 	let rg = new ExpantaNum(getHCSelector("goal")).times(DISTANCES.uni);
 	if (getHCSelector("goalMlt")) rg = ExpantaNum.pow(DISTANCES.mlt, getHCSelector("goal"));
 	tmp.elm.hc.complPerc = player.distance.log10().div(rg.log10()).min(1);
+	// why is this here
 	tmp.elm.hc.infState = getInflatonState()
 	tmp.elm.hc.infGain = getInflatonGain()
 	claimHadronEff()

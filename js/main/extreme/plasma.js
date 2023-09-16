@@ -11,7 +11,7 @@ function getPlasmaExp() {
 	if (tmp.fn?(!tmp.fn.pl.unl):true) return new ExpantaNum(0);
 	let exp = player.elementary.sky.amount.plus(1).log10().plus(1);
 	if (hasMltMilestone(13)) exp = exp.plus(player.inf.derivatives.unlocks);
-	if (tmp.fn.pl.boosts) exp = exp.times(tmp.fn.pl.boosts[2])
+	if (tmp.fn.pl.boosts) exp = exp.times(tmp.fn.pl.boosts[2]);
 	if (player.elementary.entropy.upgrades.includes(24)) exp = exp.times(tmp.elm.entropy.upgEff[24]);
 	if (tmp.fn.pl.boosts) exp = exp.times(tmp.fn.pl.boosts[12]);
 	
@@ -26,8 +26,8 @@ function getPlasmaExp() {
 function getWhiteFlameGain() {
 	if (tmp.fn?(!tmp.fn.pl.unl):true) return new ExpantaNum(0);
 	let pl = player.plasma.amount.plus(1);
-	if (pl.gte(1e125)) pl = pl.log10().div(125).times(1e100).pow(1.25)
-	let gain = pl.pow(player.furnace.blueFlame.plus(1).sqrt().div(25)).sub(1);
+	if (pl.gte(1e125)) pl = softcap(pl, "EP", 1, 1e125, 2);
+	let gain = pl.pow(player.furnace.blueFlame.plus(1).sqrt().div(12.5)).sub(1);
 	if (hasMltMilestone(14)) gain = gain.times(10);
 	if (hasMltMilestone(17)) gain = gain.times(100);
 	if (hasMltMilestone(18)) gain = gain.times(ExpantaNum.pow(20, Math.max(mltMilestonesGotten()-17, 0)));
@@ -119,7 +119,7 @@ const PLASMA_BOOSTS = {
 		baseEff: new ExpantaNum(1),
 		eff: function(amt) { 
 			let mult = amt.plus(1).root(10);
-			if (mult.gte(1e250)) mult = ExpantaNum.pow(1e250, mult.logBase(1e250).sqrt());
+			if (mult.gte(1e250)) mult = softcap(mult, "EP", 1, 1e250, 2);
 			return mult;
 		},
 		effD: function(e) { return showNum(e)+"x" },

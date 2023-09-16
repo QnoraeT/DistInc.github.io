@@ -48,6 +48,10 @@ function nerfActive(name) {
 		if (HCCBA("rockets")) active = true;
 		return active;
 	}
+	if (name=="noRUs") {
+		let active = false;
+		return active;
+	}
 	if (name == "scaledRF") {
 		let active = false;
 		active = active || (tmp.inf ? tmp.inf.stadium.active("solaris", 2) : true);
@@ -177,8 +181,11 @@ function adjustGen(val, type) {
 	}
 	if ((player.elementary.theory.active||HCTVal("tv").gt(-1))) {
 		if (pre_elem) {
-			if (!tmp.elm) exp = new ExpantaNum(0);
-			else exp = exp.times(tmp.elm.theory.nerf)
+			if (!tmp.elm) {
+				exp = new ExpantaNum(0)
+			} else {
+				exp = exp.times(tmp.elm.theory.nerf)
+			}
 		}
 	}
 	if (modeActive("extreme") && preinf) {
@@ -193,13 +200,14 @@ function adjustGen(val, type) {
 	else if (modeActive("hard") && !modeActive("extreme")) newVal = newVal.div(3.2)
 	if (type=="foam"&&modeActive("extreme")) {
 		let start = getExtremeFoamSCStart();
-		if (newVal.gte(start)) newVal = newVal.times(start.pow(3)).pow(.25)
+		if (newVal.gte(start)) newVal = softcap(newVal, "P", 1, start, 4)
 	}
-	if (preinf && modeActive("extreme") && newVal.gte("1e100000000")) newVal = newVal.times("1e400000000").pow(.2);
+	if (preinf && modeActive("extreme") && newVal.gte("1e100000000")) newVal = softcap(newVal, "P", 1, "1e100000000", 5)
 	if (modeActive("extreme") && newVal.gte(ExpantaNum.pow(DISTANCES.mlt, 500))) {
 		let mlt500 = ExpantaNum.pow(DISTANCES.mlt, 500);
-		newVal = ExpantaNum.pow(mlt500, newVal.logBase(mlt500).sqrt())
+		newVal = softcap(newVal, "EP", 1, mlt500, 2)
 	}
+	if (newVal.gte("ee14")) newVal = Decimal.pow(10, softcap(newVal.log(10), "EP", 1, "1e14", 3))
 	if (modeActive("hard") && (type=="pathogens"||(extremeStadiumComplete("aqualon") && preinf))) newVal = newVal.times(3)
 	if (extremeStadiumActive("aqualon") && preinf) newVal = newVal.div(9e15)
 	return newVal;

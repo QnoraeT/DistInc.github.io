@@ -14,24 +14,42 @@ function getRocketEffectSoftcapStart() {
 	return sc
 }
 
+function getRocketSoftcapStrength() {
+	let temp = new Decimal(1)
+	if (player.rank.gt(4000)) temp = temp.div(Decimal.div(1, Decimal.sub(1, rankEffects(4000).div(100))))
+	if (tmp.rockets && player.rocketUPG[1].ascension.gte(1)) temp = temp.div(ROCKET_UPGS[1].eff()[1])
+	return temp
+}
+
 function getRocketEffect() {
+	let rocketSoftcapStrength = getRocketSoftcapStrength();
 	let r = player.rockets;
-	if (extremeStadiumActive("nullum", 4)) r = ExpantaNum.pow(10, r.log10().times(0.75))
-	if (r.gte(10)) r = softcap(r, "E", 1, 10)
-	if (player.rf.gt(0)) r = r.plus(getFuelEff2());
+	if (extremeStadiumActive("nullum", 4)) r = ExpantaNum.pow(10, r.log10().times(0.75));
+	let sc1 = new Decimal(10)
+	if (tmp.rockets && player.rocketUPG[1].ascension.gte(2)) sc1 = sc1.pow(ROCKET_UPGS[1].eff()[2]);
+	if (r.gte(sc1)) r = softcap(r, "EP", rocketSoftcapStrength, sc1, 9.77);
+	if (player.rf.gt(0)) {
+		if (player.rank.gt(2500)){
+			r = r.mul(getFuelEff2());
+		} else {
+			r = r.plus(getFuelEff2());
+		}
+	}
 	let eff = r.plus(1).logBase(3).times(getFuelEff());
 	if (modeActive("easy")) eff = eff.times(2).plus(1);
-	if (eff.gte(getRocketEffectSoftcapStart())) eff = eff.sqrt().times(ExpantaNum.sqrt(getRocketEffectSoftcapStart()));
+	if (eff.gte(getRocketEffectSoftcapStart())) eff = softcap(eff, "P", rocketSoftcapStrength, getRocketEffectSoftcapStart(), 2);
 	if (tmp.fn && modeActive("extreme")) if (player.rf.gt(0)) eff = eff.plus(tmp.fn.eff);
 	if (tmp.inf) if (tmp.inf.upgs.has("2;1")) eff = eff.times(INF_UPGS.effects["2;1"]());
 	if (tmp.inf) if (tmp.inf.upgs.has("9;2")) eff = eff.plus(INF_UPGS.effects["9;2"]());
 	if (tmp.inf) if (tmp.inf.upgs.has("6;10")) eff = eff.times(16)
 	if (player.elementary.foam.unl && tmp.elm) eff = eff.times(tmp.elm.qf.boost20)
+	if (eff.gte(100000)) eff = softcap(eff, "EP", rocketSoftcapStrength, 100000, 2) // pre-multi softcap
 	if (tmp.inf) if (tmp.inf.stadium.completed("reality") && mltRewardActive(1)) eff = eff.times(8);
 	return eff;
 }
 
 function getRocketGainMult() {
+	let rSS = getRocketSoftcapStrength()
 	let mult = new ExpantaNum(1);
 	if (tmp.ach[34].has) mult = mult.times(1.1);
 	if (tmp.ach[15].has) mult = mult.times(1.05);
@@ -56,7 +74,7 @@ function getRocketGainMult() {
 	if (tmp.inf)
 		if (tmp.inf.upgs.has("9;8")) {
 			let c = player.tr.cubes.max(1).pow(0.1);
-			if (c.gte("1e100000")) c = c.log10().pow(20000);
+			if (c.gte("1e100000")) c = softcap(c, "EP", rSS, "e100000", 5.675)
 			mult = mult.times(c.max(1));
 		}
 	if (tmp.elm)

@@ -192,10 +192,10 @@ const MLT_1_STADIUM_REWARDS = {
 			let exp = player.inf.endorsements.div(10).plus(1).logBase(1.75).plus(1).pow(9);
 			let totalExp = base.pow(exp);
 			if (totalExp.gte("1e50000"))
-				totalExp = totalExp.log10().times(ExpantaNum.div("1e50000", ExpantaNum.log10("1e50000")));
+				totalExp = softcap(totalExp, "EP", 1, "1e50000", 3)
 			let ret = player.rank.pow(totalExp.logBase(2));
 			ret = ret.pow(mult);
-			return ret.times(ExpantaNum.pow(10, 1e6)).max(1);
+			return ret.times("ee6").max(1);
 		},
 		drigganiz: function () {
 			let ret = ExpantaNum.mul(0.015+0.0001*player.achievements.length, player.achievements.length);

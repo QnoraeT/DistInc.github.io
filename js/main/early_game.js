@@ -2,14 +2,14 @@ function calcAcceleration(){
 	tmp.acc = new ExpantaNum(0.1);
 	if (modeActive("hard")) tmp.acc = tmp.acc.div(3);
 	if (modeActive("easy")) tmp.acc = tmp.acc.times(2);
-	if (player.rank.gt(2)) tmp.acc = tmp.acc.times(rank2Eff());
+	if (player.rank.gt(2)) tmp.acc = tmp.acc.times(rankEffects(2));
 	if (player.rank.gt(3)) tmp.acc = tmp.acc.times(2);
 	if (player.tier.gt(1) && player.rank.gte(3)) tmp.acc = tmp.acc.times(2);
-	if (player.rank.gt(4)) tmp.acc = tmp.acc.times(rank4Eff());
-	if (player.rank.gt(5)) tmp.acc = tmp.acc.times(rank5Eff());
+	if (player.rank.gt(4)) tmp.acc = tmp.acc.times(rankEffects(4));
+	if (player.rank.gt(5)) tmp.acc = tmp.acc.times(rankEffects(5));
 	if (player.rank.gt(10)) tmp.acc = tmp.acc.times(2);
 	if (player.tier.gt(3)) tmp.acc = tmp.acc.times(3);
-	if (player.rank.gt(14)) tmp.acc = tmp.acc.times(rank14Eff());
+	if (player.rank.gt(14)) tmp.acc = tmp.acc.times(rankEffects(14));
 	if (player.rank.gt(15)) tmp.acc = tmp.acc.times(4);
 	if (player.tier.gt(5)) tmp.acc = tmp.acc.times(5);
 	if (player.rank.gt(25)) tmp.acc = tmp.acc.times(10);
@@ -34,13 +34,14 @@ function calcAcceleration(){
 		tmp.acc = tmp.acc.times(
 			(player.inf.derivatives.amts.acceleration
 				? player.inf.derivatives.amts.acceleration
-				: new ExpantaNum(0)
+				: new ExpantaNum(0) 
 			).max(1)
 		);
-	if (modeActive("extreme") && tmp.acc.gte(Number.MAX_VALUE)) tmp.acc = tmp.acc.pow(0.75).times(ExpantaNum.pow(Number.MAX_VALUE, 0.25))
-	if (modeActive("extreme") && tmp.acc.gte("1e10000")) tmp.acc = tmp.acc.sqrt().times(ExpantaNum.sqrt("1e10000"))
+	if (modeActive("extreme") && tmp.acc.gte(Number.MAX_VALUE)) tmp.acc = softcap(tmp.acc, "P", 0.41, Number.MAX_VALUE, 2)
+	if (modeActive("extreme") && tmp.acc.gte("1e10000")) tmp.acc = softcap(tmp.acc, "P", 1, "1e10000", 2)
 	if (extremeStadiumActive("nullum")) tmp.acc = ExpantaNum.pow(10, tmp.acc.log10().times(0.4-0.05*(extremeStadDiffLevel("nullum")-1)))
 	if (modeActive("hikers_dream") && tmp.hd) tmp.acc = tmp.acc.pow(tmp.hd.inclineRed)
+	if (tmp.acc.gte(Decimal.pow(DISTANCES.mlt, 10000000))) tmp.acc = softcap(tmp.acc, "EP", 1, Decimal.pow(DISTANCES.mlt, 10000000), 4)
 }
 
 function calcMaxVelocity(){
@@ -48,14 +49,14 @@ function calcMaxVelocity(){
 	if (player.rank.gt(1)) tmp.maxVel = tmp.maxVel.plus(1);
 	if (modeActive("hard")) tmp.maxVel = tmp.maxVel.div(2);
 	if (modeActive("easy")) tmp.maxVel = tmp.maxVel.times(3);
-	if (player.rank.gt(2)) tmp.maxVel = tmp.maxVel.times(rank2Eff());
+	if (player.rank.gt(2)) tmp.maxVel = tmp.maxVel.times(rankEffects(2));
 	if (player.tier.gt(1) && player.rank.gte(3)) tmp.maxVel = tmp.maxVel.times(5);
-	if (player.rank.gt(4)) tmp.maxVel = tmp.maxVel.times(rank4Eff());
-	if (player.rank.gt(5)) tmp.maxVel = tmp.maxVel.times(rank5Eff());
-	if (player.rank.gt(8)) tmp.maxVel = tmp.maxVel.times(rank8Eff());
-	if (player.rank.gt(14)) tmp.maxVel = tmp.maxVel.times(rank14Eff());
-	if (player.rank.gt(55)) tmp.maxVel = tmp.maxVel.times(rank55Eff());
-	if (player.tier.gt(9)) tmp.maxVel = tmp.maxVel.times(tier9Eff());
+	if (player.rank.gt(4)) tmp.maxVel = tmp.maxVel.times(rankEffects(4));
+	if (player.rank.gt(5)) tmp.maxVel = tmp.maxVel.times(rankEffects(5));
+	if (player.rank.gt(8)) tmp.maxVel = tmp.maxVel.times(rankEffects(8));
+	if (player.rank.gt(14)) tmp.maxVel = tmp.maxVel.times(rankEffects(14));
+	if (player.rank.gt(55)) tmp.maxVel = tmp.maxVel.times(rankEffects(55));
+	if (player.tier.gt(9)) tmp.maxVel = tmp.maxVel.times(tierEffects(9));
 	if (tmp.pathogens && player.pathogens.unl) tmp.maxVel = tmp.maxVel.times(tmp.pathogens[4].eff());
 	if (tmp.ach) if (tmp.ach[21].has) tmp.maxVel = tmp.maxVel.times(1.1);
 	if (tmp.ach) if (tmp.ach[14].has) tmp.maxVel = tmp.maxVel.times(1.5);

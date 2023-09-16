@@ -45,7 +45,9 @@ function buyTRUpg(n) {
 
 
 function tr1Eff() {
-	return ExpantaNum.pow(1.1, player.rank.plus(player.tier));
+	return !player.rank.gt(7500)
+		?ExpantaNum.pow(1.1, player.rank.plus(player.tier))
+		:ExpantaNum.pow(Decimal.pow(1.1, player.rank.div(7500).max(1)), player.rank.plus(player.tier).pow(player.rank.div(7500).max(1).root(2.35)));
 }
 
 function tr2Pow() {
@@ -62,16 +64,18 @@ function tr2Eff() {
 
 function tr4Eff() {
 	let r = player.rockets
-	if (r.gte(1e10)) r = softcap(r, "EP", 1, 1e10, 1.5) // exponent ^2/3 after 1e10
-	return ExpantaNum.pow(1.33, r.plus(1).log10())
+	if (!player.rank.gt(7500)) if (r.gte(1e10)) r = softcap(r, "EP", 1, 1e10, 1.5) // exponent ^2/3 after 1e10
+	return !player.rank.gt(7500)
+			?ExpantaNum.pow(1.33, r.plus(1).log10())
+			:ExpantaNum.pow(Decimal.pow(1.33, player.rank.div(7500).max(1)), r.plus(1).log10())
 }
 
 function tr6Eff() {
-	return ExpantaNum.pow(1.1, player.tr.cubes.plus(1).log10())
+	return ExpantaNum.pow(1.1, player.tr.cubes.plus(1).log10().pow(player.rank.div(7500).max(1).log(10).add(1).root(2)))
 }
 
 function tr7Eff() {
-	return ExpantaNum.pow(1.05, player.achievements.length)
+	return ExpantaNum.pow(1.05, new Decimal(player.achievements.length).pow(player.rank.div(7500).max(1)))
 }
 
 function getTR89Mod() {
@@ -91,7 +95,7 @@ function tr9Eff() {
 
 function tr10Eff() {
 	let cubes = player.tr.cubes
-	if (cubes.gte(1e100)) cubes = softcap(cubes, "EP", 1, 1e100, 1.25)
+	if (!player.rank.gt(7500)) if (cubes.gte(1e100)) cubes = softcap(cubes, "EP", 1, 1e100, 1.25)
 	return ExpantaNum.pow(1.1, cubes.plus(1).log10())
 }
 
@@ -103,29 +107,44 @@ function tr11Pow() {
 
 function tr11Eff() {
 	return {
-		cg: tmp.dc ? tmp.dc.flow.pow(tmp.dc.flow.plus(1).slog(2).times(10).plus(1)).pow(tr11Pow()) : new ExpantaNum(1),
-		dcf: player.tr.cubes.plus(1).log10().div(75).plus(1).pow(tr11Pow())
+		cg: tmp.dc ? softcap(tmp.dc.flow.pow(tmp.dc.flow.plus(1).slog(2).times(10).plus(1)).pow(tr11Pow()).pow(player.rank.div(7500).max(1).pow(5)), "EP", 1, "ee9", 4) : new ExpantaNum(1),
+		dcf: player.tr.cubes.plus(1).log10().div(75).plus(1).pow(tr11Pow()).pow(player.rank.div(7500).max(1).pow(7.5))
 	}
 }
 
 function tr12Eff() {
-	return tmp.dc ? tmp.dc.allComp.plus(1).sqrt() : new ExpantaNum(1)
+	return tmp.dc ? 
+	!player.rank.gt(7500)
+		?tmp.dc.allComp.plus(1).sqrt() 
+		:Decimal.pow(10, tmp.dc.allComp.pow(player.rank.div(7500).max(1).root(3).div(2)))
+	: new ExpantaNum(1)
 }
 
 function tr13Eff() {
-	return tmp.dc ? tmp.dc.allComp.plus(1).slog(2).pow(0.1).sub(1).max(0) : new ExpantaNum(0)
+	return tmp.dc ? 
+	!player.rank.gt(7500)
+		?tmp.dc.allComp.plus(1).slog(2).pow(0.1).sub(1).max(0)
+		:tmp.dc.allComp.plus(1).log(2).pow(player.rank.div(7500).max(1).root(2).sub(1).div(2).max(0.1)).sub(1).max(0)
+		: new ExpantaNum(0)
 }
 
 function tr14Eff() {
 	return {
-		cd: player.tier.plus(1).pow(1.25),
-		ss: player.dc.cores.plus(1).log10().plus(1).log10().times(7.5)
+		cd: !player.rank.gt(7500)
+			?player.tier.plus(1).pow(1.25)
+			:softcap(
+				Decimal.pow(2, player.tier.add(1).pow(player.rank.div(7500).max(1).root(2).mul(2)))
+				, "EP", 1, "ee11", 6.5),
+		ss: !player.rank.gt(7500)
+			?player.dc.cores.plus(1).log10().plus(1).log10().times(7.5)
+			:player.dc.cores
 	}
 }
 
 function tr15Eff() {
-	let eff = ExpantaNum.pow(1.2, player.dc.cores)
-	if (eff.gte(10)) eff = softcap(eff, "P", 1, 10, 3.5)
+	let eff = ExpantaNum.pow(1.2, player.dc.cores.pow(player.rank.div(7500).max(1).root(3).sub(1).div(4).add(1)))
+	if (!player.rank.gt(7500)) if (eff.gte(10)) eff = softcap(eff, "P", 1, 10, 3.5)
+	if (eff.gte(100)) eff = Decimal.pow(10, softcap(eff.log(10), "EP", 1, 2, 6))
 	return eff
 }
 

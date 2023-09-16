@@ -1546,3 +1546,4 @@
 })(this);
 
 const ExpantaNum = OmegaNum
+const Decimal = OmegaNum

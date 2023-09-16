@@ -237,7 +237,7 @@ function updateHiggsUpgradeEffects() {
 	if (!tmp.elm.bos["higgs_0;0;4"]) tmp.elm.bos["higgs_0;0;4"] = function(disp=false) {
 		if (!disp) if (!tmp.elm.bos.hasHiggs("0;0;4")) return new ExpantaNum(1)
 		let ret = tmp.elm.pa.active?tmp.elm.pa.speedBoost.plus(1):new ExpantaNum(1)
-		if (ret.gte(1e3)) ret = ret.pow(0.95).times(Math.pow(1e3, 0.05))
+		if (ret.gte(1e3)) ret = ret.pow(0.95).times(Math.pow(1e3, 0.05)) // wtf is this softcap lmfao 
 		return ret
 	}
 	if (!tmp.elm.bos["higgs_1;3;0"]) tmp.elm.bos["higgs_1;3;0"] = function(disp=false) {

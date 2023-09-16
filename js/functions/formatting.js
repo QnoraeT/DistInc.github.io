@@ -24,7 +24,7 @@ function showNum(val, notation = true) {
 	if (val.gte(1/0)) return "Infinity";
 	if (val.eq(0)) return "0";
 	if (val.sign == -1) return "-" + showNum(val.abs());
-	return notations[notation?player.options.not:"scientific"](new ExpantaNum(val), player.options.sf - 1, 2);
+	return notations[notation?player.options.not:"scientific"](new ExpantaNum(val), (notation?player.options.sf:5) - 1, 2);
 }
 
 function addZeroes(orig, num, digits, roundWhole=false) {

@@ -129,9 +129,11 @@ const NEWS_DATA = {
 	m110: ["Unfortunately, Pelle wasn't so good at decision making. During the final stage of Antimatter Dimensions, The [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] ... And then you get a lot of antimatter and you win!"],
 	m111: ["🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔍🔍🔍🔍🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍 - Almost every single BadBoyHalo donation back in 2019-2020"],
 	m112: ["Not like other lore based incrementals."],
-	m113: ["You have been " + ["Scaled", "Superscaled", "Hyper Scaled", "Atomic Scaled", "Trolled"][Math.floor(Math.random()*4)] + "."],
-	m114: ["Hey at least its not like Incremental Mass Rewritten (and it's forks) where its like: \"Due to Massive Meme overflow, we've decided to take away your admin powers, reducing your meme count by ^^0.74590.\"  Wait. Why am I making news? "],
-	
+	m113: ["You have been " + ["Scaled", "Superscaled", "Hyper Scaled", "Atomic Scaled", "Trolled"][Math.floor(Math.random()*5)] + "."],
+	m114: ["Hey at least its not like Incremental Mass Rewritten (and it's forks) where its like: \"Due to Massive Meme overflow, we've decided to take away your admin powers, reducing your meme exponent count by ^0.74590.\"  Wait. Why am I making news? "],
+	m115: ["Oh hey! I can swear here! f*ck f*ck f*ck!"],
+	m116: [player.distance.gte(`e${Number.MAX_VALUE}`)?`Shit, somehow you were fast enough to go around even your mother... I guess I lost =P`:`You've only travelled ${showNum(player.distance.max(10).log(10).log(Number.MAX_VALUE).mul(100))}% around your mom.`],
+
 	// Distance-based Conditions
 	d1: [
 		"You've travelled more than me today",

@@ -256,21 +256,21 @@ function updateTempHikersDream() {
 	if (player.elementary.bosons.scalar.higgs.upgrades.includes("1;3;0") && tmp.elm != undefined) tmp.hd.superEnEff2 = tmp.hd.superEnEff2.times(tmp.elm.bos["higgs_1;3;0"]())
 	
 	if (tmp.hd.futureSec?tmp.hd.futureSec.length>0:false) {
-		tmp.hd.secant = tmp.hd.futureSec[0]
+		tmp.hd.secant = tmp.hd.futureSec[0];
 		tmp.hd.futureSec.shift();
 	} else tmp.hd.secant = baseSecant(player.distance)
 	if (tmp.hd.futureIncl?tmp.hd.futureIncl.length>0:false) {
-		tmp.hd.incline = tmp.hd.futureIncl[0]
+		tmp.hd.incline = tmp.hd.futureIncl[0];
 		tmp.hd.futureIncl.shift();
-	} else tmp.hd.incline = baseIncline(player.distance)
-	tmp.hd.inclinePow = new ExpantaNum(1)
-	if (player.energyUpgs.includes(4) && tmp.hd.enerUpgs) tmp.hd.inclinePow = tmp.hd.inclinePow.times(tmp.hd.enerUpgs[4])
-	let incl = tmp.hd.incline
+	} else tmp.hd.incline = baseIncline(player.distance);
+	tmp.hd.inclinePow = new ExpantaNum(1);
+	if (player.energyUpgs.includes(4) && tmp.hd.enerUpgs) tmp.hd.inclinePow = tmp.hd.inclinePow.times(tmp.hd.enerUpgs[4]);
+	let incl = tmp.hd.incline;
 	if (incl.gte(89.95)) incl = ExpantaNum.sub(90, ExpantaNum.div(90, ExpantaNum.div(90, ExpantaNum.sub(90, incl)).pow(2).div(1800)))
 	if (incl.gte(89.999)) {
 		let sec = tmp.hd.secant;
-		if (sec.gte(1e6)) sec = ExpantaNum.pow(1.002, sec.sub(1e6)).times(sec);
-		if (sec.gte(20)) sec = sec.pow(2).div(20)
+		if (sec.gte(1e6)) sec = ExpantaNum.pow(1.002, sec.sub(1e6)).times(sec); // hyper scaling
+		if (sec.gte(20)) sec = sec.pow(2).div(20) // scaled scaling
 		tmp.hd.inclineRed = sec.times(90).root(tmp.hd.inclinePow.times(-1))
 	} else tmp.hd.inclineRed = ExpantaNum.sub(90, incl).div(90).root(tmp.hd.inclinePow)
 	updateEnergyLoss()
@@ -287,27 +287,27 @@ function updateTempHikersDream() {
 
 	calcEnergyUpgrades()
 	
-	tmp.hd.energyGen = ExpantaNum.pow(2, player.genLvl.times(player.energy.plus(1).logBase(1.004).sqrt()).sqrt()).sub(1).times(player.geners)
-	if (player.genLvl.gte(1)) tmp.hd.energyGen = tmp.hd.energyGen.max(1)
-	if (player.elementary.bosons.scalar.higgs.upgrades.includes("0;3;1")) tmp.hd.energyGen = tmp.hd.energyGen.pow(2)
-	if (tmp.ach) if (tmp.ach[143].has) tmp.hd.energyGen = tmp.hd.energyGen.times(1e7)
+	tmp.hd.energyGen = ExpantaNum.pow(2, player.genLvl.times(player.energy.plus(1).logBase(1.004).sqrt()).sqrt()).sub(1).times(player.geners);
+	if (player.genLvl.gte(1)) tmp.hd.energyGen = tmp.hd.energyGen.max(1);
+	if (player.elementary.bosons.scalar.higgs.upgrades.includes("0;3;1")) tmp.hd.energyGen = tmp.hd.energyGen.pow(2);
+	if (tmp.ach) if (tmp.ach[143].has) tmp.hd.energyGen = tmp.hd.energyGen.times(1e7);
 }
 
 function quickReset() {
-	player.canRefill = true
-	tmp.ranks.layer.reset(true)
+	player.canRefill = true;
+	tmp.ranks.layer.reset(true);
 }
 
 function refillEnergy() {
-	if (!tmp.ach) return
-	if (modeActive('hard') && player.energy.neq(0) && !tmp.ach[85].has) return
-	if (!player.canRefill) return
-	player.energy = new ExpantaNum(100)
-	player.canRefill = modeActive('hard')
+	if (!tmp.ach) return;
+	if (modeActive('hard') && player.energy.neq(0) && !tmp.ach[85].has) return;
+	if (!player.canRefill) return;
+	player.energy = new ExpantaNum(100);
+	player.canRefill = modeActive('hard');
 }
 
 function respecEnergyUpgs() {
-	if (player.energyUpgs.length==0) return
+	if (player.energyUpgs.length==0) return;
 	if (!confirm("Are you sure you want to respec your Energy Upgrades to get your Motive back? This will also perform a Quick Reset.")) return
 	player.spentMotive = new ExpantaNum(0);
 	player.energyUpgs = [];
@@ -315,11 +315,11 @@ function respecEnergyUpgs() {
 }
 
 function buyEnergyUpg(x) {
-	if (player.energyUpgs.includes(x)) return
-	let cost = getEnergyUpgCost(x)
-	if (tmp.hd.motive.lt(cost)) return
-	player.spentMotive = player.spentMotive.plus(cost)
-	player.energyUpgs.push(x)
+	if (player.energyUpgs.includes(x)) return;
+	let cost = getEnergyUpgCost(x);
+	if (tmp.hd.motive.lt(cost)) return;
+	player.spentMotive = player.spentMotive.plus(cost);
+	player.energyUpgs.push(x);
 }
 
 function isEnergyUpgShown(x) {
@@ -341,49 +341,49 @@ function isEnergyUpgShown(x) {
 }
 
 function baseIncline(d) {
-	if (d.gte(4.4e26)) d = d.pow(2).div(4.4e26)
-	if (d.gte("4.4e2026")) d = d.pow(5).div(ExpantaNum.pow("4.4e2026", 4))
+	if (d.gte(4.4e26)) d = d.pow(2).div(4.4e26);
+	if (d.gte("4.4e2026")) d = d.pow(5).div(ExpantaNum.pow("4.4e2026", 4));
 	if (player.energyUpgs.includes(32)&&tmp.hd.enerUpgs&&tmp.hd.enerUpgs[32]) d = d.pow(1-tmp.hd.enerUpgs[32]/100);
-	if (player.energyUpgs.includes(34)&&tmp.hd.enerUpgs&&tmp.hd.enerUpgs[34]) d = d.root(tmp.hd.enerUpgs[34])
-	let incl = d.gte(1e3) ? ExpantaNum.sub(90, ExpantaNum.div(90, d.div(1e3).log10().div(10).plus(1))) : new ExpantaNum(0)
-	return incl.max(0)
+	if (player.energyUpgs.includes(34)&&tmp.hd.enerUpgs&&tmp.hd.enerUpgs[34]) d = d.root(tmp.hd.enerUpgs[34]);
+	let incl = d.gte(1e3) ? ExpantaNum.sub(90, ExpantaNum.div(90, d.div(1e3).log10().div(10).plus(1))) : new ExpantaNum(0);
+	return incl.max(0);
 }
 
 function baseSecant(d) {
-	if (d.gte(4.4e26)) d = d.pow(2).div(4.4e26)
-	if (d.gte("4.4e2026")) d = d.pow(5).div(ExpantaNum.pow("4.4e2026", 4))
+	if (d.gte(4.4e26)) d = d.pow(2).div(4.4e26);
+	if (d.gte("4.4e2026")) d = d.pow(5).div(ExpantaNum.pow("4.4e2026", 4));
 	if (player.energyUpgs.includes(32)&&tmp.hd.enerUpgs&&tmp.hd.enerUpgs[32]) d = d.pow(1-tmp.hd.enerUpgs[32]/100);
-	if (player.energyUpgs.includes(34)&&tmp.hd.enerUpgs&&tmp.hd.enerUpgs[34]) d = d.root(tmp.hd.enerUpgs[34])
-	let incl = d.gte(1e3) ? d.div(1e3).log10().div(10).plus(1).div(90) : new ExpantaNum(0)
-	return incl.max(0)
+	if (player.energyUpgs.includes(34)&&tmp.hd.enerUpgs&&tmp.hd.enerUpgs[34]) d = d.root(tmp.hd.enerUpgs[34]);
+	let incl = d.gte(1e3) ? d.div(1e3).log10().div(10).plus(1).div(90) : new ExpantaNum(0);
+	return incl.max(0);
 }
 
 function calcInclines() {
 	if (!tmp.hd) tmp.hd = {}
-	let d = player.distance
+	let d = player.distance;
 	let baseV = adjustGen(player.velocity, "dist").times(tmp.hd.enEff?tmp.hd.enEff:(1/0)).times(nerfActive("noTS") ? 1 : tmp.timeSpeed)
-	let v = new ExpantaNum(baseV)
-	let maxError = 1.001
-	let incl = baseIncline(d)
-	let sec = baseSecant(d)
-	let newIncl = new ExpantaNum(90)
-	let newSecant = new ExpantaNum(1/0)
+	let v = new ExpantaNum(baseV);
+	let maxError = 1.001;
+	let incl = baseIncline(d);
+	let sec = baseSecant(d);
+	let newIncl = new ExpantaNum(90);
+	let newSecant = new ExpantaNum(1/0);
 	let reduc;
-	let a = tmp.acc||new ExpantaNum(1/0)
-	let iter = 0
-	tmp.hd.futureIncl = []
-	tmp.hd.futureSec = []
+	let a = tmp.acc||new ExpantaNum(1/0);
+	let iter = 0;
+	tmp.hd.futureIncl = [];
+	tmp.hd.futureSec = [];
 	while (newIncl.div(incl).gt(maxError)&&newSecant.div(sec).gt(maxError)&&iter<25) {
-		incl = baseIncline(d)
-		sec = baseSecant(d)
-		reduc = ExpantaNum.sub(90, incl).div(90)
-		v = v.plus(a.pow(reduc).div(50))
+		incl = baseIncline(d);
+		sec = baseSecant(d);
+		reduc = ExpantaNum.sub(90, incl).div(90);
+		v = v.plus(a.pow(reduc).div(50));
 		d = player.distance.plus(adjustGen(v, "dist").times(tmp.hd.enEff?tmp.hd.enEff:player.energy).times(nerfActive("noTS") ? 1 : tmp.timeSpeed).div(50))
-		newIncl = baseIncline(d)
-		newSecant = baseSecant(d)
+		newIncl = baseIncline(d);
+		newSecant = baseSecant(d);
 		iter++
-		tmp.hd.futureIncl.push(newIncl)
-		tmp.hd.futureSec.push(newSecant)
+		tmp.hd.futureIncl.push(newIncl);
+		tmp.hd.futureSec.push(newSecant);
 	}
 }
 
@@ -422,33 +422,33 @@ function showENTab(name) {
 // The Generator
 
 function getEnergyLim() {
-	let lim = new ExpantaNum(100)
+	let lim = new ExpantaNum(100);
 	if (player.inf.endorsements.gte(10)) {
-		let lvl = player.genLvl
-		if (lvl.gte(6)) lvl = lvl.times(6).sqrt()
-		if (lvl.gte(3)) lvl = lvl.times(1.1).sub(0.3)
-		lim = lim.times(ExpantaNum.pow(5, lvl.pow(0.75))).times(player.geners.pow(2))
+		let lvl = player.genLvl;
+		if (lvl.gte(6)) lvl = lvl.times(6).sqrt();
+		if (lvl.gte(3)) lvl = lvl.times(1.1).sub(0.3);
+		lim = lim.times(ExpantaNum.pow(5, lvl.pow(0.75))).times(player.geners.pow(2));
 	}
-	if (player.energyUpgs.includes(25)) lim = lim.times(tmp.hd.enerUpgs ? tmp.hd.enerUpgs[25] : 1).max(1)
-	return lim
+	if (player.energyUpgs.includes(25)) lim = lim.times(tmp.hd.enerUpgs ? tmp.hd.enerUpgs[25] : 1).max(1);
+	return lim;
 }
 
 function getGenCost() {
-	let g = player.genLvl.div(player.geners.pow(0.2))
-	if (g.gte(5)) g = ExpantaNum.pow(1.2, g.sub(5)).times(g)
+	let g = player.genLvl.div(player.geners.pow(0.2));
+	if (g.gte(5)) g = ExpantaNum.pow(1.2, g.sub(5)).times(g);
 	if (modeActive("extreme+hikers_dream") && g.gte(11)) g = g.sub(11).div(2).plus(11);
 	if (player.energyUpgs.includes(33)&&tmp.hd.enerUpgs[33]) g = g.times(ExpantaNum.sub(1, tmp.hd.enerUpgs[33].div(100)));
-	let cost = ExpantaNum.pow(8, ExpantaNum.pow(2, g.pow(0.75)).sub(1)).times(2.5e9)
+	let cost = ExpantaNum.pow(8, ExpantaNum.pow(2, g.pow(0.75)).sub(1)).times(2.5e9);
 	return cost
 }
 
 function buyGen() {
-	if (!modeActive("hikers_dream")) return
-	if (player.inf.endorsements.lt(10)) return
-	let cost = getGenCost()
-	if (tmp.hd.motive.lt(cost)) return
-	player.spentMotiveGens = player.spentMotiveGens.plus(cost)
-	player.genLvl = player.genLvl.plus(1)
+	if (!modeActive("hikers_dream")) return;
+	if (player.inf.endorsements.lt(10)) return;
+	let cost = getGenCost();
+	if (tmp.hd.motive.lt(cost)) return;
+	player.spentMotiveGens = player.spentMotiveGens.plus(cost);
+	player.genLvl = player.genLvl.plus(1);
 }
 
 function respecGens() {

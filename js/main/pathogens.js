@@ -4,20 +4,21 @@ function updatePathogensGain(){
 	tmp.pathogens.gainPTHpart = player.pathogens.amount.plus(1).log10().plus(1);
 	tmp.pathogens.gain = tmp.pathogens.gainLEpart.times(tmp.pathogens.gainPTHpart);
 	if (tmp.pathogens.gain.gte(tmp.pathogens.st))
-		tmp.pathogens.gain = tmp.pathogens.gain.sqrt().times(tmp.pathogens.st.sqrt());
-	tmp.pathogens.baseGain = new ExpantaNum(tmp.pathogens.gain);
+		tmp.pathogens.gain = softcap(tmp.pathogens.gain, "P", player.rank.gt(70000)?0.3:1, tmp.pathogens.st, 2)
+	tmp.pathogens.baseGain = new ExpantaNum(tmp.pathogens.gain); // what why
 	if (tmp.ach) if (tmp.ach[63].has) tmp.pathogens.gain = tmp.pathogens.gain.times(ach63Eff());
 	if (tmp.ach) if (tmp.ach[68].has) {
 		tmp.pathogens.gain = tmp.pathogens.gain.times(2.5);
 		if (modeActive("hard+hikers_dream")) tmp.pathogens.gain = tmp.pathogens.gain.times(tmp.hd.enerUpgs[3])
 	}
 	let a84 = tmp.dc ? tmp.dc.flow.max(1) : new ExpantaNum(1);
-	if (a84.gte(50)) a84 = a84.log10().times(ExpantaNum.div(50, Math.log10(50)));
+	if (a84.gte(50)) a84 = softcap(a84, "EP", player.rank.gt(70000)?0.3:1, 50, 2.5);
 	if (tmp.ach[84].has) tmp.pathogens.gain = tmp.pathogens.gain.times(a84);
+	
 	if (tmp.ach[131].has) tmp.pathogens.gain = tmp.pathogens.gain.times(2);
 	if (tmp.ach[87].has && modeActive("hard+hikers_dream")) {
 		let x = player.tr.cubes.div("1e750").pow(.2).plus(1)
-		if (x.gt(100)) x = x.log10().times(50)
+		if (x.gt(100)) x = softcap(x, "EP", player.rank.gt(70000)?0.3:1, 100, 3.5)
 		tmp.pathogens.gain = tmp.pathogens.gain.times(x)
 		let x2 = player.tr.cubes.div("1e800").pow(.2).plus(1).min(1e3)
 		tmp.pathogens.gain = tmp.pathogens.gain.times(x2)
@@ -35,6 +36,18 @@ function updatePathogensGain(){
 	if (tmp.inf) if (tmp.inf.upgs.has("10;10")) tmp.pathogens.gain = tmp.pathogens.gain.times(INF_UPGS.effects["10;10"]())
 	if (tmp.fn && modeActive("extreme")) tmp.pathogens.gain = tmp.pathogens.gain.times(tmp.fn.enh.moltBrEff||1)
 	if (player.elementary.foam.unl && tmp.elm) tmp.pathogens.gain = tmp.pathogens.gain.times(tmp.elm.qf.boost24)
+}
+
+function nonFreePathogenStrength(){
+	let ret = new ExpantaNum(1)
+	if (player.tier.gt(80)) ret = ret.mul(20)
+	if (player.tier.gt(667)) ret = ret.mul(40)
+	return ret
+}
+
+function freePathogenStrength(){
+	let ret = new ExpantaNum(1)
+	return ret
 }
 
 function updateTempPathogens() {
@@ -76,7 +89,7 @@ function updateTempPathogens() {
 	if (extremeStadiumActive("nullum", 3)) tmp.pathogens.upgPow = tmp.pathogens.upgPow.times(0.8);
 	if (extremeStadiumActive("quantron")) tmp.pathogens.upgPow = tmp.pathogens.upgPow.times(0.9);
 	if (nerfActive("noPathogenUpgs")) tmp.pathogens.upgPow = new ExpantaNum(0);
-	if (tmp.pathogens.upgPow.gte(10)) tmp.pathogens.upgPow = tmp.pathogens.upgPow.sqrt().times(Math.sqrt(10))
+	if (tmp.pathogens.upgPow.gte(10)) tmp.pathogens.upgPow = softcap(tmp.pathogens.upgPow, "P", (player.rank.gt(22500))?0.8:1, 10, 2)
 	if (player.elementary.sky.unl && tmp.elm) tmp.pathogens.upgPow = tmp.pathogens.upgPow.times(tmp.elm.sky.pionEff[2])
 	if (!tmp.pathogens.extra) tmp.pathogens.extra = function (n) {
 		let extra = new ExpantaNum(0);
@@ -96,11 +109,11 @@ function updateTempPathogens() {
 	if (!tmp.pathogens.eff) tmp.pathogens.eff = function (n) {
 		let fp = new ExpantaNum(1);
 		if (tmp.inf) if (tmp.inf.upgs.has("8;8")) fp = fp.times(INF_UPGS.effects["8;8"]());
-		let bought = player.pathogens.upgrades[n].plus(tmp.pathogens.extra(n));
-		if (bought.gte(getPathogenUpgSoftcapStart(n))) bought = bought.sqrt().times(getPathogenUpgSoftcapStart(n).sqrt());
+		let bought = player.pathogens.upgrades[n].mul(nonFreePathogenStrength()).plus(tmp.pathogens.extra(n).mul(freePathogenStrength()));
+		if (bought.gte(getPathogenUpgSoftcapStart(n))) bought = softcap(bought, "P", 1, getPathogenUpgSoftcapStart(n), 2)
 		bought = bought.times(tmp.pathogens.upgPow);
 		if (PTH_UPGS[n].unl ? !PTH_UPGS[n].unl() : false) bought = new ExpantaNum(0);
-		let sPos = tmp.inf ? (tmp.inf.upgs.has("3;8") && n >= 6 && n <= 10) : false
+		let sPos = tmp.inf ? (tmp.inf.upgs.has("3;8") && n >= 6 && n <= 10) : false;
 		switch(n) {
 			case 1: {
 				let ret = player.pathogens.amount
@@ -115,47 +128,33 @@ function updateTempPathogens() {
 							.logBase(2)
 							.plus(bought.gt(0) ? 1 : 0)
 					);
-				if (ret.gte(2e3) && !(tmp.elm?tmp.elm.bos.hasHiggs("0;1;4"):false)) ret = ret.sqrt().times(Math.sqrt(2e3));
-				if (ret.gte(1e4)) ret = ret.log10().times(1e4 / 4);
+				if (ret.gte(2e3) && !(tmp.elm?tmp.elm.bos.hasHiggs("0;1;4"):false)) ret = softcap(ret, "P", 1, 2e3, 2);
+				if (ret.gte(1e4)) ret = softcap(ret, "EP", 1, 1e4, 10) // strongest SC so far, 10th root
 				if (tmp.elm) if (tmp.elm.bos.hasHiggs("0;1;4")) ret = ret.times(4)
 				if (player.elementary.sky.unl && tmp.elm) ret = ret.times(tmp.elm.sky.pionEff[11])
 				return ret;
-				break;
 			} case 2: {
 				let ret = player.collapse.cadavers.plus(1).pow(0.3).pow(bought.plus(1).logBase(1.3));
-				if (ret.gte("1e100000"))
-					ret = ret
-						.log10()
-						.pow(1e5 / 5)
-						.min(ret);
+				if (ret.gte("1e100000")) ret = softcap(ret, "E", 1, "e100000")
 				return ret;
-				break;
 			} case 3: {
 				let ret = player.collapse.cadavers.plus(1).pow(0.4).pow(bought.plus(1).logBase(1.4));
-				if (ret.gte("1e100000"))
-					ret = ret
-						.log10()
-						.pow(1e5 / 5)
-						.min(ret);
+				if (ret.gte("1e100000")) ret = softcap(ret, "E", 1, "e100000")
 				return ret;
-				break;
 			} case 4:
 				return player.pathogens.amount.plus(1).pow(1.5).pow(bought.pow(0.9));
-				break;
 			case 5:
 				let exp = new ExpantaNum(1);
 				if (tmp.inf) if (tmp.inf.upgs.has("7;5")) exp = exp.times(INF_UPGS.effects["7;5"]());
 				return ExpantaNum.pow(3, bought.sqrt()).pow(exp);
-				break;
 			case 6:
 				if (sPos) {
 					let eff = ExpantaNum.pow(1.4, bought.sqrt()).times(
 						ExpantaNum.pow(2, bought.pow(ExpantaNum.mul(2.5, fp))).pow(0.2)
 					);
-					if (eff.gte(ExpantaNum.pow(10, 3e9))) eff = ExpantaNum.pow(10, eff.log10().times(Math.pow(3e9, 2)).cbrt())
+					if (eff.gte(new ExpantaNum("e3e9"))) eff = softcap(eff, "EP", 1, "e3e9", 3)
 					return eff;
 				} else return ExpantaNum.pow(1.4, bought.sqrt())
-				break;
 			case 7: 
 				if (sPos) {
 					return bought
@@ -165,7 +164,6 @@ function updateTempPathogens() {
 						.pow(5)
 						.times(bought.plus(1).pow(bought.plus(1).logBase(2).plus(1)).pow(ExpantaNum.mul(30, fp)));
 				} else return bought.plus(1).logBase(2).plus(1).pow(5);
-				break;
 			case 8: 
 				if (sPos) {
 					return bought
@@ -175,7 +173,6 @@ function updateTempPathogens() {
 						.log10()
 						.times(bought.plus(1).logBase(2).plus(1).pow(ExpantaNum.mul(2.75, fp)));
 				} else return bought.plus(1).logBase(2).plus(1).log10();
-				break;
 			case 9: 
 				if (sPos) {
 					return bought
@@ -185,7 +182,6 @@ function updateTempPathogens() {
 						.pow(1.25)
 						.times(bought.plus(1).pow(bought.plus(1).log10().plus(1)).pow(ExpantaNum.mul(100, fp)));
 				} else return bought.plus(1).logBase(4).plus(1).pow(1.25);
-				break;
 			case 10: 
 				if (sPos) {
 					return bought
@@ -195,24 +191,18 @@ function updateTempPathogens() {
 						.sqrt()
 						.times(bought.plus(1).pow(ExpantaNum.mul(10, fp)));
 				} else return bought.plus(1).logBase(4).plus(1).sqrt();
-				break;
 			case 11: 
 				return player.pathogens.amount.plus(1).times(10).slog(10).times(bought.sqrt().times(2.5));
-				break;
 			case 12: 
 				return player.rf.plus(1).log10().plus(1).log10().times(bought.cbrt().times(1.5));
-				break;
 			case 13: 
 				return ExpantaNum.mul(2, bought);
-				break;
 			case 14: 
 				return ExpantaNum.sub(1, ExpantaNum.div(1, player.dc.cores.plus(1).log10().times(bought).plus(1)));
-				break;
 			case 15: 
 				return ExpantaNum.sub(1, ExpantaNum.div(1, bought.plus(1).log10().plus(1).pow(0.1)));
-				break;
 		}
-		return undefined
+		throw new Error("amazing code right here y'all  [Pathogen UPG#" + n + "  doesn't exist]")
 	};
 	if (!tmp.pathogens.disp) tmp.pathogens.disp = function (n) {
 		let eff = tmp.pathogens.eff(n);
@@ -233,9 +223,9 @@ function updateTempPathogens() {
 	};
 	for (let i = 1; i <= PTH_AMT; i++) {
 		if (!tmp.pathogens[i]) tmp.pathogens[i] = {};
-		let data = getPathogenUpgData(i)
-		tmp.pathogens[i].cost = data.cost
-		tmp.pathogens[i].bulk = data.bulk
+		let data = getPathogenUpgData(i);
+		tmp.pathogens[i].cost = data.cost;
+		tmp.pathogens[i].bulk = data.bulk;
 		if (!tmp.pathogens[i].extra) tmp.pathogens[i].extra = function() { return tmp.pathogens.extra(i) }
 		if (!tmp.pathogens[i].buy) tmp.pathogens[i].buy = function(manual=false) { tmp.pathogens.buy(i, manual) }
 		if (!tmp.pathogens[i].eff) tmp.pathogens[i].eff = function() { return tmp.pathogens.eff(i) }
@@ -251,23 +241,25 @@ function updateTempPathogens() {
 			if (!tmp.ach[88].has) player.pathogens.amount = player.pathogens.amount.sub(tmp.pathogens[i].cost);
 		}
 	};
-	updatePathogensGain()
+	updatePathogensGain();
 }
 
 function getPathogenUpgData(i) {
 	let upg = PTH_UPGS[i];
+	let fp = new Decimal(1)
+	if (player.tier.gt(80)) fp = fp.mul(1.25)
 	let cost = upg.start.times(ExpantaNum.pow(upg.inc, player.pathogens.upgrades[i]))
 	let bulk = player.pathogens.amount.div(upg.start).max(1).logBase(upg.inc).add(1);
-	let scalPath
-	scalPath = player.pathogens.upgrades[i]
-	scalPath = doAllScaling(scalPath, "pathogenUpg", false, [3, 5, 1.025, 6, 4])
-	scalPath = upg.start.times(ExpantaNum.pow(upg.inc, scalPath))
-	cost = scalPath
-	scalPath = player.pathogens.amount.div(upg.start).max(1).logBase(upg.inc).add(1);
-	scalPath = doAllScaling(scalPath, "pathogenUpg", true, [3, 5, 1.025, 6, 4])
+	let scalPath;
+	scalPath = player.pathogens.upgrades[i];
+	scalPath = doAllScaling(scalPath, "pathogenUpg", false, [3, 5, 1.025, 2, 3]);
+	scalPath = upg.start.times(ExpantaNum.pow(upg.inc, scalPath.div(fp)));
+	cost = scalPath;
+	scalPath = player.pathogens.amount.div(upg.start).max(1).logBase(upg.inc).mul(fp).add(1);
+	scalPath = doAllScaling(scalPath, "pathogenUpg", true, [3, 5, 1.025, 2, 3]);
 	scalPath = scalPath.plus(1).round();
-	bulk = scalPath
-	return {cost: cost, bulk: bulk}
+	bulk = scalPath;
+	return {cost: cost, bulk: bulk};
 }
 
 function getPathogenUpgSoftcapStart(x) {

@@ -1,46 +1,47 @@
-// Variables
+// letiables
 
-var player = transformToEN(DEFAULT_START, DEFAULT_START);
-var loaded = false;
-var interval;
-var intervalPerSec;
-var autoTimes = {};
+let player = transformToEN(DEFAULT_START, DEFAULT_START);
+let loaded = false;
+let interval;
+let intervalPerSec;
+let autoTimes = {};
 for (let i = 0; i < Object.keys(ROBOT_REQS).length; i++) autoTimes[Object.keys(ROBOT_REQS)[i]] = new ExpantaNum(0);
-var tmp = {};
-var last = getCurrentTime();
-var modesSelected = [];
-var reloaded = false;
-var ddState = "none";
-var notifier = new Notifier();
-var saveTimer = 0;
-var showContainer = true;
-var infActive = false;
-var fnTab = "nfn";
-var infTab = "infinity";
-var elmTab = "fermions";
-var bosTab = "gauge";
-var hcTab = "mainHC";
-var foamTab = "qf1";
-var skyTab = "skyrmions";
-var mltTab = "mltMap";
-var statTab = "mainStats";
-var statScalingsShown = false;
-var pionSel = 0;
-var spinorSel = 0;
-var mltSelected = "NONE";
-var ttaid = 1;
-var gluonTab = "r";
-var thTab = "tv";
-var enTab = "mainEN";
-var autoRobotTarget = 0
-var betaID = ""; //beta2.0
-var completedModeCombos = [];
-var needUpdate = true
-var updating = false
-var visUpdTicks = 1/0
-var robotActives = {}
-var correctLink = ""
-var outerShiftDown = false
+let tmp = {};
+let last = getCurrentTime();
+let modesSelected = [];
+let reloaded = false;
+let ddState = "none";
+let notifier = new Notifier();
+let saveTimer = 0;
+let showContainer = true;
+let infActive = false;
+let fnTab = "nfn";
+let infTab = "infinity";
+let elmTab = "fermions";
+let bosTab = "gauge";
+let hcTab = "mainHC";
+let foamTab = "qf1";
+let skyTab = "skyrmions";
+let mltTab = "mltMap";
+let statTab = "mainStats";
+let statScalingsShown = false;
+let pionSel = 0;
+let spinorSel = 0;
+let mltSelected = "NONE";
+let ttaid = 1;
+let gluonTab = "r";
+let thTab = "tv";
+let enTab = "mainEN";
+let autoRobotTarget = 0
+let betaID = ""; //beta2.0
+let completedModeCombos = [];
+let needUpdate = true
+let updating = false
+let visUpdTicks = 1/0
+let robotActives = {}
+let correctLink = ""
+let outerShiftDown = false
+let TIME = 0;
 
 // Game Loops 
 
@@ -133,4 +134,5 @@ function gameLoop(diff) {
 		updating = false
 		needUpdate = false
 	}
+	TIME = getCurrentTime() - last
 }

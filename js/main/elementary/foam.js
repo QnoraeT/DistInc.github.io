@@ -287,6 +287,7 @@ function getEntropyGainMult() {
 		if (player.energyUpgs.includes(35) && tmp.hd) mult = mult.times(tmp.hd.enerUpgs[35]);
 		if (tmp.ach[193].has && !modeActive("extreme")) mult = mult.times(1.1);
 	}
+	if (mult.gte(33.333)) mult = softcap(mult, "P", 1, 33.333, 2.25)
 	return mult;
 }
 

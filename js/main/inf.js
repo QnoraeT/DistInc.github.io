@@ -337,6 +337,7 @@ function updateTempAscension() {
 			tmp.inf.asc.perkStrength = tmp.inf.asc.perkStrength.times(tmp.elm.ferm.leptonR("electron").plus(1));
 	if (tmp.elm) if (tmp.elm.pa.active) tmp.inf.asc.perkStrength = tmp.inf.asc.perkStrength.times(tmp.elm.pa.boost.max(1))
 	if (modeActive('easy')) tmp.inf.asc.perkStrength = tmp.inf.asc.perkStrength.times(1.2)
+	if (tmp.inf.asc.perkStrength.gte(1e30)) tmp.inf.asc.perkStrength = softcap(tmp.inf.asc.perkStrength, "EP", 1, 1e30, 3)
 	tmp.inf.asc.perkPower = [
 		null,
 		tmp.inf.asc.perkStrength,
@@ -387,7 +388,9 @@ function updateTempAscension() {
 		let pow = new ExpantaNum(tmp.inf.asc.perkPower[n]);
 		if (pow.gte(90)) pow = softcap(pow, "D", 1, 90, 10) // divide by 10
 		if (pow.gte(150)) pow = softcap(pow, "P", 1, 150, 2) // root by 2
-		if (n == 2) pow = softcap(pow, "P", 1, 500, 2.5) // root by 2.5
+		if (pow.gte(1e9)) pow = softcap(pow, "EP", 1, 1e9, 3) // exponent root by 2.5
+		if (n == 2) if (pow.gte(500)) pow = softcap(pow, "P", 1, 500, 2.5) // root by 2.5
+		if (n == 2) if (pow.gte(10000)) pow = softcap(pow, "EP", 1, 10000, 1.75) // exponent root by 1.5
 		if (n == 1) return ExpantaNum.pow(10, pow);
 		else if (n == 2) return pow;
 		else if (n == 3) return ExpantaNum.pow(1e15, pow);

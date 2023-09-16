@@ -76,7 +76,7 @@ function updateTempSupersymmetry() {
 	}
 	tmp.elm.theory.ss.wavelength = player.elementary.theory.supersymmetry.squarks.times(player.elementary.theory.supersymmetry.sleptons).times(player.elementary.theory.supersymmetry.neutralinos).times(player.elementary.theory.supersymmetry.charginos).pow(1/5)
 	tmp.elm.theory.ss.waveEff = tmp.elm.theory.ss.wavelength.plus(1).pow(2.25)
-	if (tmp.elm.theory.ss.waveEff.gte(1e13)) tmp.elm.theory.ss.waveEff = softcap(tmp.elm.theory.ss.waveEff, "P", 1, 1e13, ExpantaNum.sub(4, ExpantaNum.div(3, tmp.elm.theory.ss.waveEff.log(1e13).pow(2).max(1))))
+	if (tmp.elm.theory.ss.waveEff.gte(1e13)) tmp.elm.theory.ss.waveEff = softcap(tmp.elm.theory.ss.waveEff, "P", (player.tier.gt(72))?0.4:1, 1e13, ExpantaNum.sub(4, ExpantaNum.div(3, tmp.elm.theory.ss.waveEff.log(1e13).pow((player.tier.gt(72))?0.1:2).max(1))))
 	if (HCCBA("sprsym")) tmp.elm.theory.ss.waveEff = new ExpantaNum(1);
 }
 
@@ -201,7 +201,7 @@ function getEntangleGain() {
 	player.elementary.theory.strings.amounts.forEach(x => function() { base = base.times(ExpantaNum.add(x, 1)) }())
 	let gain = base.pow(1/7).sqrt()
 	if (gain.gte(1e7)) gain = softcap(gain, "P", 1, 1e7, 3)
-	if (gain.gte(1e9)) gain = softcap(gain, "EP", 1, 1e9, 2)
+	if (gain.gte(1e9)) gain = softcap(gain, "EP", (player.tier.gt(72))?0.75:1, 1e9, 2)
 	gain = gain.times(TREE_UPGS[6].effect(player.elementary.theory.tree.upgrades[6]||0))
 	gain = gain.times(TREE_UPGS[30].effect(player.elementary.theory.tree.upgrades[30]||0))
 	if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.times(tmp.elm.qf.boost3)
@@ -334,7 +334,8 @@ function getAccelGain() {
 function getAccelEff() {
 	if (!player.elementary.theory.accelerons.unl) return new ExpantaNum(1)
 	let eff = player.elementary.theory.accelerons.amount.plus(1).pow(0.04)
-	if (eff.gte(2)) eff = softcap(eff, "E", 1, 2)
+	if (eff.gte(2)) eff = softcap(eff, "E", (player.tier.gt(72))?0.9:1, 2)
+	if (eff.gte(250)) eff = softcap(eff, "EP", 1, 250, 2.5)
 	return eff
 }
 
@@ -461,7 +462,7 @@ function getInfatonEff2NextAt(){
 	let cur = getInflatonEff2()
 	if (cur.lt(4)) return new ExpantaNum(1e3).times(ExpantaNum.pow(10, cur))
 	//idk lol this function sucks maybe just use an alg
-	no
+	! no
 }
 */
 

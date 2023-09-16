@@ -82,7 +82,7 @@ function updateElementaryLayer() {
 		let exp = new ExpantaNum(1)
 		if (hasDE(5) && (player.elementary.theory.tree.upgrades[20]||new ExpantaNum(0)).gte(1)) exp = exp.times(0.5)
 		if (tmp.ach[172].has) exp = exp.div(player.elementary.times.plus(1).logBase(1e3).times(0.2).plus(1))
-		if (player.tier.gt(50)) exp = exp.mul(ExpantaNum.sub(1, tier50Eff().div(100)))
+		if (player.tier.gt(50)) exp = exp.mul(ExpantaNum.sub(1, tierEffects(50).div(100)))
 		gain = softcap(gain, "P", exp, tmp.elm.softcap, 4)
 		if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.times(tmp.elm.qf.boost12) // not affected by softcap hehe
 	
@@ -171,6 +171,7 @@ function updateTempPerkAccelerator() {
 	tmp.elm.pa.stateStarts = {
 		weakened: new ExpantaNum(1e5),
 		broken: new ExpantaNum(1e10),
+		collapsed: new ExpantaNum(1e30),
 	}
 	if (player.elementary.theory.accelerons.unl) tmp.elm.pa.stateStarts.weakened = tmp.elm.pa.stateStarts.weakened.times(getAccelEff())
 	if (player.elementary.foam.unl && tmp.elm.qf) {
@@ -187,10 +188,14 @@ function updateTempPerkAccelerator() {
 	if (tmp.elm.pa.speedBoost.gte(tmp.elm.pa.stateStarts.broken)) tmp.elm.pa.state = "broken"
 	if (tmp.elm.pa.state=="weakened") tmp.elm.pa.speedBoost = softcap(tmp.elm.pa.speedBoost, "P", 1, tmp.elm.pa.stateStarts.weakened, 2)
 	if (tmp.elm.pa.state=="broken") tmp.elm.pa.speedBoost = softcap(tmp.elm.pa.speedBoost, "EP", 1, tmp.elm.pa.stateStarts.broken, 2)
+	// what are the point of these softcaps??
+	
 	tmp.elm.pa.boost = tmp.inf.asc.perkTimeO.div(10).pow(0.07)
 	if (tmp.inf.upgs.has("10;8")) tmp.elm.pa.boost = tmp.elm.pa.boost.max(tmp.inf.asc.perkTimeO.div(10).pow(0.2))
 	if (tmp.ach[174].has) tmp.elm.pa.boost = tmp.elm.pa.boost.pow(1.05)
 	if (player.elementary.sky.unl && tmp.elm.sky)  tmp.elm.pa.boost = tmp.elm.pa.boost.pow(tmp.elm.sky.pionEff[13])
+	if (tmp.elm.pa.boost.gte(tmp.elm.pa.stateStarts.collapsed)) tmp.elm.pa.state = "collapsed"
+	if (tmp.elm.pa.state=="collapsed") tmp.elm.pa.boost = Decimal.pow(10, softcap(tmp.elm.pa.boost.log(10), "EP", 1, tmp.elm.pa.stateStarts.collapsed.log(10), 2))
 }
 
 function updateTempElementary() {

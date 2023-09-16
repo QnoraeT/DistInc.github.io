@@ -51,8 +51,8 @@ function getIntelligenceGain() {
 	if (player.tier.gt(13)) gain = gain.times(4);
 	if (tmp.ach[36].has) gain = gain.times(1.5);
 	if (tmp.ach[46].has) gain = gain.times(2);
-	if (player.rank.gt(111)) gain = gain.times(rank111Eff());
-	if (player.rank.gt(40)) gain = gain.times(rank40Eff());
+	if (player.rank.gt(111)) gain = gain.times(rankEffects(111));
+	if (player.rank.gt(40)) gain = gain.times(rankEffects(40));
 	if (player.tr.upgrades.includes(6) && !HCCBA("noTRU")) gain = gain.times(tr6Eff());
 	if (modeActive("hard")) gain = gain.div(2)
 	if (modeActive("easy")) gain = gain.times(1.6)
@@ -203,38 +203,38 @@ function spectralGemAutoTick(){
 
 function photonsAutoTick(){
 	if (player.automators["photon_upgrades"]) for (let i=1;i<=4;i++) {
-		tmp.elm.bos.buyLU(i, true)
-		tmp.elm.bos.buyLU(i)
+		tmp.elm.bos.buyLU(i, true);
+		tmp.elm.bos.buyLU(i);
 	}
 }
 
 function gluonAutoTick(){
 	if (player.automators["gluon_upgrades"]) for (let i = 0; i < GLUON_COLOURS.length; i++) {
 		let col = GLUON_COLOURS[i];
-		for (let x=1;x<=2;x++) tmp.elm.bos.buy(col, x, true)
-		if (hasDE(1)) buyGluon3(col, true)
+		for (let x=1;x<=2;x++) tmp.elm.bos.buy(col, x, true);
+		if (hasDE(1)) buyGluon3(col, true);
 	}
 }
 
 function theoriverseAutoPerSec() {
 	if (player.automators["theoriverse"] && player.elementary.theory.unl && hasMltMilestone(4)) {
 		if (HCTVal("tv").gt(-1)) return;
-		let a = player.distance.div("1e1000000")
+		let a = player.distance.div("1e1000000");
 		if (modeActive("easy")) a = a.root(5/6);
 		if (modeActive("hikers_dream")) {
 			a = a.root(4/3);
 			a = a.root(9/8);
-			a = a.root((modeActive("extreme+hikers_dream")?2.675:4) / 3)
+			a = a.root((modeActive("extreme+hikers_dream")?2.675:4) / 3);
 		}
 		if (modeActive("extreme")) a = a.root(1.25);
-		let target = a.logBase(1/0.8).root(4/3).plus(tmp.elm.theory.subbed)
-		if (target.gte(20)) target = target.log(20).plus(19)
+		let target = a.logBase(1/0.8).root(4/3).plus(tmp.elm.theory.subbed);
+		if (target.gte(20)) target = target.log(20).plus(19);
 		target = target.floor();
 		let toAdd = target.sub(player.elementary.theory.depth.max(0))
 		let oldPoints = tmp.elm.theory.gainMult.times(ExpantaNum.sub(1, ExpantaNum.pow(2, player.elementary.theory.depth))).times(-1);
 		let newPoints = tmp.elm.theory.gainMult.times(ExpantaNum.sub(1, ExpantaNum.pow(2, target.max(player.elementary.theory.depth)))).times(-1);
 		if (toAdd.gt(0)) {
-			player.elementary.theory.points = player.elementary.theory.points.plus(newPoints.sub(oldPoints).max(0).round())
+			player.elementary.theory.points = player.elementary.theory.points.plus(newPoints.sub(oldPoints).max(0).round());
 			player.elementary.theory.depth = player.elementary.theory.depth.max(target);
 			player.elementary.theory.bestDepth = player.elementary.theory.bestDepth.max(target);
 		}

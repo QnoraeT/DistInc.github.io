@@ -172,7 +172,7 @@ const RANK_DESCS = {
 		effectType: "% weaker",
 	},
 	34: {
-		text: "scaled Enlightenments are much weaker based off of your Ascension Power.",
+		text: "scaled Enlightenments are much weaker based off of your Ascension Power (also effects Superscaled at a reduced rate).",
 		req: new ExpantaNum(2000),
 		effectType: "% weaker",
 	},
@@ -225,6 +225,11 @@ const RANK_DESCS = {
 		text: "all Atomic scaling from pre-infinity is weaker based off of Time Cubes",
 		req: new ExpantaNum(150000),
 		effectType: "% weaker",
+	},
+	45: {
+		text: "every Hyper Scaling pre-multiverse is 10% weaker.",
+		req: new ExpantaNum(200000),
+		effectType: "x",
 	},
 };
 
@@ -323,29 +328,44 @@ const TIER_DESCS = {
 		effectType: "% weaker",
 	},
 	18: {
-		text: "hyper Rank Cheapener starts later based off of your Magma.",
+		text: "hyper Rank Cheapener (or Tier if extreme is not active) starts later based off of your Magma.",
 		req: new ExpantaNum(60),
 		effectType: "+",
 	},
 	19: {
-		text: "compressed supersymmetrical wave's softcap scaling is 50% weaker.",
+		text: "compressed supersymmetrical wave's softcap is much weaker, Entangled Strings' gain softcap is 25% weaker, and Acceleron's effect softcap is weaker. ",
 		req: new ExpantaNum(72),
 		effectType: "x",
 	},
 	20: {
+		text: "non-extra Pathogen Upgrades are 2,000% stronger, and their general cost scaling is 25% weaker",
+		req: new ExpantaNum(80),
+		effectType: "x",
+	},
+	21: {
 		text: "atomic Rocket Fuel is weaker based off of your Rockets and the product of Ranks and Tiers.",
 		req: new ExpantaNum(85),
 		effectType: "% weaker",
 	},
-	21: {
+	22: {
 		text: "hyper Dark Cores and Scaled Derivative Boosts are weaker based off of your Cadavers.",
 		req: new ExpantaNum(100),
 		effectType: "% weaker",
 	},
-	22: {
-		text: "all furnace related scalings (before Atomic and Magma) is weaker based off of time in Elementary reset.",
+	23: {
+		text: "all furnace and rocket related scalings (before Atomic and Magma) is weaker based off of time in Elementary reset.",
 		req: new ExpantaNum(120),
 		effectType: "% weaker",
+	},
+	24: {
+		text: "non-free Pathogen Upgrade purchases are 40x stronger.",
+		req: new ExpantaNum(667),
+		effectType: "x",
+	},
+	25: {
+		text: "scaled and Superscaled Endorsements are 50% and 25% weaker, respectively.",
+		req: new ExpantaNum(1000),
+		effectType: "x",
 	},
 };
 

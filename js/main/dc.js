@@ -1,15 +1,15 @@
 function updateTempDarkCoreCost(){
-	let nAmt = player.dc.cores
+	let nAmt = player.dc.cores;
 	let bcMult = modeActive("extreme") ? 0.25 : 10
-	let scalDc
-	scalDc = nAmt
-	scalDc = doAllScaling(scalDc, "darkCore", false, [2, 3, 1.03, 4, 5])
+	let scalDc;
+	scalDc = nAmt;
+	scalDc = doAllScaling(scalDc, "darkCore", false, [2, 3, 1.03, 4, 5]);
 	scalDc = ExpantaNum.pow(10,ExpantaNum.pow(10,scalDc.div(50).plus(1))).times(bcMult);
-	tmp.dc.coreCost = scalDc
-	scalDc = player.collapse.cadavers.div(bcMult).max(1).log10().max(1).log10().sub(1).times(50)
-	scalDc = doAllScaling(scalDc, "darkCore", true, [2, 3, 1.03, 4, 5])
+	tmp.dc.coreCost = scalDc;
+	scalDc = player.collapse.cadavers.div(bcMult).max(1).log10().max(1).log10().sub(1).times(50);
+	scalDc = doAllScaling(scalDc, "darkCore", true, [2, 3, 1.03, 4, 5]);
 	scalDc = scalDc.plus(1).round();
-	tmp.dc.bulk = scalDc
+	tmp.dc.bulk = scalDc;
 }
 
 function calcDarkFlow(){
@@ -35,6 +35,7 @@ function calcDarkFlow(){
 		if (player.elementary.times.gt(0)) tmp.dc.flow = tmp.dc.flow.times(tmp.elm.bos.z2.max(1));
 		if (player.elementary.sky.unl) tmp.dc.flow = tmp.dc.flow.times(tmp.elm.sky.pionEff[5]);
 	}
+	if (tmp.dc.flow.gte("ee11.5")) tmp.dc.flow = softcap(tmp.dc.flow, 'EP', 1, "ee11.5", 4.5) 
 	if (extremeStadiumActive("quantron", 5)) tmp.dc.flow = tmp.dc.flow.pow(0.95);
 	if (nerfActive("noDarkFlow")) tmp.dc.flow = new ExpantaNum(0);
 }
@@ -88,17 +89,17 @@ function calcDarkCircleGain(){
 					.plus(1)
 					.log10()
 					.plus(1)
-					.times(player.dc.fluid.plus(1).pow(ExpantaNum.mul(1 / 5, fp)))
+					.times(player.dc.fluid.plus(1).pow(ExpantaNum.mul(0.2, fp)))
 			)
 			.max(0);
 		tmp.dc.deGain = player.dc.matter
 			.plus(1)
 			.log10()
-			.times(player.dc.matter.plus(1).pow(ExpantaNum.mul(1 / 5, fp)));
+			.times(player.dc.matter.plus(1).pow(ExpantaNum.mul(0.2, fp)));
 		tmp.dc.dfGain = player.dc.energy
 			.plus(1)
 			.log10()
-			.times(player.dc.energy.plus(1).pow(ExpantaNum.mul(1 / 5, fp)));
+			.times(player.dc.energy.plus(1).pow(ExpantaNum.mul(0.2, fp)));
 	}
 }
 

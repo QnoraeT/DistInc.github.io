@@ -17,24 +17,24 @@ function getCadaverEff() {
 	let scs = getCadaverEffSoftcapStart()
 	let scp = getCadaverEffSoftcapPower()
 	let eff = ExpantaNum.log10(player.rank.plus(player.tier.times(5)).plus(player.collapse.cadavers).plus(1))
-		.pow(player.collapse.cadavers.plus(1).logBase(2))
+		.pow(softcap(
+			player.collapse.cadavers.plus(1).logBase(2)
+			, "EP", 1, 1e10, 2.5))
 		.plus(player.collapse.cadavers.sqrt());
-	if (eff.gte(scs) && scp.gt(0))
-		eff = softcap(eff, "EP", scp, scs, 4) // exponent 4th rooted
-	eff = eff.pow(
-		tmp.elm && player.elementary.times.gt(0) ? tmp.elm.ferm.leptonR("muon").max(1) : 1
-	);
+	if (eff.gte(scs) && scp.gt(0)) eff = softcap(eff, "EP", scp, scs, 4) // exponent 4th rooted
+	eff = eff.pow(tmp.elm && player.elementary.times.gt(0) ? tmp.elm.ferm.leptonR("muon").max(1) : 1);
 	if (player.elementary.sky.unl && tmp.elm) eff = eff.pow(tmp.elm.sky.pionEff[4])
 	if (player.elementary.sky.unl && tmp.elm) eff = eff.pow(tmp.elm.sky.pionEff[12])
 	if (player.elementary.entropy.upgrades.includes(35) && modeActive("extreme")) eff = eff.pow(100);
+	if (eff.gte("ee13")) eff = Decimal.pow(10, softcap(eff.log(10), "EP", 1, 1e13, 5.25))
 	return eff;
 }
 
 function sacrificeToLifeEssence() {
 	if (player.collapse.cadavers.eq(0) || nerfActive("noLifeEssence")) return;
-	player.collapse.lifeEssence = player.collapse.lifeEssence.plus(
-		player.collapse.cadavers.times(tmp.collapse.sacEff).max(1)
-	);
+	let cLEGain = player.collapse.cadavers.times(tmp.collapse.sacEff).max(1)
+	if (cLEGain.gte("ee12")) cLEGain = Decimal.pow(10, Decimal.pow(10, softcap(cLEGain.log(10).log(10), "EP", 1, 12, 1.25)))// quadlog ^0.8 softcap after ee12
+	player.collapse.lifeEssence = player.collapse.lifeEssence.plus(cLEGain);
 	if (tmp.inf ? !tmp.inf.upgs.has("2;4") : true) player.collapse.cadavers = new ExpantaNum(0);
 }
 

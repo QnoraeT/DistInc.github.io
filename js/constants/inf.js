@@ -1021,8 +1021,6 @@ const EXTREME_STADIUM_DATA = {
 		],
 		effect: function() { 
 			let ret = player.furnace.coal.plus(1).log10().plus(1).log10().div(6.09);
-			if (ret.gte(0.75)) ret = ret.div(3).plus(0.75*2/3)
-			if (ret.gte(1)) ret = ret.log10().plus(1).min(ret);
 			return ret;
 		},
 		disp: function() { return "+"+showNum(EXTREME_STADIUM_DATA.quantron.effect().times(100))+"%" },

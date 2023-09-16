@@ -197,6 +197,11 @@ function transformToEN(obj, sc = DEFAULT_START) {
 	ret.tier = new ExpantaNum(ret.tier);
 	ret.rockets = new ExpantaNum(ret.rockets);
 	ret.rf = new ExpantaNum(ret.rf);
+	for (let i = 1; i <= Object.keys(sc.rocketUPG).length; i++){
+		ret.rocketUPG[i].ascension = new ExpantaNum(ret.rocketUPG[i].ascension)
+		ret.rocketUPG[i].tier = new ExpantaNum(ret.rocketUPG[i].tier)
+		ret.rocketUPG[i].bought = new ExpantaNum(ret.rocketUPG[i].bought)
+	}
 	ret.automation.scraps = new ExpantaNum(ret.automation.scraps);
 	ret.automation.intelligence = new ExpantaNum(ret.automation.intelligence);
 	for (let i = 0; i < Object.values(ret.automation.robots).length; i++)

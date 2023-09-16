@@ -42,6 +42,28 @@ const DEFAULT_START = {
 	tier: new ExpantaNum(0),
 	rockets: new ExpantaNum(0),
 	rf: new ExpantaNum(0),
+	rocketUPG: {
+		1: {
+			bought: new ExpantaNum(0),
+			tier: new ExpantaNum(0),
+			ascension: new ExpantaNum(0),
+		},
+		2: {
+			bought: new ExpantaNum(0),
+			tier: new ExpantaNum(0),
+			ascension: new ExpantaNum(0),
+		},
+		3: {
+			bought: new ExpantaNum(0),
+			tier: new ExpantaNum(0),
+			ascension: new ExpantaNum(0),
+		},
+		4: {
+			bought: new ExpantaNum(0),
+			tier: new ExpantaNum(0),
+			ascension: new ExpantaNum(0),
+		},
+	},
 	automation: {
 		unl: false,
 		scraps: new ExpantaNum(0),

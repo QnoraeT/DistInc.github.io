@@ -131,8 +131,8 @@ function updateRanksHTML(){
 	tmp.el.rankReq.setTxt(formatDistance(tmp.ranks.req));
 	tmp.el.rankName.setTxt(getScalingName("rank") + "Rank");
 	let scalType = getScalingId("rank")
-	tmp.el.rankName.changeStyle("color", SCALE_COLOR[scalType])
-	tmp.el.rankName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+	tmp.el.rankName.changeStyle("color", SCALE_COLOR[scalType]())
+	tmp.el.rankName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 }
 
 function updateTiersHTML(){
@@ -142,8 +142,8 @@ function updateTiersHTML(){
 	tmp.el.tierReq.setTxt(showNum(tmp.tiers.req.ceil()));
 	tmp.el.tierName.setTxt(getScalingName("tier") + "Tier");
 	let scalType = getScalingId("tier")
-	tmp.el.tierName.changeStyle("color", SCALE_COLOR[scalType])
-	tmp.el.tierName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+	tmp.el.tierName.changeStyle("color", SCALE_COLOR[scalType]())
+	tmp.el.tierName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 }
 
 function updateMainHTML(){
@@ -185,8 +185,8 @@ function updateRocketsHTML(){
 		tmp.el.rfEff.setTxt(showNum(getFuelEff().sub(1).times(100)));
 		tmp.el.rfName.setTxt(getScalingName("rf") + "Rocket Fuel");
 		let scalType = getScalingId("rf")
-		tmp.el.rfName.changeStyle("color", SCALE_COLOR[scalType])
-		tmp.el.rfName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+		tmp.el.rfName.changeStyle("color", SCALE_COLOR[scalType]())
+		tmp.el.rfName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 		tmp.el.rf2.setTxt(showNum(getFuelEff2()));
 	}
 }
@@ -382,8 +382,8 @@ function upadtePathogenUpgradesHTML(){
 				" Pathogens."
 		);
 		let scalType = getScalingId("pathogenUpg", i)
-		tmp.el["pth" + i].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
-		tmp.el["pth" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+		tmp.el["pth" + i].changeStyle("color", SCALE_COLOR_BRIGHT[scalType]())
+		tmp.el["pth" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 	}
 }
 
@@ -477,8 +477,8 @@ function updateDarkCircleHTML(){
 		tmp.el.arrowToDarkMatter.setHTML(tmp.dc.dmGain.gt(0) ? "&#8593;" : "");
 		tmp.el.darkFlow.setTxt(showNum(tmp.dc.flow));
 		let scalType = getScalingId("darkCore")
-		tmp.el.darkCore.changeStyle("color", SCALE_COLOR[scalType])
-		tmp.el.darkCore.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+		tmp.el.darkCore.changeStyle("color", SCALE_COLOR[scalType]())
+		tmp.el.darkCore.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 	}
 }
 
@@ -530,8 +530,8 @@ function updateInfinitySubtabHTML(){
 		}
 		tmp.el.endorsementName.setTxt(getScalingName("endorsements") + " ");
 		let scalType = getScalingId("endorsements")
-		tmp.el.endorsementName.changeStyle("color", SCALE_COLOR[scalType])
-		tmp.el.endorsementName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+		tmp.el.endorsementName.changeStyle("color", SCALE_COLOR[scalType]())
+		tmp.el.endorsementName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 		let ach112 = ach112Eff()
 		tmp.el.tudeEff.setHTML(
 			tmp.ach[112].has ? "The Universe Doesn't Exist multiplier: " + showNum(ach112) + "x"+(ach112.gte(1e160)?" <span class='sc'>(softcapped)</span>":"")+"<br><br>" : ""
@@ -565,8 +565,8 @@ function updateAscensionHTML(){
 				let name = getScalingName("enlightenments", i);
 				tmp.el["enlScale" + i].setTxt(name == "" ? "" : name + " ");
 				let scalType = getScalingId("enlightenments", i)
-				tmp.el["enlScale" + i].changeStyle("color", SCALE_COLOR[scalType])
-				tmp.el["enlScale" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+				tmp.el["enlScale" + i].changeStyle("color", SCALE_COLOR[scalType]())
+				tmp.el["enlScale" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 			}
 			tmp.el.perkPower.setTxt("Perk Strength: " + showNum(tmp.inf.asc.perkStrength.times(100)) + "%");
 			tmp.el.perkPower.setDisplay(!tmp.inf.asc.perkStrength.eq(1));
@@ -669,8 +669,8 @@ function updateAngelsChipsHTML(){
 	let name = getScalingName("spectralGems");
 	tmp.el.spectralGemName.setTxt(name == "" ? "" : name + " ");
 	let scalType = getScalingId("spectralGems")
-	tmp.el.spectralGemName.changeStyle("color", SCALE_COLOR[scalType])
-	tmp.el.spectralGemName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+	tmp.el.spectralGemName.changeStyle("color", SCALE_COLOR[scalType]())
+	tmp.el.spectralGemName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 	tmp.el.respecSpectralGems.setClasses({
 		btn: true,
 		inf: player.inf.pantheon.angels.plus(player.inf.pantheon.demons).gt(0),
@@ -732,8 +732,8 @@ function updateDerivativeHTML(){
 		inf: player.inf.knowledge.gte(tmp.inf.derv.unlCost)
 	});
 	let scalType = getScalingId("dervBoost")
-	tmp.el.dervUnlock.changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
-	tmp.el.dervUnlock.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+	tmp.el.dervUnlock.changeStyle("color", SCALE_COLOR_BRIGHT[scalType]())
+	tmp.el.dervUnlock.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 }
 
 function updateAllInfinityHTML(){
@@ -769,8 +769,8 @@ function updateRankCheapenersHTML(){
 	tmp.el.rankCheapReq.setTxt(formatDistance(tmp.rankCheap.req));
 	tmp.el.rankCheapName.setTxt(getScalingName("rankCheap") + "Rank Cheapener");
 	let scalType = getScalingId("rankCheap")
-	tmp.el.rankCheapName.changeStyle("color", SCALE_COLOR[scalType])
-	tmp.el.rankCheapName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+	tmp.el.rankCheapName.changeStyle("color", SCALE_COLOR[scalType]())
+	tmp.el.rankCheapName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 }
 
 function updateNormalFurnace(){
@@ -790,8 +790,8 @@ function updateNormalFurnace(){
 			tmp.el["fnu" + i + "name"].setTxt(getScalingName("fn", i));
 			tmp.el["fnu" + i + "lvl"].setTxt(showNum(player.furnace.upgrades[i - 1]));
 			let scalType = getScalingId("fn", i)
-			tmp.el["fnu" + i + "name"].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
-			tmp.el["fnu" + i + "name"].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+			tmp.el["fnu" + i + "name"].changeStyle("color", SCALE_COLOR_BRIGHT[scalType]())
+			tmp.el["fnu" + i + "name"].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 		}
 		tmp.el.fnu4.setDisplay(player.tr.upgrades.includes(31))
 		tmp.el.fnu5.setDisplay(FCComp(5))
@@ -804,9 +804,13 @@ function updateNormalFurnace(){
 		tmp.el.bfAmt.setTxt(showNum(player.furnace.blueFlame)+(tmp.fn.enh.eff.gt(0)?(" + "+showNum(tmp.fn.enh.eff)):""));
 		tmp.el.blueFlameName.setTxt(getScalingName("bf"))
 		let scalType = getScalingId("bf")
-		tmp.el.blueFlameName.changeStyle("color", SCALE_COLOR[scalType])
-		tmp.el.blueFlameName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
-		tmp.el.bfEff.setTxt(showNum(ExpantaNum.sub(1, tmp.fn.bfEff).times(100)));
+		tmp.el.blueFlameName.changeStyle("color", SCALE_COLOR[scalType]())
+		tmp.el.blueFlameName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
+		if (tmp.fn.bfEffRecip.lte(102.04)){
+			tmp.el.bfEff.setTxt(showNum(ExpantaNum.sub(1, tmp.fn.bfEff).times(100))+"%");
+		} else {
+			tmp.el.bfEff.setTxt(showNum(tmp.fn.bfEffRecip)+"x");
+		}
 		tmp.el.furnChalls.setDisplay(player.inf.endorsements.gte(10))
 		for (let i=1;i<=6;i++) {
 			if (i==6) tmp.el["fnc"+i].setDisplay(player.elementary.bosons.scalar.higgs.upgrades.includes("6;0;0")&&player.furnChalls.includes(i-1))
@@ -837,8 +841,8 @@ function updateEnhanceFurnace(){
 			tmp.el["efnu" + i + "name"].setTxt(getScalingName("efn", i));
 			tmp.el["efnu" + i + "lvl"].setTxt(showNum(player.furnace.enhancedUpgrades[i - 1])+(tmp.fn.enh.upgs[i].extra.gt(0)?(" + "+showNum(tmp.fn.enh.upgs[i].extra)):""));
 			let scalType = getScalingId("efn", i)
-			tmp.el["efnu" + i + "name"].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
-			tmp.el["efnu" + i + "name"].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+			tmp.el["efnu" + i + "name"].changeStyle("color", SCALE_COLOR_BRIGHT[scalType]())
+			tmp.el["efnu" + i + "name"].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 		}
 		tmp.el.efnu1eff.setTxt(showNum(tmp.fn.enh.upg1eff))
 		tmp.el.efnu2eff.setTxt(showNum(tmp.fn.enh.upg2eff.times(100)))
@@ -859,37 +863,37 @@ function updateMagma() {
 			locked: player.furnace.enhancedCoal.lt(req),
 			magma: player.furnace.enhancedCoal.gte(req),
 		})
-		tmp.el.magmaReq.setTxt(showNum(req))
-		tmp.el.magmaAmt.setTxt(showNum(player.magma.amount))
-		tmp.el.magmaDesc.setTxt(getScalingName("magma") + "Magma")
-		let scalType = getScalingId("magma")
-		tmp.el.magmaDesc.changeStyle("color", SCALE_COLOR[scalType])
-		tmp.el.magmaDesc.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
-		tmp.el.magmaEff.setTxt(showNum(tmp.fn.magma.eff.sub(1).times(100)))
+		tmp.el.magmaReq.setTxt(showNum(req));
+		tmp.el.magmaAmt.setTxt(showNum(player.magma.amount));
+		tmp.el.magmaDesc.setTxt(getScalingName("magma") + "Magma");
+		let scalType = getScalingId("magma");
+		tmp.el.magmaDesc.changeStyle("color", SCALE_COLOR[scalType]());
+		tmp.el.magmaDesc.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]());
+		tmp.el.magmaEff.setTxt(showNum(tmp.fn.magma.eff.sub(1).times(100)));
 		let req2 = getMagmaReformReq();
 		let req2b = getMagmaReformReq2();
 		tmp.el.reformMagma.setClasses({
 			btn: true,
 			locked: player.magma.amount.lt(req2)||player.inf.knowledge.lt(req2b),
 			magma: player.magma.amount.gte(req2)&&player.inf.knowledge.gte(req2b),
-		})
+		});
 		tmp.el.magmaReformReq.setTxt(showNum(req2));
 		tmp.el.magmaReformReq2.setTxt(showNum(req2b));
 		tmp.el.rMagmaAmt.setTxt(showNum(player.magma.ref));
 		tmp.el.rMagmaEff.setHTML("<span class='magmaTxt'>"+showNum(tmp.fn.magma.eff2)+"x</span>"+(player.elementary.theory.tree.unl?(" (boosted by unspent Theory Points"+(player.elementary.theory.depth.gte(6)?(" and Primary String length)"):")")):""));
-		tmp.el.rMagmaDesc.setTxt(getScalingName("rmagma") + "Reformed Magma")
-		scalType = getScalingId("rmagma")
-		tmp.el.rMagmaDesc.changeStyle("color", SCALE_COLOR[scalType])
-		tmp.el.rMagmaDesc.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+		tmp.el.rMagmaDesc.setTxt(getScalingName("rmagma") + "Reformed Magma");
+		scalType = getScalingId("rmagma");
+		tmp.el.rMagmaDesc.changeStyle("color", SCALE_COLOR[scalType]());
+		tmp.el.rMagmaDesc.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]());
 	}
 }
 
 function updatePlasma() {
 	if (fnTab == "plasma") {
-		tmp.el.plasmaExp.setTxt(showNum(tmp.fn.pl.exp))
-		tmp.el.plasmaAmt.setTxt(showNum(player.plasma.amount))
-		tmp.el.whiteFlameGen.setTxt(formatGain(player.plasma.whiteFlame, tmp.fn.pl.wfGain, "plasma"))
-		tmp.el.whiteFlameAmt.setTxt(showNum(player.plasma.whiteFlame))
+		tmp.el.plasmaExp.setTxt(showNum(tmp.fn.pl.exp));
+		tmp.el.plasmaAmt.setTxt(showNum(player.plasma.amount));
+		tmp.el.whiteFlameGen.setTxt(formatGain(player.plasma.whiteFlame, tmp.fn.pl.wfGain, "plasma"));
+		tmp.el.whiteFlameAmt.setTxt(showNum(player.plasma.whiteFlame));
 		
 		let boostReq = getPlasmaBoostReq();
 		tmp.el.plasmaBoostBtn.setDisplay(canBuyPlasmaBoost())
@@ -915,13 +919,13 @@ function updatePlasma() {
 function updateOverallExtremeModeHTML(){
 	tmp.el.rankCheapDiv.setDisplay(modeActive('extreme'));
 	if (modeActive("extreme")) {
-		updateRankCheapenersHTML()
+		updateRankCheapenersHTML();
 		// The Furnace
-		if (player.tab=="furnace") {
-			updateNormalFurnace() 
-			updateEnhanceFurnace()
-			updateMagma()
-			updatePlasma()
+		if (player.tab=="furnace"){
+			updateNormalFurnace() ;
+			updateEnhanceFurnace();
+			updateMagma();
+			updatePlasma();
 		}
 	}
 }
@@ -930,47 +934,63 @@ function updateStatisticsHTML(){
 	if (player.tab == "statistics") {
 		updateStatTabs();
 		if (statTab == "mainStats") {
-			tmp.el.best.setTxt(formatDistance(player.bestDistance))
-			tmp.el.bestV.setTxt(formatDistance(player.bestV)+"/s")
-			tmp.el.bestA.setHTML(formatDistance(player.bestA)+"/s<sup>2</sup>")
-			tmp.el.maxEnd.setTxt(player.bestEnd.eq(0)?"":("Best-Ever Endorsements: "+showNum(player.bestEnd)))
-			tmp.el.maxEP.setTxt(player.bestEP.eq(0)?"":("Best-Ever Elementary Point gain in one reset: "+showNum(player.bestEP)))
+			tmp.el.best.setTxt(formatDistance(player.bestDistance));
+			tmp.el.bestV.setTxt(formatDistance(player.bestV)+"/s");
+			tmp.el.bestA.setHTML(formatDistance(player.bestA)+"/s<sup>2</sup>");
+			tmp.el.maxEnd.setTxt(player.bestEnd.eq(0)?"":("Best-Ever Endorsements: "+showNum(player.bestEnd)));
+			tmp.el.maxEP.setTxt(player.bestEP.eq(0)?"":("Best-Ever Elementary Point gain in one reset: "+showNum(player.bestEP)));
 		} 
 		
 		// Always called because it determines whether the tab button is shown
 		statScalingsShown = false;
 		for (let i=0;i<Object.keys(SCALING_STARTS).length;i++) {
-			let name = Object.keys(SCALING_STARTS)[i]
-			let tt = ""
-			if (name=="hyper") tt = "Hyper scaling can go below 50% strength, but it is (obscured) instead.\n"
+			let name = Object.keys(SCALING_STARTS)[i];
+			let tt = "";
+			if (name=="hyper") tt = "Hyper scaling is heavily (obscured) at 50% and cannot go below 5%.\n";
+			if (name=="supercritical") tt = "Supercritical scaling is heavily (obscured) at 66.667% and cannot go below 25%.\n";
+			if (name=="meta") tt = "Meta scaling is not affected by any previous effects that delays all scaling starts.\n";
 			for (let r=0;r<Object.keys(SCALING_RES).length;r++) { // NESTED LOOP, REMOVE TO REDUCE LAG
-				let func = Object.values(SCALING_RES)[r]
-				let key = Object.keys(SCALING_RES)[r]
-				let amt = func(1)
-				if (MULTI_SCALINGS.includes(key)) for (let i=1;i<=SCALING_AMTS[key];i++) amt = ExpantaNum.max(amt, func(i))
+				let func = Object.values(SCALING_RES)[r];
+				let key = Object.keys(SCALING_RES)[r];
+				let amt = func(1);
+				if (MULTI_SCALINGS.includes(key)) for (let i=1;i<=SCALING_AMTS[key];i++) amt = ExpantaNum.max(amt, func(i));
 				if (amt.eq(0)||((key=="rankCheap"||key=="fn")&&!modeActive("extreme"))) continue
-				if (amt.gte(getScalingStart(name, key))) tt += capitalFirst(REAL_SCALING_NAMES[key])+" ("+showNum(getScalingPowerDisplay(name, key).times(100))+"%): Starts at "+showNum(getScalingStart(name, key))+"\n"
+				if (amt.gte(getScalingStart(name, key))) tt += capitalFirst(REAL_SCALING_NAMES[key])+" ("+showNum(getScalingPowerDisplay(name, key).times(100))+"%): Starts at "+showNum(getScalingStart(name, key))+"\n";
 			}
 			let blank = ""
-			if (name=="hyper") blank = "Hyper scaling can go below 50% strength, but it is heavily (obscured) instead.\n"
-			tmp.el[name+"Stat"].changeStyle("visibility", tt==blank?"hidden":"visible")
-			if (tt!=blank) statScalingsShown = true
-			tmp.el[name+"Stat"].setAttr("widetooltip", tt)
+			if (name=="hyper") blank = "Hyper scaling is heavily (obscured) at 50% and cannot go below 5%.\n";
+			if (name=="supercritical") blank = "Supercritical scaling is heavily (obscured) at 66.667% and cannot go below 25%.\n";
+			if (name=="meta") blank = "Meta scaling is not affected by any previous effects that delays all scaling starts.\n";
+
+			tmp.el[name+"Stat"].changeStyle("visibility", tt==blank?"hidden":"visible");
+			if (name == "wtf") {
+				tmp.el[name+"Stat"].changeStyle("background-color", SCALE_COLOR[9]())
+				tmp.el[name+"Stat"].changeStyle("color", SCALE_COLOR_DARK[9]())
+				tmp.el[name+"Stat"].changeStyle("fontWeight", 900)
+			}
+			if (name == "utterlyFucked") {
+				tmp.el[name+"Stat"].changeStyle("background-color", SCALE_COLOR[10]())
+				tmp.el[name+"Stat"].changeStyle("color", SCALE_COLOR_DARK[10]())
+				tmp.el[name+"Stat"].changeStyle("fontWeight", 900)
+
+			}
+			if (tt!=blank) statScalingsShown = true;
+			tmp.el[name+"Stat"].setAttr("widetooltip", tt);
 		}
 		
 		if (statTab == "rankTiers") {
-			tmp.el.rankTierStats.setDisplay(player.rank.gt(1)||player.tier.gt(0))
+			tmp.el.rankTierStats.setDisplay(player.rank.gt(1)||player.tier.gt(0));
 			for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
-				let ranks = RANK_DESCS[i]
-				let rankReq = ranks.req
-				tmp.el["rankReward"+showNum(rankReq, false)].setDisplay(player.rank.gt(rankReq))
-				if (tmp.el["rankEff"+showNum(rankReq, false)]) tmp.el["rankEff"+showNum(rankReq, false)].setTxt(showNum(window["rank"+showNum(rankReq, false)+"Eff"]()));
+				let ranks = RANK_DESCS[i];
+				let rankReq = ranks.req;
+				tmp.el["rankReward"+showNum(rankReq, false).replace(/\./g, "_")].setDisplay(player.rank.gt(rankReq));
+				if (tmp.el["rankEff"+showNum(rankReq, false).replace(/\./g, "_")]) tmp.el["rankEff"+showNum(rankReq, false).replace(/\./g, "_")].setTxt(showNum(rankEffects(rankReq)));
 			}
 			for (let i=0;i<Object.keys(TIER_DESCS).length;i++) {
-				let tiers = TIER_DESCS[i]
-				let tierReq = tiers.req
-				tmp.el["tierReward"+showNum(tierReq, false)].setDisplay(player.tier.gt(tierReq))
-				if (tmp.el["tierEff"+showNum(tierReq, false)]) tmp.el["tierEff"+showNum(tierReq, false)].setTxt(showNum(window["tier"+showNum(tierReq, false)+"Eff"]()));
+				let tiers = TIER_DESCS[i];
+				let tierReq = tiers.req;
+				tmp.el["tierReward"+showNum(tierReq, false).replace(/\./g, "_")].setDisplay(player.tier.gt(tierReq));
+				if (tmp.el["tierEff"+showNum(tierReq, false).replace(/\./g, "_")]) tmp.el["tierEff"+showNum(tierReq, false).replace(/\./g, "_")].setTxt(showNum(tierEffects(tierReq)));
 			}
 		}
 	}
@@ -1069,8 +1089,8 @@ function updatePhotonsHTML(){
 		tmp.el["photonDesc" + i].setTxt(showNum(tmp.elm.bos.photonEff(i)) + "x");
 		tmp.el["photonCost" + i].setTxt(showNum(tmp.elm.bos.photonCost[i]));
 		let scalType = getScalingId("photons", i)
-		tmp.el["photonLvl" + i].changeStyle("color", SCALE_COLOR_BRIGHT[scalType])
-		tmp.el["photonLvl" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType])
+		tmp.el["photonLvl" + i].changeStyle("color", SCALE_COLOR_BRIGHT[scalType]())
+		tmp.el["photonLvl" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 	}
 }
 
@@ -1091,7 +1111,7 @@ function updateGluonsHTML(){
 		let amt = player.elementary.bosons.gauge.gluons[col].amount;
 		tmp.el[col + "g"].setTxt(showNum(amt));
 		tmp.el[col + "gg"].setTxt(formatGain(amt, tmp.elm.bos[col+"g"], "gauge"));
-		tmp.el["glu"+col+"3"].setDisplay(hasDE(1))
+		tmp.el["glu"+col+"3"].setDisplay(hasDE(1));
 		for (let x = 1; x <= 3; x++) {
 			tmp.el[col + "Upg" + x].setClasses({
 				btn: true,
@@ -1123,29 +1143,29 @@ function updateScalarBosonsHTML(){
 	if (bosTab == "scalar") {
 		tmp.el.scalarAmt.setTxt(showNum(player.elementary.bosons.scalar.amount));
 		tmp.el.scalarGain.setTxt(showNum(adjustGen(tmp.elm.bos.scalarGain, "scalar")));
-		tmp.el.higgs.setTxt(showNum(player.elementary.bosons.scalar.higgs.amount))
-		tmp.el.higgsGain.setTxt(formatGain(player.elementary.bosons.scalar.higgs.amount, tmp.elm.bos.higgsGain, "scalar"))
+		tmp.el.higgs.setTxt(showNum(player.elementary.bosons.scalar.higgs.amount));
+		tmp.el.higgsGain.setTxt(formatGain(player.elementary.bosons.scalar.higgs.amount, tmp.elm.bos.higgsGain, "scalar"));
 		for (let i=0;i<Object.keys(HIGGS_UPGS).length;i++) {
-			let name = Object.keys(HIGGS_UPGS)[i]
-			let data = Object.values(HIGGS_UPGS)[i]
-			tmp.el["higgs"+name].setDisplay(data.unl())
-			tmp.el["higgs"+name].setClasses({btn: true, higgsL: player.elementary.bosons.scalar.higgs.amount.lt(data.cost)&&!player.elementary.bosons.scalar.higgs.upgrades.includes(name), higgs: player.elementary.bosons.scalar.higgs.amount.gte(data.cost)&&!player.elementary.bosons.scalar.higgs.upgrades.includes(name), higgsB: player.elementary.bosons.scalar.higgs.upgrades.includes(name)})
-			let extra = HIGGS_UPGS_EXTR_DESCS[name]
-			let text = data.desc
+			let name = Object.keys(HIGGS_UPGS)[i];
+			let data = Object.values(HIGGS_UPGS)[i];
+			tmp.el["higgs"+name].setDisplay(data.unl());
+			tmp.el["higgs"+name].setClasses({btn: true, higgsL: player.elementary.bosons.scalar.higgs.amount.lt(data.cost)&&!player.elementary.bosons.scalar.higgs.upgrades.includes(name), higgs: player.elementary.bosons.scalar.higgs.amount.gte(data.cost)&&!player.elementary.bosons.scalar.higgs.upgrades.includes(name), higgsB: player.elementary.bosons.scalar.higgs.upgrades.includes(name)});
+			let extra = HIGGS_UPGS_EXTR_DESCS[name];
+			let text = data.desc;
 			if (extra != undefined) {
-				let ac = extra.active()
-				if (ac) text = extra.desc[ac]
+				let ac = extra.active();
+				if (ac) text = extra.desc[ac];
 			}
-			tmp.el["higgs"+name].setHTML(text+"<br>Cost: "+showNum(data.cost)+" Higgs Bosons.")
+			tmp.el["higgs"+name].setHTML(text+"<br>Cost: "+showNum(data.cost)+" Higgs Bosons.");
 		}
-		tmp.el["higgs1;1;0"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_1;1;0"](true))+"x")
-		tmp.el["higgs0;1;1"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;1;1"](true))+"x")
-		tmp.el["higgs3;0;0"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_3;0;0"](true))+"x")
-		tmp.el["higgs0;2;1"].setTooltip("Currently: +"+showNum(tmp.elm.bos["higgs_0;2;1"](true))+"%")
-		tmp.el["higgs0;0;4"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;0;4"](true))+"x")
-		tmp.el["higgs1;3;0"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_1;3;0"](true))+"x")
-		tmp.el["higgs0;3;1"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;3;1"](true))+"x")
-		tmp.el["higgs0;0;5"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;0;5"](true))+" later")
+		tmp.el["higgs1;1;0"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_1;1;0"](true))+"x");
+		tmp.el["higgs0;1;1"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;1;1"](true))+"x");
+		tmp.el["higgs3;0;0"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_3;0;0"](true))+"x");
+		tmp.el["higgs0;2;1"].setTooltip("Currently: +"+showNum(tmp.elm.bos["higgs_0;2;1"](true))+"%");
+		tmp.el["higgs0;0;4"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;0;4"](true))+"x");
+		tmp.el["higgs1;3;0"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_1;3;0"](true))+"x");
+		tmp.el["higgs0;3;1"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;3;1"](true))+"x");
+		tmp.el["higgs0;0;5"].setTooltip("Currently: "+showNum(tmp.elm.bos["higgs_0;0;5"](true))+" later");
 	}
 }
 
@@ -1331,7 +1351,7 @@ function updateHadronicChallenges(){
 		tmp.el.hadronEff.setTxt(showNum(player.elementary.hc.claimed))
 		tmp.el.hadronNext.setTxt(showNum(tmp.elm.hc.next))
 		tmp.el.hadEffBulk.setTxt(showNum(tmp.elm.hc.hadronBulk))
-		tmp.el.hadInterval.setTxt(tmp.elm.hc.hadInterval.lt(1+0.1**(player.options.sf-1))?("Hadronic Intervals per OoM: "+showNum(tmp.elm.hc.hadInterval.log10().pow(-1))):("Hadronic Interval: "+showNum(tmp.elm.hc.hadInterval)))
+		tmp.el.hadInterval.setTxt(tmp.elm.hc.hadIntervalRecip.gte(10**(player.options.sf-1))?("Hadronic Intervals per OoM: "+showNum(tmp.elm.hc.hadIntervalRecip)):("Hadronic Interval: "+showNum(tmp.elm.hc.hadIntervalRecip.pow(-1))))
 		for (let s=0;s<DYNAMIC_UNLOCK_HC_SELECTORS.length;s++) {
 			let name = DYNAMIC_UNLOCK_HC_SELECTORS[s];
 			tmp.el["hcSelectorSpan"+name].setDisplay(checkFunc(HC_DATA[name][3]));

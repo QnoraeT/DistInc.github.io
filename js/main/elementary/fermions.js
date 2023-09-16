@@ -7,8 +7,9 @@ function updateTempQuarks() {
 	if (player.elementary.theory.supersymmetry.unl) tmp.elm.ferm.quarkGain = tmp.elm.ferm.quarkGain.times(tmp.sqEff||1)
 	if (player.elementary.foam.unl && tmp.elm.qf) tmp.elm.ferm.quarkGain = tmp.elm.ferm.quarkGain.times(tmp.elm.qf.boost2)
 	if (modeActive("easy")) tmp.elm.ferm.quarkGain = tmp.elm.ferm.quarkGain.times(4)
+	if (tmp.elm.ferm.quarkGain.gte("e616")) tmp.elm.ferm.quarkGain = softcap(tmp.elm.ferm.quarkGain, "EP", 1, "e616", 3)
 	tmp.elm.ferm.quarkRewards = new ExpantaNum(player.elementary.fermions.quarks.amount).max(1).logBase(50).floor();
-	if (tmp.elm.ferm.quarkRewards.gte(10)) tmp.elm.ferm.quarkRewards = tmp.elm.ferm.quarkRewards.sqrt().times(Math.sqrt(10))
+	if (tmp.elm.ferm.quarkRewards.gte(10)) tmp.elm.ferm.quarkRewards = softcap(tmp.elm.ferm.quarkRewards, "P", 1, 10, 2)
 	if (!tmp.elm.ferm.quarkName) tmp.elm.ferm.quarkName = function (noExp = false) {
 		let name = QUARK_NAMES[player.elementary.fermions.quarks.type - 1];
 		let stacks = getQuarkStacks(tmp.elm.ferm.quarkRewards)
@@ -16,8 +17,9 @@ function updateTempQuarks() {
 	};
 	tmp.elm.ferm.quarkEff = function (name) {
 		let qks = player.elementary.fermions.quarks.amount.max(0);
+		if (qks.gte("ee3.5")) qks = softcap(qks, "EP", 1, "ee3.5", 2.5)
 		let stacks = getQuarkStacks(tmp.elm.ferm.quarkRewards)
-		if (stacks.gte(8) && player.elementary.sky.amount.eq(0)) stacks = stacks.sqrt().times(Math.sqrt(8));
+		if (stacks.gte(8) && player.elementary.sky.amount.eq(0)) stacks = softcap(stacks, "P", 1, 8, 2)
 		if (name == "up") return qks.plus(1).pow(ExpantaNum.mul(5, stacks));
 		else if (name == "down") return qks.plus(1).pow(ExpantaNum.mul(Math.sqrt(2), stacks.sqrt()));
 		else if (name == "charm") return qks.plus(1).pow(ExpantaNum.mul(0.1, stacks.cbrt()));
@@ -60,6 +62,7 @@ function updateTempLeptons() {
 	if (player.elementary.theory.supersymmetry.unl) tmp.elm.ferm.leptonGain = tmp.elm.ferm.leptonGain.times(tmp.slEff||1)
 	if (player.elementary.foam.unl && tmp.elm.qf) tmp.elm.ferm.leptonGain = tmp.elm.ferm.leptonGain.times(tmp.elm.qf.boost2)
 	if (modeActive("easy")) tmp.elm.ferm.leptonGain = tmp.elm.ferm.leptonGain.times(4)
+	if (tmp.elm.ferm.leptonGain.gte("e616")) tmp.elm.ferm.leptonGain = softcap(tmp.elm.ferm.leptonGain, "EP", 1, "e616", 3)
 	tmp.elm.ferm.leptonRewards = new ExpantaNum(player.elementary.fermions.leptons.amount).max(1).logBase(100).floor();
 	if (tmp.elm.ferm.leptonRewards.gte(7)) tmp.elm.ferm.leptonRewards = tmp.elm.ferm.leptonRewards.sqrt().times(Math.sqrt(7))
 	if (!tmp.elm.ferm.leptonName) tmp.elm.ferm.leptonName = function (noExp = false) {
@@ -69,8 +72,9 @@ function updateTempLeptons() {
 	};
 	tmp.elm.ferm.leptonEff = function (name) {
 		let lpts = player.elementary.fermions.leptons.amount;
+		if (lpts.gte("e1000")) lpts = softcap(lpts, "EP", 1, "e1000", 2.5)
 		let stacks = getLeptonStacks(tmp.elm.ferm.leptonRewards)
-		if (stacks.gte(8) && player.elementary.sky.amount.eq(0)) stacks = stacks.sqrt().times(Math.sqrt(8));
+		if (stacks.gte(8) && player.elementary.sky.amount.eq(0)) stacks = softcap(stacks, "P", 1, 8, 2)
 		if (name == "electron")
 			return softcap(lpts.max(0)
 			.plus(1)
@@ -88,12 +92,16 @@ function updateTempLeptons() {
 		else if (name == "tau")
 			return ExpantaNum.pow(
 				player.inf.knowledge.max(0).plus(1).log10().plus(1).log10().plus(1),
-				lpts.max(0).times(ExpantaNum.pow(2.5, stacks)).plus(1).times(10).slog(10).div(5).max(0.2)
+				lpts.max(0).times(ExpantaNum.pow(2.5, stacks)).plus(1).times(10).log(10).div(5).max(0.2)
 			).min(lpts.plus(1));
 		else if (name == "netrion")
-			return lpts.max(0).times(ExpantaNum.pow(2, stacks)).plus(1).times(10).log(10).max(1).sub(1).div(100).max(0).root(1.5).plus(1);
+			return softcap(
+				lpts.max(0).times(ExpantaNum.pow(2, stacks)).plus(1).times(10).log(10).max(1).sub(1).div(100).max(0).root(1.5).plus(1)
+				, "EP", 1, 20, 2.25);
 		else if (name == "vibrino")
-			return lpts.max(0).times(ExpantaNum.pow(1.4, stacks)).plus(1).times(16).log(16).max(1).sub(1).div(250).max(0).root(1.5).plus(1);
+			return softcap(
+				lpts.max(0).times(ExpantaNum.pow(1.4, stacks)).plus(1).times(16).log(16).max(1).sub(1).div(250).max(0).root(1.5).plus(1)
+				, "EP", 1, 10, 2.5);
 			// please do not use slog ;_;
 		else if (name == "psi") return lpts.max(0).plus(1).log10().plus(1).pow(stacks.plus(0.5)).max(1);
 	};

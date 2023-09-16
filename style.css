@@ -686,6 +686,9 @@ table {
 	animation: dcArrow 1s linear infinite;
 }
 
+
+
+
 .btn.inf {
 	box-shadow: 3px 4px 0px 0px #947435;
 	background: none;
@@ -1466,6 +1469,58 @@ table {
 	display: table-cell;
 	vertical-align: middle;
 }
+
+#metaStat {
+	display: inline-block;
+	border-radius: 75px;
+	width: 75px;
+	height: 75px;
+	background-color: #00C7F3;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#exoticStat {
+	display: inline-block;
+	border-radius: 75px;
+	width: 75px;
+	height: 75px;
+	background-color: #FF8000;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#instantStat {
+	display: inline-block;
+	border-radius: 75px;
+	width: 75px;
+	height: 75px;
+	background-color: #D0D0D0;
+	color: #202020;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#wtfStat {
+	display: inline-block;
+	border-radius: 75px;
+	width: 75px;
+	height: 75px;
+	background-color: #202020;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+#utterlyFuckedStat {
+	display: inline-block;
+	border-radius: 160px;
+	width: 160px;
+	height: 75px;
+	background-color: #FF0000;
+	display: table-cell;
+	vertical-align: middle;
+}
+
 
 #achDesc {
 	top: 0px; 

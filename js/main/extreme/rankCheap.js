@@ -20,15 +20,15 @@ function updateTempRankCheapCost(){
 	tmp.rankCheap.fp = new ExpantaNum(1);
 	if (extremeStadiumComplete("spectra")) tmp.rankCheap.fp = tmp.rankCheap.fp.times(EXTREME_STADIUM_DATA.spectra.effect())
 	tmp.rankCheap.bc = new ExpantaNum(30);
-		let scal
-		scal = player.rankCheap
-		scal = doAllScaling(scal, "rankCheap", false)
+		let scal;
+		scal = player.rankCheap;
+		scal = doAllScaling(scal, "rankCheap", false);
 		scal = new ExpantaNum(tmp.rankCheap.bc).times(ExpantaNum.pow(2, scal.div(tmp.rankCheap.fp).max(1).sub(1).pow(2)));
-		tmp.rankCheap.req = scal
-		scal = player.distance.div(tmp.rankCheap.bc).logBase(2).sqrt().plus(1).times(tmp.rankCheap.fp)
-		scal = doAllScaling(scal, "rankCheap", true)
-		scal = scal.plus(1).round();
-		tmp.rankCheap.bulk = scal
+		tmp.rankCheap.req = scal;
+		scal = player.distance.div(tmp.rankCheap.bc).logBase(2).sqrt().plus(1).times(tmp.rankCheap.fp);
+		scal = doAllScaling(scal, "rankCheap", true);
+		scal = scal.plus(1).floor();
+		tmp.rankCheap.bulk = scal;
 }
 
 function updateTempRankCheap() {

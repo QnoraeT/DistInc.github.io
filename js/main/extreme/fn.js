@@ -35,7 +35,7 @@ function updateFurnaceUpgradeCosts() {
 			scalFN = doAllScaling(scalFN, "fn", false, specialScale)
 			scalFN = ExpantaNum.pow(tmp.fn.upgs[n].base.div(10), scalFN.pow(tmp.fn.bfEff.times(2))).times(tmp.fn.upgs[n].base);
 			tmp.fn.upgs[n].cost = scalFN
-			scalFN = player.furnace.coal.div(tmp.fn.upgs[n].base).logBase(tmp.fn.upgs[n].base.div(10)).pow(tmp.fn.bfEff.times(2).pow(-1));
+			scalFN = player.furnace.coal.div(tmp.fn.upgs[n].base).logBase(tmp.fn.upgs[n].base.div(10)).root(tmp.fn.bfEff.times(2));
 			scalFN = doAllScaling(scalFN, "fn", true, specialScale)
 			scalFN = scalFN.plus(1).floor();
 			tmp.fn.upgs[n].bulk = scalFN
@@ -62,8 +62,12 @@ function updateBlueFlameEff() {
 	if (inFC(5)) adj = adj.times(0.725)
 	if (extremeStadiumActive("quantron", 2)) adj = adj.times(0.95)
 	tmp.fn.bfEff = ExpantaNum.div(1, player.furnace.blueFlame.plus(tmp.fn.enh?tmp.fn.enh.eff:0).times(adj).div(4).plus(1));
+	tmp.fn.bfEffRecip = player.furnace.blueFlame.plus(tmp.fn.enh?tmp.fn.enh.eff:0).times(adj).div(4).plus(1)
 	if (tmp.fn.bfEff.lt(0.0098)) tmp.fn.bfEff = tmp.fn.bfEff.sqrt().times(Math.sqrt(0.0098));
+	if (tmp.fn.bfEffRecip.gte(102.04)) tmp.fn.bfEffRecip = softcap(tmp.fn.bfEffRecip, "P", 1, 102.04, 2)
 	if (inFC(1)) tmp.fn.bfEff = new ExpantaNum(1)
+	if (inFC(1)) tmp.fn.bfEffRecip = new ExpantaNum(1)
+	if (tmp.fn.bfEff==new Decimal(0) || tmp.fn.bfEffRecip==new Decimal(Infinity)) throw new Error("What the fuck? Blue Flame effectiveness is OP! [Hit Infinity]")
 }
 
 function updateFurnUpgEffs() {
@@ -104,15 +108,22 @@ function updateBlueFlameCost() {
 		tmp.fn.bfBase = ExpantaNum.pow(tmp.fn.bfBase, 2)
 		tmp.fn.bfLB = ExpantaNum.pow(tmp.fn.bfLB, 3)
 	}
-	tmp.fn.bfReq = ExpantaNum.pow(tmp.fn.bfLB, ExpantaNum.pow(tmp.fn.bfBase, player.furnace.blueFlame).sub(1)).times(1e6);
-	tmp.fn.bfBulk = player.furnace.coal.div(1e6).max(1).logBase(tmp.fn.bfLB).add(1).logBase(tmp.fn.bfBase).add(1);
-	if (scalingActive("bf", player.furnace.blueFlame.max(tmp.fn.bfBulk), "scaled")) {
-		let start = getScalingStart("scaled", "bf")
-		let power = getScalingPower("scaled", "bf")
-		let exp = ExpantaNum.pow(2, power);
-		tmp.fn.bfReq = ExpantaNum.pow(tmp.fn.bfLB, ExpantaNum.pow(tmp.fn.bfBase, player.furnace.blueFlame.pow(exp).div(start.pow(exp.sub(1)))).sub(1)).times(1e6);
-		tmp.fn.bfBulk = player.furnace.coal.div(1e6).max(1).logBase(tmp.fn.bfLB).add(1).logBase(tmp.fn.bfBase).times(start.pow(exp.sub(1))).pow(exp.pow(-1)).add(1);
-	}
+	let scalBFlame;
+	scalBFlame = player.furnace.blueFlame
+	scalBFlame = doAllScaling(scalBFlame, "bf", false);
+	scalBFlame = ExpantaNum.pow(tmp.fn.bfLB, ExpantaNum.pow(tmp.fn.bfBase, scalBFlame).sub(1)).times(1e6);
+	tmp.fn.bfReq = scalBFlame;
+	scalBFlame = player.furnace.coal.div(1e6).max(1).logBase(tmp.fn.bfLB).add(1).logBase(tmp.fn.bfBase).add(1);
+	scalBFlame = doAllScaling(scalBFlame, "bf", true);
+	scalBFlame = scalBFlame.plus(1).floor();
+	tmp.fn.bfBulk = scalBFlame;
+	// if (scalingActive("bf", player.furnace.blueFlame.max(tmp.fn.bfBulk), "scaled")) {
+	// 	let start = getScalingStart("scaled", "bf")
+	// 	let power = getScalingPower("scaled", "bf")
+	// 	let exp = ExpantaNum.pow(2, power);
+	// 	tmp.fn.bfReq = ExpantaNum.pow(tmp.fn.bfLB, ExpantaNum.pow(tmp.fn.bfBase, player.furnace.blueFlame.pow(exp).div(start.pow(exp.sub(1)))).sub(1)).times(1e6);
+	// 	tmp.fn.bfBulk = player.furnace.coal.div(1e6).max(1).logBase(tmp.fn.bfLB).add(1).logBase(tmp.fn.bfBase).times(start.pow(exp.sub(1))).pow(exp.pow(-1)).add(1);
+	// }
 }
 
 function updateBlueFlameReset() {
@@ -160,19 +171,19 @@ function updateEnhFurnUpgCosts() {
 		13: { base: new ExpantaNum(1e40) },
 	};
 	for (let n = 1; n <= 13; n++) {
-		tmp.fn.enh.upgs[n].costAdj = new ExpantaNum(1)
+		tmp.fn.enh.upgs[n].costAdj = new ExpantaNum(1);
 		if (n==13) tmp.fn.enh.upgs[n].costAdj = new ExpantaNum(0.75);
 		if (FCComp(6)) tmp.fn.enh.upgs[n].costAdj = tmp.fn.enh.upgs[n].costAdj.times(tmp.fn.bfEff.root(100));
 		if (inFC(6)) tmp.fn.enh.upgs[n].costAdj = tmp.fn.enh.upgs[n].costAdj.div(10);
-		let scalEFN
-		scalEFN = player.furnace.enhancedUpgrades[n - 1]
-		scalEFN = doAllScaling(scalEFN, "efn", false)
+		let scalEFN;
+		scalEFN = player.furnace.enhancedUpgrades[n - 1];
+		scalEFN = doAllScaling(scalEFN, "efn", false);
 		scalEFN = ExpantaNum.pow(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1), scalEFN).times(tmp.fn.enh.upgs[n].base);
-		tmp.fn.enh.upgs[n].cost = scalEFN
-		scalEFN = player.furnace.enhancedCoal.div(tmp.fn.enh.upgs[n].base).logBase(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1))
-		scalEFN = doAllScaling(scalEFN, "efn", true)
+		tmp.fn.enh.upgs[n].cost = scalEFN;
+		scalEFN = player.furnace.enhancedCoal.div(tmp.fn.enh.upgs[n].base).logBase(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1));
+		scalEFN = doAllScaling(scalEFN, "efn", true);
 		scalEFN = scalEFN.plus(1).floor();
-		tmp.fn.enh.upgs[n].bulk = scalEFN
+		tmp.fn.enh.upgs[n].bulk = scalEFN;
 		tmp.fn.enh.upgs[n].extra = (n<=9?((player.furnace.enhancedUpgrades[n+2]||new ExpantaNum(0)).plus(tmp.fn.enh.upgs[n+3]?(tmp.fn.enh.upgs[n+3].extra?tmp.fn.enh.upgs[n+3].extra:0):0).times(tmp.fn.enh.upgPow)):new ExpantaNum(0)).times((n>6)?2:1)
 		if (n<13) tmp.fn.enh.upgs[n].extra = tmp.fn.enh.upgs[n].extra.plus(player.furnace.enhancedUpgrades[12].times(tmp.fn.enh.upgPow))
 		if (!tmp.fn.enh.upgs[n].buy) tmp.fn.enh.upgs[n].buy = function () {
