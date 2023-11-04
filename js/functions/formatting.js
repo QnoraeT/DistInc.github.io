@@ -75,7 +75,7 @@ function decimalPlaces(value, places, roundWhole=false, base = 10) {
 	}
 }
 
-function formatDistance(x, fc=multiverseCapped()) {
+function formatDistance(x, fc=false) {
 	x = new ExpantaNum(x);
 	for (i = Object.keys(DISTANCES).length - 1; i >= 0; i--) {
 		let name = Object.keys(DISTANCES)[i];
@@ -87,6 +87,8 @@ function formatDistance(x, fc=multiverseCapped()) {
 		}
 		if (DISTANCE_TYPES[name]=="log") return showNum(x.log10().div(val.log10())) + " " + name; 
 		if (DISTANCE_TYPES[name]=="log^2") return showNum(x.log10().log10().sub(9).div(15).add(2)) + " " + name; 
+		if (DISTANCE_TYPES[name]=="log^3") return showNum(x.log10().log10().log10().sub(9).div(15).add(2)) + " " + name; 
+		if (DISTANCE_TYPES[name]=="log^4") return showNum(x.log10().log10().log10().log10().sub(9).div(15).add(2)) + " " + name; 
 		return showNum(x.div(val)) + " " + name;
 	}
 }

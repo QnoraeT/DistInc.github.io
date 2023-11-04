@@ -2,12 +2,15 @@ function updateTempRanks() {
 	if (!tmp.ranks) tmp.ranks = {};
 	let fp = getRankFP()
 	let bc = getRankBaseCost()
+	let divide = new Decimal(1)
+	if (tmp.rankCheap)
+		divide = tmp.rankCheap.eff2
 	let scalRank
 	scalRank = player.rank
 	scalRank = doAllScaling(scalRank, "rank", false)
-	scalRank = new ExpantaNum(bc).times(ExpantaNum.pow(2, scalRank.div(fp).max(1).sub(1).pow(2)));
+	scalRank = new ExpantaNum(bc).times(ExpantaNum.pow(2, scalRank.div(fp).max(1).sub(1).pow(2))).div(divide);
 	tmp.ranks.req = scalRank
-	scalRank = player.distance.div(bc).max(1).logBase(2).sqrt().add(1).mul(fp)
+	scalRank = player.distance.mul(divide).div(bc).max(1).logBase(2).sqrt().add(1).mul(fp)
 	scalRank = doAllScaling(scalRank, "rank", true)
 	scalRank = scalRank.plus(1).floor();
 	tmp.ranks.bulk = scalRank
@@ -51,7 +54,7 @@ function getRankBaseCost() {
 	if (modeActive("extreme") && player.rank < 3) bc = bc.times(2);
 	if (modeActive("easy") && player.rank < 3) bc = bc.div(3);
 	if (tmp.inf) if (tmp.inf.stadium.active("spaceon", 5) || tmp.inf.stadium.active("solaris", 6)) bc = bc.times(10);
-	if (tmp.rankCheap && modeActive("extreme")) bc = bc.div(tmp.rankCheap.eff2).max(1e-100);
+	// if (tmp.rankCheap && modeActive("extreme")) bc = bc.div(tmp.rankCheap.eff2).max(1e-100);
 	return bc;
 }
 
@@ -89,22 +92,31 @@ function rankEffects(num) {
 			temp = softcap(ExpantaNum.pow(10, player.elementary.particles.max(1e9).sub(1e9).add(1).log(10).pow(0.25)).sub(1).div(20), "EP", 1, 25, 2);
 			break;
 		case "1750":
-			temp = Decimal.sub(1, Decimal.div(1, player.elementary.hc.best.max(10).div(10).sub(1).div(6).add(1))).mul(100);
+			temp = player.elementary.hc.best.max(10).div(10).sub(1).div(6).add(1);
 			break;
 		case "2000":
-			temp = Decimal.sub(1, Decimal.div(1, player.inf.ascension.power.max(Number.MAX_VALUE).log(Number.MAX_VALUE).root(2))).mul(100);
+			temp = player.inf.ascension.power.max(Number.MAX_VALUE).log(Number.MAX_VALUE).root(2);
 			break;
 		case "2500":
-			temp = Decimal.sub(1, Decimal.div(1, player.rockets.max("ee9").log(10).root(9).div(10).root(1.75))).mul(100);
+			temp = player.rockets.max("ee9").log(10).root(9).div(10).root(1.75);
 			break;
 		case "4000":
-			temp = Decimal.sub(1, Decimal.div(1, player.collapse.cadavers.max("ee8").log(10).log(1e8).root(3.5))).mul(100);
+			temp = player.collapse.cadavers.max("ee8").log(10).log(1e8).root(3.5);
 			break;
 		case "1.5e4":
-			temp = new Decimal(999)
+			temp = new Decimal(1) // placeholder
+			break;
+		case "4e4":
+			temp = new Decimal(1) // placeholder
+			break;
+		case "1e5":
+			temp = new Decimal(1) // placeholder
+			break;
+		case "1.5e5":
+			temp = new Decimal(1) // placeholder
 			break;
 		default:
-			throw new Error("rank " + num + " does not exist for effects!")
+			return false
 	}
 	return temp
 }

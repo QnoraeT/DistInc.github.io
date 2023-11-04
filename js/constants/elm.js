@@ -1048,7 +1048,7 @@ const SKY_FIELDS = {
 	placements: [[8],[10,2,3,11],[6,1,7],[12,4,5,13],[9]],
 	1: {
 		req: 1,
-		pionDesc: "All Rank/Tier scalings start later based on your Pions.",
+		pionDesc: "Scaled-Atomic Rank/Tier scalings start later based on your Pions.",
 		spinorDesc: "Add to all Foam Boosts based on your Spinors.",
 		baseCost: new ExpantaNum(100),
 		costMult: new ExpantaNum(5),

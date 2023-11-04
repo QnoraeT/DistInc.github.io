@@ -32,16 +32,20 @@ function getScalingStart(type, name) {
 			if (player.tr.upgrades.includes(11) && !HCCBA("noTRU")) start = start.plus(10)
 			if (player.tr.upgrades.includes(15) && !HCCBA("noTRU")) start = start.plus(32)
 			if (tmp.inf) if (tmp.inf.upgs.has("1;6")) start = start.plus(2)
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 			if (nerfActive("scaledRank")) start = new ExpantaNum(1)
 		} else if (type=="superscaled") {
 			if (tmp.inf) if (tmp.inf.upgs.has("6;2")) start = start.plus(5)
 			if (tmp.inf) if (tmp.inf.stadium.completed("solaris")) start = start.plus(STADIUM_REWARDS.effects.solaris())
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 		} else if (type=="hyper") {
 			if (hasMltMilestone(23) && player.mlt.active==0) start = start.plus(250);
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 		} else if (type=="atomic") {
 			if (player.elementary.bosons.scalar.higgs.upgrades.includes("0;0;5") && tmp.elm) start = start.plus(tmp.elm.bos["higgs_0;0;5"]())
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 		}
-		if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
+		
 	} else if (name=="rankCheap") {
 		if (type=="scaled") {
 
@@ -56,13 +60,18 @@ function getScalingStart(type, name) {
 			if (player.tr.upgrades.includes(12) && !HCCBA("noTRU")) start = start.plus(2)
 			if (player.tr.upgrades.includes(14) && !HCCBA("noTRU")) start = start.plus(tr14Eff()["ss"])
 			if (tmp.inf) if (tmp.inf.upgs.has("1;6")) start = start.plus(2)
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 			if (nerfActive("scaledTier")) start = new ExpantaNum(1)
 		} else if (type=="superscaled") {
 			if (tmp.inf) if (tmp.inf.upgs.has("5;7")) start = start.plus(INF_UPGS.effects["5;7"]());
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 		} else if (type=="hyper") {
 			if (player.tier.gt(60)) start = start.add(tierEffects(60))
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
+		} else if (type=="atomic") {
+			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 		}
-		if (type!=="meta") if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
+
 	} else if (name=="rf") {
 		if (type=="scaled") {
 			if (player.dc.unl && tmp.dc) start = start.plus(tmp.dc.dfEff)
@@ -117,7 +126,7 @@ function getScalingStart(type, name) {
 			}
 		}
 	}
-	start = new Decimal(1)
+	
 	if (type!=="utterlyFucked") {
 		if (Object.values(SCALING_STARTS)[Object.keys(SCALING_STARTS).indexOf(type)+1][name]!==undefined) {
 			start = start.min(getScalingStart(Object.keys(SCALING_STARTS)[Object.keys(SCALING_STARTS).indexOf(type)+1], name));
@@ -170,8 +179,8 @@ function getScalingPower(type, name) {
 		} else if (type=="hyper") {
 
 		} else if (type=="atomic") {
-			if (player.tier.gte(85)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(85).div(100))))
-			if (player.rank.gte(2500)) power = power.div(Decimal.div(1, Decimal.sub(1, rankEffects(2500).div(100))))
+			if (player.tier.gte(85)) power = power.div(tierEffects(85))
+			if (player.rank.gte(2500)) power = power.div(rankEffects(2500))
 		}
 	} else if (name=="fn" && modeActive("extreme")) {
 		if (type == "scaled"){
@@ -180,13 +189,13 @@ function getScalingPower(type, name) {
 				if (a >= 22) a += 10
 				if (tmp.ach) if (tmp.ach[124].has) power = power.times(20 / a)
 			}
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		} else if (type=="superscaled") {
 			if (FCComp(1)) power = power.times(0.1)
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		} else if (type=="hyper") {
 			if (FCComp(1)) power = power.times(0.1)
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 			if (inFC(3)) power = new ExpantaNum(99.99)
 		}
 	} else if (name=="pathogenUpg") {
@@ -196,14 +205,14 @@ function getScalingPower(type, name) {
 		} else if (type=="superscaled") {
 			if (tmp.inf) if (tmp.inf.upgs.has("10;1")) power = power.times(ExpantaNum.sub(1, INF_UPGS.effects["10;1"]("pth")))
 		} else if (type=="hyper") {
-			if (tmp.ach[185].has) power = power.sub(.1);
+			if (tmp.ach[185].has) power = power.mul(0.9); // sub by 0.1 might cause issues
 		}
 	} else if (name=="darkCore") {
 		if (type=="scaled") {
 			if (tmp.inf) if (tmp.inf.upgs.has("8;6")) power = power.times(ExpantaNum.sub(1, INF_UPGS.effects["8;6"]()))
 		} else if (type=="hyper") {
 			if (!modeActive("extreme")&&!modeActive("hikers_dream")) power = power.div(25.5)
-			if (player.tier.gt(100)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(100).div(100))))
+			if (player.tier.gt(100)) power = power.div(tierEffects(100))
 		}
 	} else if (name=="endorsements") {
 		if (type=="scaled") {
@@ -211,29 +220,29 @@ function getScalingPower(type, name) {
 		}
 	} else if (name=="dervBoost") {
 		if (type=="scaled") {
-			if (player.tier.gt(100)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(100).div(100))))
+			if (player.tier.gt(100)) power = power.div(tierEffects(100))
 		}
 	} else if (name=="enlightenments") {
 		if (type=="scaled") {
-			if (player.rank.gte(2000)) power = power.div(Decimal.div(1, Decimal.sub(1, rankEffects(2000).div(100))))
+			if (player.rank.gte(2000)) power = power.div(rankEffects(2000))
 		} else if (type=="superscaled") {
-			if (player.rank.gte(2000)) power = power.div(Decimal.div(1, Decimal.sub(1, rankEffects(2000).div(100).add(1).root(2).sub(1))))
+			if (player.rank.gte(2000)) power = power.div(rankEffects(2000).root(2))
 		}
 	} else if (name=="efn") {
 		if (type=="scaled") {
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		} else if (type=="superscaled") {
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		} else if (type=="hyper") {
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		}
 	} else if (name=="bf") {
 		if (type=="scaled") {
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		} else if (type=="superscaled") {
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		} else if (type=="hyper") {
-			if (player.tier.gt(120)) power = power.div(Decimal.div(1, Decimal.sub(1, tierEffects(120).div(100))))
+			if (player.tier.gt(120)) power = power.div(tierEffects(120))
 		}
 	}
 	if (type=="hyper"&&name!="darkCore"&&power.lte(0.5)) power = ExpantaNum.div(1, softcap(ExpantaNum.div(1, power.max(1e-12)), "EP", 1, 2)).max(0.05)

@@ -70,22 +70,22 @@ function tierEffects(num) {
 			temp = player.automation.intelligence.plus(1).log10().plus(1).sqrt();
 			break;
 		case "50":
-			temp = ExpantaNum.sub(1, ExpantaNum.div(1, player.tier.div(50).pow(2))).mul(100);
+			temp = player.tier.div(50).pow(2).add(1);
 			break;
 		case "60":
-			temp = player.magma.amount.max(20).div(5).pow(1.2).sub(1);
+			temp = player.magma?player.magma.amount.max(20).div(5).pow(1.2).sub(1):new Decimal(1);
 			break;
 		case "85":
-			temp = Decimal.sub(1, Decimal.div(1, player.rockets.add(1).log(10).add(1).log(10).pow(4.25).mul(player.rank.mul(player.tier)).root(128))).mul(100)
+			temp = player.rockets.add(1).log(10).add(1).log(10).pow(4.25).mul(player.rank.mul(player.tier)).root(128).max(1)
 			break;
 		case "100":
-			temp = Decimal.sub(1, Decimal.div(1, player.collapse.cadavers.max("ee10").log(10).log(10).div(10).pow(2.2222))).mul(100)
+			temp = player.collapse.cadavers.max("ee10").log(10).log(10).div(10).pow(2.2222)
 			break;
 		case "120":
-			temp = Decimal.sub(1, Decimal.div(200, softcap(player.elementary.time, "EP", 1, 100, 2.2).add(200))).mul(100).min(90)
-			break;																									
-		default:
-			throw new Error("tier " + num + " does not exist for effects!")
+			temp = softcap(player.elementary.time, "EP", 1, 100, 2.2).root(1.5).div(200).add(1).min(10)
+			break;	
+		default: 
+			return false																								
 	}
 	return temp
 }

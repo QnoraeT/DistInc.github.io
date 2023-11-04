@@ -54,6 +54,7 @@ function calcDarkCircleBonus(){
 				.pow(
 					ExpantaNum.mul(
 						ExpantaNum.pow(2, player.dc.matter.plus(10).slog(10).sub(1)).div(10),
+						// TODO: remove this slog
 						tmp.dc.power
 					)
 				)
@@ -66,6 +67,7 @@ function calcDarkCircleBonus(){
 				.pow(
 					ExpantaNum.mul(
 						ExpantaNum.pow(2, player.dc.energy.plus(10).slog(10).sub(1)).div(8),
+						// TODO: remove this slog
 						tmp.dc.power
 					)
 				)

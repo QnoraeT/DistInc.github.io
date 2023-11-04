@@ -19,7 +19,7 @@ class Layer {
 		if (modeActive("extreme+hikers_dream") && player.achievements.includes(38) && this.name == "collapse") gain = gain.times(Math.max(player.energyUpgs.length, 1)**2)
 		let sc = new ExpantaNum(LAYER_SC[this.name]);
 		if (tmp[this.tName].sc !== undefined) sc = tmp[this.tName].sc;
-		if (gain.gte(sc)) gain = gain.sqrt().times(ExpantaNum.sqrt(sc));
+		if (gain.gte(sc)) gain = softcap(gain, "P", 1, sc);
 		if (tmp.lm) if (tmp.lm[this.name]) gain = gain.times(tmp.lm[this.name]);
 		if (this.name == "collapse"){
 			if (player.inf.pantheon.purge.active || HCCBA("purge")) gain = softcap(gain, "EP", 1, 10, 1.5)

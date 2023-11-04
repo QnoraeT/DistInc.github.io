@@ -20,7 +20,8 @@ const DISTANCES = {
 	zev: "ee99",
 	yov: "ee114",
 	arvs: "ee129",
-	
+	ulv: "ee1.000000129e9",
+	sec: "eee1000000084",
 };
 
 const DISTANCE_TYPES = {
@@ -33,6 +34,8 @@ const DISTANCE_TYPES = {
 	zev: "log",
 	yov: "log",
 	arvs: "log^2",
+	ulv: "log^3",
+	sec: "log^4",
 }
 
 const TIMES = {

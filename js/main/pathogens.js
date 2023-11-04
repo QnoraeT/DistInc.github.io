@@ -2,7 +2,7 @@ function updatePathogensGain(){
 	tmp.pathogens.st = new ExpantaNum(1.25);
 	tmp.pathogens.gainLEpart = player.collapse.lifeEssence.plus(1).log10().plus(1).pow(0.1).sub(1);
 	tmp.pathogens.gainPTHpart = player.pathogens.amount.plus(1).log10().plus(1);
-	tmp.pathogens.gain = tmp.pathogens.gainLEpart.times(tmp.pathogens.gainPTHpart);
+	tmp.pathogens.gain = tmp.pathogens.gainLEpart.times(tmp.pathogens.gainPTHpart).sqrt();
 	if (tmp.pathogens.gain.gte(tmp.pathogens.st))
 		tmp.pathogens.gain = softcap(tmp.pathogens.gain, "P", player.rank.gt(70000)?0.3:1, tmp.pathogens.st, 2)
 	tmp.pathogens.baseGain = new ExpantaNum(tmp.pathogens.gain); // what why
@@ -193,6 +193,7 @@ function updateTempPathogens() {
 				} else return bought.plus(1).logBase(4).plus(1).sqrt();
 			case 11: 
 				return player.pathogens.amount.plus(1).times(10).slog(10).times(bought.sqrt().times(2.5));
+				// TODO: remove this slog
 			case 12: 
 				return player.rf.plus(1).log10().plus(1).log10().times(bought.cbrt().times(1.5));
 			case 13: 

@@ -602,6 +602,8 @@ function updateTempPantheon() {
 		tmp.inf.pantheon.soulBoost = adjustedD.div(h.pow(tmp.inf.pantheon.ppe).plus(1)).plus(1).log10().plus(1).log10().plus(1);
 	}
 	if (!mltRewardActive(5)) {
+		// TODO: remove this slog
+		// ! What the hell is this kind of softcap!?
 		if (tmp.inf.pantheon.chipBoost.gte(2)) tmp.inf.pantheon.chipBoost = tmp.inf.pantheon.chipBoost.slog(2).times(2);
 		if (tmp.inf.pantheon.chipBoost.gte(2.5)) tmp.inf.pantheon.chipBoost = tmp.inf.pantheon.chipBoost.logBase(2.5).plus(1.5);
 	} else tmp.inf.pantheon.chipBoost = tmp.inf.pantheon.chipBoost.pow(1.25);

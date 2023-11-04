@@ -82,7 +82,7 @@ function updateElementaryLayer() {
 		let exp = new ExpantaNum(1)
 		if (hasDE(5) && (player.elementary.theory.tree.upgrades[20]||new ExpantaNum(0)).gte(1)) exp = exp.times(0.5)
 		if (tmp.ach[172].has) exp = exp.div(player.elementary.times.plus(1).logBase(1e3).times(0.2).plus(1))
-		if (player.tier.gt(50)) exp = exp.mul(ExpantaNum.sub(1, tierEffects(50).div(100)))
+		if (player.tier.gt(50)) exp = exp.div(tierEffects(50))
 		gain = softcap(gain, "P", exp, tmp.elm.softcap, 4)
 		if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.times(tmp.elm.qf.boost12) // not affected by softcap hehe
 	

@@ -10,10 +10,10 @@ function getRankCheapEff() {
 
 function getRankCheapEff2() {
 	if (extremeStadiumActive("flamis")) return new ExpantaNum(1)
-	return ExpantaNum.pow(
+	return softcap(ExpantaNum.pow(
 		2,
 		player.rankCheap.times(tmp.rankCheap.manPow).plus(tmp.rankCheap.free).times(tmp.rankCheap.pow)
-	);
+	), "EP", 1, 1e100, 2.5);
 }
 
 function updateTempRankCheapCost(){
@@ -45,6 +45,7 @@ function updateTempRankCheap() {
 	if (tmp.ach[12].has) tmp.rankCheap.pow = tmp.rankCheap.pow.plus(ExpantaNum.mul(0.5, player.achievements.length));
 	if (player.tr.upgrades.includes(22) && !HCCBA("noTRU") && modeActive("extreme"))
 		tmp.rankCheap.pow = tmp.rankCheap.pow.times(player.collapse.cadavers.plus(1).times(10).slog(10).sqrt());
+	// TODO: remove this slog
 	tmp.rankCheap.manPow = new ExpantaNum(1);
 	if (tmp.fn) if (tmp.fn.enh.unl) tmp.rankCheap.manPow = tmp.rankCheap.manPow.plus(ExpantaNum.mul(tmp.fn.enh.upg2eff, player.furnace.enhancedUpgrades[1].plus(tmp.fn.enh.upgs[2].extra).times(tmp.fn.enh.upgPow)))
 	tmp.rankCheap.eff = getRankCheapEff();

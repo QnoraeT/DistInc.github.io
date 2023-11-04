@@ -108,6 +108,7 @@ function tr11Pow() {
 function tr11Eff() {
 	return {
 		cg: tmp.dc ? softcap(tmp.dc.flow.pow(tmp.dc.flow.plus(1).slog(2).times(10).plus(1)).pow(tr11Pow()).pow(player.rank.div(7500).max(1).pow(5)), "EP", 1, "ee9", 4) : new ExpantaNum(1),
+		// TODO: remove this slog
 		dcf: player.tr.cubes.plus(1).log10().div(75).plus(1).pow(tr11Pow()).pow(player.rank.div(7500).max(1).pow(7.5))
 	}
 }
@@ -124,6 +125,7 @@ function tr13Eff() {
 	return tmp.dc ? 
 	!player.rank.gt(7500)
 		?tmp.dc.allComp.plus(1).slog(2).pow(0.1).sub(1).max(0)
+		// TODO: remove this slog
 		:tmp.dc.allComp.plus(1).log(2).pow(player.rank.div(7500).max(1).root(2).sub(1).div(2).max(0.1)).sub(1).max(0)
 		: new ExpantaNum(0)
 }

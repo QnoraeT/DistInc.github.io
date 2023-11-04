@@ -150,6 +150,7 @@ const PLASMA_BOOSTS = {
 		desc: "All previous Plasmic & Gleaming Boosts use their respective resource more effectively.",
 		baseEff: new ExpantaNum(1),
 		eff: function(amt) { return amt.plus(1).times(10).slog(10).div(1.75).plus(1) },
+		// TODO: remove this slog
 		effD: function(e) { return "+"+showNum(e.sub(1).times(100))+"%" },
 	},
 	10: {

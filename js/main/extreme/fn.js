@@ -57,6 +57,7 @@ function updateBlueFlameEff() {
 	let adj = new ExpantaNum(1);
 	if (player.tr.upgrades.includes(17) && !HCCBA("noTRU") && modeActive("extreme"))
 		adj = adj.times(player.tr.cubes.plus(1).times(10).slog(10));
+	// TODO: remove this slog
 	if (player.tr.upgrades.includes(26) && !HCCBA("noTRU") && modeActive("extreme"))
 		adj = adj.times(tmp.dc.flow.max(1).log10().plus(1));
 	if (inFC(5)) adj = adj.times(0.725)

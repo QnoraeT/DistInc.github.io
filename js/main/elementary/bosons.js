@@ -233,6 +233,7 @@ function updateHiggsUpgradeEffects() {
 	if (!tmp.elm.bos["higgs_0;2;1"]) tmp.elm.bos["higgs_0;2;1"] = function(disp=false) {
 		if (!disp) if (!tmp.elm.bos.hasHiggs("0;2;1")) return new ExpantaNum(1)
 		return player.elementary.bosons.scalar.higgs.amount.plus(1).times(10).slog(10).pow(0.1).sub(1).times(100)
+		// TODO: remove this slog
 	}
 	if (!tmp.elm.bos["higgs_0;0;4"]) tmp.elm.bos["higgs_0;0;4"] = function(disp=false) {
 		if (!disp) if (!tmp.elm.bos.hasHiggs("0;0;4")) return new ExpantaNum(1)
@@ -255,6 +256,7 @@ function updateHiggsUpgradeEffects() {
 		if (!disp) if (!tmp.elm.bos.hasHiggs("0;0;5")) return new ExpantaNum(0)
 		let ret = player.elementary.bosons.scalar.higgs.amount.plus(1).times(10).slog(10).pow(2.5).sub(1).times(18)
 		return ret
+		// TODO: remove this slog
 	}
 }
 

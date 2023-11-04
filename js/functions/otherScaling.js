@@ -2,15 +2,15 @@
 
 function cSC(type, amt, inv, a, b, c, d, f, g) {
     // 1st arg is type, 2nd arg is effective bought, 3rd arg is if it's inverse, 4th+ are params
-   let x = new ExpantaNum(amt);
-   a = new ExpantaNum(a);
-   b = new ExpantaNum(b);
-   c = new ExpantaNum(c);
-   d = new ExpantaNum(d);
-   f = new ExpantaNum(f);
-   g = new ExpantaNum(g);
-   let temp;
-   switch(type) {
+    let x = new ExpantaNum(amt);
+    a = new ExpantaNum(a);
+    b = new ExpantaNum(b);
+    c = new ExpantaNum(c);
+    d = new ExpantaNum(d);
+    f = new ExpantaNum(f);
+    g = new ExpantaNum(g);
+    let temp;
+    switch(type) {
         case "P":
             if (!inv)
                 // temp = x.pow(ExpantaNum.pow(c, b)).div(a.pow(ExpantaNum.pow(c, b).sub(1)));
@@ -30,7 +30,7 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
             else
                 temp = x.div(a).log(ExpantaNum.pow(c, b)).add(a);
             // return (inv)?(ExpantaNum.min(temp,x)):(ExpantaNum.max(temp,x));
-            return temp; // but why would you let hyper rocket fuel have the potential to scale way slower than normal
+            return temp; // but why would you let hyper anything have the potential to scale way slower than normal
         case "E":
             if (!inv)
                 temp = ExpantaNum.pow(ExpantaNum.pow(c, b), x.div(a).sub(1)).mul(a);
@@ -71,37 +71,37 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
         default:
             console.warn("Cost scaling type " + type + " is not defined!!");
             return new ExpantaNum(10); // fallback cost
-   }
+    }
 }
 
 
-function softcap(amt, type, strength, start, powScale = 2, reduction = 0) {
+function softcap(amt, type, strength, start, powScale = 2) {
     let sta = new ExpantaNum(start);
-    let temp;
     if (amt.gte(sta)){
         let str = new ExpantaNum(strength);
+        let temp;
         switch(type) {
             case "D":
                 str = new ExpantaNum(powScale).pow(str);
-                temp = amt.div(str).add(sta.sub(sta.div(str)));
+                return amt.div(str).add(sta.sub(sta.div(str)));
             case "P": // polynomial
                 str = new ExpantaNum(powScale).pow(str);
-                temp = amt.div(sta).root(str).mul(sta).sub(sta).mul(str).add(sta);
+                return amt.div(sta).root(str).mul(sta).sub(sta).mul(str).add(sta);
             case "E": // exponential 
                 if (str.gt(1)){console.warn("Softcap \"E\" cannot work correctly with strength > 1 !");str=new ExpantaNum(1)}
                 str = ExpantaNum.sub(1, str);
-                temp = amt.log(sta.mul(amt.div(sta).pow(str))).add(1).pow(sta.mul(amt.div(sta).pow(str)).log(2));
+                return amt.log(sta.mul(amt.div(sta).pow(str))).add(1).pow(sta.mul(amt.div(sta).pow(str)).log(2));
             case "EP":
                 str = new ExpantaNum(powScale).pow(str);
-                temp = ExpantaNum.pow(sta, amt.log(sta).root(str));
+                return ExpantaNum.pow(sta, amt.log(sta).root(str));
             case "L": // logarithmic
-                temp = amt.log(10).pow(sta.log(10).div(sta.log(10).log(10)));
+                return amt.log(10).pow(sta.log(10).div(sta.log(10).log(10)));
             default:
                 console.warn("Softcap type " + type + " is not defined");
                 return amt;
         }
     }
-    return temp;
+    return amt;
 }
 
 function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 = ["P", "P", "LE", "P", "E"]){
@@ -152,8 +152,7 @@ function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 
             throw new Error("type " + type + " doesn't exist!");
     }
     if ((SCALING_STARTS[type][name] !== undefined) && scalingActive(name, amt, type)){
-        let x = cSC(scaleTYP, amt, inv, getScalingStart(type, name), getScalingPower(type, name), scaleSTR);
-        return x;
+        return cSC(scaleTYP, amt, inv, getScalingStart(type, name), getScalingPower(type, name), scaleSTR);
     }
     return amt;
 }

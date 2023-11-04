@@ -37,7 +37,8 @@ function calcAcceleration(){
 				: new ExpantaNum(0) 
 			).max(1)
 		);
-	if (modeActive("extreme") && tmp.acc.gte(Number.MAX_VALUE)) tmp.acc = softcap(tmp.acc, "P", 0.41, Number.MAX_VALUE, 2)
+	if (modeActive("extreme") && tmp.acc.gte(1e100)) tmp.acc = softcap(tmp.acc, "P", 1, 1e100, 1.5)
+	if (modeActive("extreme") && tmp.acc.gte(Number.MAX_VALUE)) tmp.acc = softcap(tmp.acc, "P", 1, Number.MAX_VALUE, 2.5)
 	if (modeActive("extreme") && tmp.acc.gte("1e10000")) tmp.acc = softcap(tmp.acc, "P", 1, "1e10000", 2)
 	if (extremeStadiumActive("nullum")) tmp.acc = ExpantaNum.pow(10, tmp.acc.log10().times(0.4-0.05*(extremeStadDiffLevel("nullum")-1)))
 	if (modeActive("hikers_dream") && tmp.hd) tmp.acc = tmp.acc.pow(tmp.hd.inclineRed)

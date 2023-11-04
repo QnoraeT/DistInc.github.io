@@ -3,20 +3,20 @@ var newsTimeouts = []
 function updateTemp() {
 	updateTempEarlyGame();
 	updateTempRanks();
-	updateTempTiers(); 
+	updateTempTiers();
 	updateTempRockets();
-	updateTempSpecial(); 
+	updateTempSpecial();
 	updateTempRF();
 	updateTempAuto();
-	updateLayerMults(); 
+	updateLayerMults();
 	updateTempTR();
 	updateTempCollapse();
 	updateTempPathogens();
-	updateTempDC(); 
+	updateTempDC();
 	updateTempInf();
 	updateTempElementary();
 	updateTempMultiverse();
-	updateTempSC(); 
+	updateTempSC();
 	updateTempMisc();
 	updateTempTimeSpeed();
 
@@ -24,18 +24,19 @@ function updateTemp() {
 		updateTempRankCheap();
 		updateTempFurnace();
 	}
-	
+
 	if (modeActive("hikers_dream")) {
 		updateTempHikersDream()
 	}
 }
 
 function setupHTML() {
+	tmp.el = {}
 	// Achievement Table
 	let achTable = new Element("achTable");
 	let table = "";
 	for (let r = 1; r <= ACH_DATA.rows; r++) {
-		table += "<tr id='achR"+r+"'>";
+		table += "<tr id='achR" + r + "'>";
 		for (let c = 1; c <= ACH_DATA.cols; c++) {
 			let id = r * 10 + c;
 			table += "<td id='ach" + id + "' class='achCont'>";
@@ -44,42 +45,52 @@ function setupHTML() {
 		table += "</tr>";
 	}
 	achTable.setHTML(table);
-	
+
 	// Setup Mode Combo Table
 	setupModeComboTable();
-	
+
 	// Rank/Tier Stats
 	let rankTierTable = new Element("rankTierStats")
 	table = "<div class='flexTopRow'><div class='flexContainer'>"
-	for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
+	for (let i = 0; i < Object.keys(RANK_DESCS).length; i++) {
 		let ranks = RANK_DESCS[i]
-		table += "<div id='rankReward"+showNum(ranks.req, false).replace(/\./g, "_")+"' class='rtReward'>"
-		table += "Rank "+showNum(ranks.req.add(1), false)+": "+(ranks.text[0].toUpperCase() + ranks.text.slice(1))
-		if (window["rank"+showNum(ranks.req, false)+"Eff"]) {
-			if (ranks.effectType == "% weaker"){
-				table += "<br>Currently: <b><span id='rankEff"+showNum(ranks.req, false).replace(/\./g, "_");+"'></span></b>"+ranks.effectType
+		table += "<div id='rankReward" + showNum(ranks.req, false).replace(/\./g, "_") + "' class='rtReward'>"
+		table += "Rank " + showNum(ranks.req.add(1), false) + ": " + (ranks.text[0].toUpperCase() + ranks.text.slice(1))
+		if (rankEffects(ranks.req)) {
+			if (ranks.effectType == "% weaker") {
+				table += `<br>Currently: <b><span id='rankEff${showNum(ranks.req, false).replace(/\./g, "_")}'></span>${ranks.effectType}</b>`
 			} else {
-				table += "<br>Currently: <b>"+ranks.effectType+"<span id='rankEff"+showNum(ranks.req, false).replace(/\./g, "_")+"'></span></b>"
+				table += `<br>Currently: <b>${ranks.effectType}<span id='rankEff${showNum(ranks.req, false).replace(/\./g, "_")}'></span></b>`
 			}
 		}
 		table += "</div>"
 	}
 	table += "</div><div class='flexContainer'>"
-	for (let i=0;i<Object.keys(TIER_DESCS).length;i++) {
+	for (let i = 0; i < Object.keys(TIER_DESCS).length; i++) {
 		let tiers = TIER_DESCS[i]
-		table += "<div id='tierReward"+showNum(tiers.req, false).replace(/\./g, "_")+"' class='rtReward'>"
-		table += "Tier "+showNum(tiers.req.add(1), false)+": "+(tiers.text[0].toUpperCase() + tiers.text.slice(1))
-		if (window["tier"+showNum(tiers.req, false)+"Eff"]) {
-			if (tiers.effectType == "% weaker"){
-				table += "<br>Currently: <b><span id='tierEff"+showNum(tiers.req, false).replace(/\./g, "_")+"'></span></b>"+tiers.effectType
+		table += "<div id='tierReward" + showNum(tiers.req, false).replace(/\./g, "_") + "' class='rtReward'>"
+		table += "Tier " + showNum(tiers.req.add(1), false) + ": " + (tiers.text[0].toUpperCase() + tiers.text.slice(1))
+		if (tierEffects(tiers.req)) {
+			if (tiers.effectType == "% weaker") {
+				table += `<br>Currently: <b><span id='tierEff${showNum(tiers.req, false).replace(/\./g, "_")}'></span>${tiers.effectType}</b>`
 			} else {
-				table += "<br>Currently: <b>"+tiers.effectType+"<span id='tierEff"+showNum(tiers.req, false).replace(/\./g, "_")+"'></span></b>"
+				table += `<br>Currently: <b>${tiers.effectType}<span id='tierEff${showNum(tiers.req, false).replace(/\./g, "_")}'></span></b>`
 			}
 		}
 		table += "</div>"
 	}
 	table += "</div></div>"
 	rankTierTable.setHTML(table)
+
+	for (let i = 1; i < Object.keys(RANK_DESCS).length; i++) {
+		let ranks = RANK_DESCS[i]
+		tmp.el[`rankReward${showNum(ranks.req, false).replace(/\./g, "_")}`] = new Element(`rankReward${showNum(ranks.req, false).replace(/\./g, "_")}`)
+	}
+
+	for (let i = 1; i < Object.keys(TIER_DESCS).length; i++) {
+		let tiers = TIER_DESCS[i]
+		tmp.el[`tierReward${showNum(tiers.req, false).replace(/\./g, "_")}`] = new Element(`tierReward${showNum(tiers.req, false).replace(/\./g, "_")}`)
+	}
 
 	// Time Reversal Upgrade Table
 	let trTable = new Element("trTable");
@@ -162,7 +173,7 @@ function setupHTML() {
 		autos +=
 			"<div id='automatorDiv-" +
 			Object.keys(AUTOMATORS)[i] +
-			"' class='automator' style='border-color: "+AUTOMATOR_BORDER[Object.keys(AUTOMATORS)[i]]+";'>" +
+			"' class='automator' style='border-color: " + AUTOMATOR_BORDER[Object.keys(AUTOMATORS)[i]] + ";'>" +
 			"<label for='automator-" + Object.keys(AUTOMATORS)[i] + "'>" +
 			(dp.includes("auto") || dp.includes("Auto") ? dp : "Auto-" + dp) +
 			"</label>" +
@@ -170,12 +181,12 @@ function setupHTML() {
 			Object.keys(AUTOMATORS)[i] +
 			"' type='checkbox'></input><br>";
 		let name = Object.keys(AUTOMATORS)[i]
-		if (AUTOMATOR_X[name]!==undefined) {
-			if (AUTOMATOR_X[name]>=1) {
-				autos += "<button class='btn tb rckt' onclick='toggleAutoMode(&quot;"+name+"&quot;)'>Mode: <span id='autoMode"+name+"' style='color: black;'>"+AUTOMATOR_MODES[name][0]+"</span></button><br>"
+		if (AUTOMATOR_X[name] !== undefined) {
+			if (AUTOMATOR_X[name] >= 1) {
+				autos += "<button class='btn tb rckt' onclick='toggleAutoMode(&quot;" + name + "&quot;)'>Mode: <span id='autoMode" + name + "' style='color: black;'>" + AUTOMATOR_MODES[name][0] + "</span></button><br>"
 			}
-			if (AUTOMATOR_X[name]>=2) {
-				autos += "<br><input type='number' id='autoTxt"+name+"' onchange='updateAutoTxt(&quot;"+name+"&quot;)' style='color: black;'></input><br>"
+			if (AUTOMATOR_X[name] >= 2) {
+				autos += "<br><input type='number' id='autoTxt" + name + "' onchange='updateAutoTxt(&quot;" + name + "&quot;)' style='color: black;'></input><br>"
 			}
 		}
 		autos += "</div>";
@@ -186,13 +197,13 @@ function setupHTML() {
 		el.el.checked = Object.values(player.automators)[i];
 		let name = Object.keys(player.automators)[i]
 		if (AUTOMATOR_X[name]) {
-			if (AUTOMATOR_X[name]>=1) {
-				let btn = new Element("autoMode"+name)
+			if (AUTOMATOR_X[name] >= 1) {
+				let btn = new Element("autoMode" + name)
 				if (!player.autoModes[name]) player.autoModes[name] = AUTOMATOR_MODES[name][0]
 				btn.setTxt(player.autoModes[name])
 			}
-			if (AUTOMATOR_X[name]>=2) {
-				let field = new Element("autoTxt"+name)
+			if (AUTOMATOR_X[name] >= 2) {
+				let field = new Element("autoTxt" + name)
 				if (!player.autoTxt[name]) player.autoTxt[name] = new ExpantaNum(0)
 				field.setAttr("value", player.autoTxt[name].toString())
 			}
@@ -253,7 +264,7 @@ function setupHTML() {
 			col +
 			"Cost2'></span> of these Gluons.</button></td>";
 		data +=
-			"<td id='glu"+col+"3'><button id='" +
+			"<td id='glu" + col + "3'><button id='" +
 			col +
 			"Upg3' class='btn locked' onclick='buyGluon3(&quot;" +
 			col +
@@ -266,57 +277,57 @@ function setupHTML() {
 			"Cost3'></span> of these Gluons.</button></td></tr>";
 		tbl.setHTML(data);
 	}
-	
+
 	// Hadronic Challenge
 	new Element("mltHC").setHTML("<b>WARNING: STARTING A HADRONIC CHALLENGE WITH ANY OF THESE SELECTORS WILL FORCE A MULTIVERSE RESET!</b><br>");
 	let len = Object.keys(HC_DATA).length
-	for (let i=0;i<len;i++) {
+	for (let i = 0; i < len; i++) {
 		let name = Object.keys(HC_DATA)[i]
 		let data = HC_DATA[name]
 		let tab = data[2]
 		let el;
-		el = new Element(tab+"HC")
-		
-		let html = "<br><span id='hcSelectorSpan"+name+"'><span id='hcSelectorTitle"+name+"'>"+HC_TITLE[name]+"</span>: <input id='hcSelector"+name+"' style='color: black;' type='"+data[0]+"' onchange='updateHCSelector(&quot;"+name+"&quot;)' "+(data[0]=="range"?("min='"+checkFunc(data[1][0])+"' max='"+checkFunc(data[1][1])+"'"):"")+"></input>"+(HC_CHALLS.includes(name)?("<span id='hcChall"+name+"'><b>(hover for info)</b></span>"):"")
-		if (HC_EXTREME_CHALLS.includes(name)) html += "<span id='hcExtrChall"+name+"'><b>(hover for info)</b></span>"
+		el = new Element(tab + "HC")
+
+		let html = "<br><span id='hcSelectorSpan" + name + "'><span id='hcSelectorTitle" + name + "'>" + HC_TITLE[name] + "</span>: <input id='hcSelector" + name + "' style='color: black;' type='" + data[0] + "' onchange='updateHCSelector(&quot;" + name + "&quot;)' " + (data[0] == "range" ? ("min='" + checkFunc(data[1][0]) + "' max='" + checkFunc(data[1][1]) + "'") : "") + "></input>" + (HC_CHALLS.includes(name) ? ("<span id='hcChall" + name + "'><b>(hover for info)</b></span>") : "")
+		if (HC_EXTREME_CHALLS.includes(name)) html += "<span id='hcExtrChall" + name + "'><b>(hover for info)</b></span>"
 		html += "<br>"
-		if (data[0]=="range") html += "<span id='hcCurrent"+name+"'></span><br>"
+		if (data[0] == "range") html += "<span id='hcCurrent" + name + "'></span><br>"
 		html += "</span>"
 		el.addHTML(html)
 	}
 	updateHCSelectorInputs()
-	
+
 	// Pion/Spinor Fields
 	setupSkyField("pion")
 	setupSkyField("spinor")
-	
+
 	// Plasma Boosts
 	setupPlasmaBoosts()
-	
+
 	// Multiverse Stuff
 	setupMltMilestoneTable()
-	
+
 	// Version
 	let v = new Element("version")
 	v.setTxt(player.version)
-	
+
 	// Main Link
 	let span = new Element("linkToGame")
-	span.setHTML((betaID==""&&!window.location.href.includes(correctLink))?"Please migrate to <a href='http://"+correctLink+"/DistInc.github.io/main.html'>"+correctLink+"</a><br>":"")
-	
+	span.setHTML((betaID == "" && !window.location.href.includes(correctLink)) ? "Please migrate to <a href='http://" + correctLink + "/DistInc.github.io/main.html'>" + correctLink + "</a><br>" : "")
+
 	// Element Setup
-	tmp.el = {}
 	let all = document.getElementsByTagName("*")
-	for (let i=0;i<all.length;i++) {
+	for (let i = 0; i < all.length; i++) {
 		let x = all[i]
-		tmp.el[x.id] = new Element(x)
+		tmp.el[x.id] = new Element(x, false)
+
 	}
 }
 
 function updateBeforeTick() {
 	updateTemp();
 	let ticks = VIS_UPDS[player.options.visUpd]
-	if (visUpdTicks>=ticks) {
+	if (visUpdTicks >= ticks) {
 		updateHTML();
 		checkNaN();
 		visUpdTicks = 0
@@ -336,7 +347,7 @@ function updateAfterTick() {
 				let t = `rotate(${Math.random() * 360}deg) `;
 				t += "skew(" + Math.random() * 75 + "deg) ";
 				let scale = (Math.random() * 3) ** 2 / 9;
-				if (scale<0.1) scale = 0.1;
+				if (scale < 0.1) scale = 0.1;
 				t += "scale(" + scale + ") ";
 				bufhiesibvfib[i].style.transform = t;
 			}
@@ -352,7 +363,7 @@ function updateUnlocks() {
 	if (player.distance.gte(ExpantaNum.mul(COLLAPSE_UNL, tmp.collapse.lrm))) player.collapse.unl = true;
 	if (player.collapse.cadavers.gte(ExpantaNum.mul(PATHOGENS_UNL, tmp.pathogens.lrm))) player.pathogens.unl = true;
 	if (player.distance.gte(ExpantaNum.mul(DC_UNL, tmp.dc.lrm))) player.dc.unl = true;
-	if (tmp.inf.can && !infActive && player.inf.endorsements.lt(10) && !(tmp.ach[178].has&&tmp.elm.bos.hasHiggs("2;0;0"))) tmp.inf.forceReset();
+	if (tmp.inf.can && !infActive && player.inf.endorsements.lt(10) && !(tmp.ach[178].has && tmp.elm.bos.hasHiggs("2;0;0"))) tmp.inf.forceReset();
 	if (player.distance.gte(ExpantaNum.mul(DISTANCES.uni, "1e90000"))) player.inf.derivatives.unl = true;
 	if (!mltActive(1)) {
 		if ((player.distance.gte(THEORY_REQ[0]) && player.bestEP.gte(THEORY_REQ[1])) || player.elementary.theory.unl) player.elementary.theory.unl = true;
@@ -360,33 +371,33 @@ function updateUnlocks() {
 		if (player.distance.gte(FOAM_REQ)) player.elementary.foam.unl = true
 		if (player.elementary.foam.maxDepth.gte(5)) player.elementary.entropy.unl = true;
 		if (player.distance.gte(getSkyReqData(0)) && player.elementary.fermions.quarks.amount.gte(getSkyReqData(1)) && player.elementary.fermions.leptons.amount.gte(getSkyReqData(2))) player.elementary.sky.unl = true;
-	} 
+	}
 }
 
-document.onkeyup = function(e) {
+document.onkeyup = function (e) {
 	outerShiftDown = !(!e.shiftKey);
 }
 
-document.onkeydown = function(e) {
+document.onkeydown = function (e) {
 	outerShiftDown = !(!e.shiftKey);
 	if (!player.options.hot || player.modes.includes("absurd")) return
-	if (player.tab=="mlt") return;
+	if (player.tab == "mlt") return;
 	let shiftDown = e.shiftKey
 	let key = e.which
-	switch(key) {
-		case 49: 
+	switch (key) {
+		case 49:
 			if (INF_TABS.ascension()) tmp.inf.asc.activatePerk(1)
 			break;
-		case 50: 
+		case 50:
 			if (INF_TABS.ascension()) tmp.inf.asc.activatePerk(2)
 			break;
-		case 51: 
+		case 51:
 			if (INF_TABS.ascension()) tmp.inf.asc.activatePerk(3)
 			break;
-		case 52: 
+		case 52:
 			if (INF_TABS.ascension()) tmp.inf.asc.activatePerk(4)
 			break;
-		case 67: 
+		case 67:
 			if (TABBTN_SHOWN.collapse() && !shiftDown) tmp.collapse.layer.reset()
 			else if (modeActive("extreme") && shiftDown) tmp.rankCheap.layer.reset();
 			break;
@@ -401,7 +412,7 @@ document.onkeydown = function(e) {
 				else if (TABBTN_SHOWN.inf() && player.inf.endorsements.gte(10)) tmp.inf.layer.reset();
 			}
 			break;
-		case 70: 
+		case 70:
 			if (shiftDown && TABBTN_SHOWN.furnace() && tmp.fn) tmp.fn.bfReset()
 			else if (TABBTN_SHOWN.rockets()) tmp.rf.layer.reset()
 			break;
@@ -416,15 +427,15 @@ document.onkeydown = function(e) {
 			if (shiftDown && TABBTN_SHOWN.rockets()) tmp.rockets.layer.reset()
 			else tmp.ranks.layer.reset()
 			break;
-		case 83: 
+		case 83:
 			if (shiftDown && ELM_TABS.sky()) skyrmionReset();
 			else if (TH_TABS.strings()) entangleStrings();
 			break;
-		case 84: 
+		case 84:
 			if (shiftDown && ELM_TABS.theory()) tmp.elm.theory.start()
 			else tmp.tiers.layer.reset()
 			break;
-		case 85: 
+		case 85:
 			if (TABBTN_SHOWN.tr()) reverseTime()
 			break;
 	}
@@ -437,7 +448,7 @@ function getNews() {
 			else return data[1]();
 		})()
 	);
-	
+
 	let txt = "";
 	if (possible.length == 0) txt = "Sorry, we are out of news for the day... try again later?";
 	else if (possible.length == 1) txt = possible[0][0];
@@ -445,34 +456,34 @@ function getNews() {
 		let n = Math.floor(Math.random() * possible.length);
 		txt = possible[n][0];
 	}
-	
+
 	return txt;
 }
 
 function doNews() {
-	for (let i=0;i<newsTimeouts.length;i++) {
+	for (let i = 0; i < newsTimeouts.length; i++) {
 		clearTimeout(newsTimeouts[i])
 		delete newsTimeouts[i]
 	}
 	let s = document.getElementById("news");
 	s.innerHTML = getNews();
-	
+
 	// Part of the AD NG+++ news ticker code was used for this, full credit to Aarex for that :)
 	let parentWidth = s.parentElement.clientWidth;
 	s.style.transition = '';
-	s.style.transform = 'translateX('+parentWidth+'px)';
-	newsTimeouts.push(setTimeout( function() {
+	s.style.transform = 'translateX(' + parentWidth + 'px)';
+	newsTimeouts.push(setTimeout(function () {
 		let dist = s.parentElement.clientWidth + s.clientWidth + 20;
 		let rate = 100;
 		let transformDuration = dist / rate;
-		s.style.transition = 'transform '+transformDuration+'s linear';
+		s.style.transition = 'transform ' + transformDuration + 's linear';
 		let textWidth = s.clientWidth;
-		s.style.transform = 'translateX(-'+(textWidth+5)+'px)';
-		newsTimeouts.push(setTimeout(function() {
+		s.style.transform = 'translateX(-' + (textWidth + 5) + 'px)';
+		newsTimeouts.push(setTimeout(function () {
 			s.innerHTML = "";
 			doNews();
 		}, Math.ceil(transformDuration * 1000)));
-	}, 100));	
+	}, 100));
 }
 
 doNews();

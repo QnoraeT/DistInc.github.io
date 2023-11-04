@@ -133,6 +133,17 @@ function updateRanksHTML(){
 	let scalType = getScalingId("rank")
 	tmp.el.rankName.changeStyle("color", SCALE_COLOR[scalType]())
 	tmp.el.rankName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
+	let m = tmp.rankCheap ? getRankBaseCost().div(tmp.rankCheap.eff2) : getRankBaseCost()
+	let f = false
+	if (m.lte(1e-10) && tmp.rankCheap) {
+		f = true
+		m = tmp.rankCheap.eff2.div(getRankBaseCost())
+	}
+	f = f ? "1/" : "" 
+	let tt = `Rank scaling: /${showNum(getRankFP())} \n Base cost: ` 
+	+ f
+	+ `${showNum(m)} \n Cost before scaling: ${showNum(getRankBaseCost().times(ExpantaNum.pow(2, player.rank.div(getRankFP()).max(1).sub(1).pow(2))))}`
+	tmp.el.rankName.setAttr("widetooltip", tt);
 }
 
 function updateTiersHTML(){
@@ -144,6 +155,8 @@ function updateTiersHTML(){
 	let scalType = getScalingId("tier")
 	tmp.el.tierName.changeStyle("color", SCALE_COLOR[scalType]())
 	tmp.el.tierName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
+	let tt = `Tier scaling: /${showNum(getTierFP())} \n Base cost: ${showNum(getTierBaseCost())} \n Cost before scaling: ${showNum(getTierBaseCost().plus(player.tier.div(getTierFP()).pow(2)))}`
+	tmp.el.tierName.setAttr("widetooltip", tt);
 }
 
 function updateMainHTML(){
@@ -173,10 +186,16 @@ function updateRocketsHTML(){
 		tmp.el.rocketGain.setTxt(showNum(tmp.rockets.layer.gain));
 		tmp.el.rocketsAmt.setTxt(
 			showNum(player.rockets) +
-				" rockets " +
+				" rockets" +
 				(((tmp.ach[95].has||hasCollapseMilestone(9))&&!nerfActive("noRockets")) ? formatGain(player.rockets, tmp.rockets.layer.gain.div(tmp.ach[95].has?1:100)) : "")
 		);
 		tmp.el.rocketsEff.setTxt(showNum(getRocketEffect()));
+		let tt = `Formula: (${formatDistance(player.distance)} / ${formatDistance(LAYER_REQS['rockets'][1])})^${showNum(0.4)} x ${showNum(getRocketGainMult())}`
+		tmp.el.rocketsAmt.setAttr("widetooltip", tt);
+		tt = `Maximum Velocity: ${showNum(tmp.rockets.mvPow)}x \nAcceleration: ${showNum(tmp.rockets.accPow)}x`;
+		if (tmp.accEn.gte(1) && tmp.rockets.accEnPow) { tt += `\nAccelerational Energy: ${showNum(tmp.rockets.accEnPow)}x` }
+		if (tmp.rockets.tsPow.gt(1)) { tt += `\nTime Speed: ${showNum(tmp.rockets.tsPow)}x` }
+		tmp.el.rocketsEff.setAttr("widetooltip", tt)
 
 		// Rocket Fuel
 		tmp.el.rf.setTxt(showNum(player.rf) + (getFreeFuel().gt(0) ? " + " + showNum(getFreeFuel()) : ""));
@@ -188,6 +207,8 @@ function updateRocketsHTML(){
 		tmp.el.rfName.changeStyle("color", SCALE_COLOR[scalType]())
 		tmp.el.rfName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 		tmp.el.rf2.setTxt(showNum(getFuelEff2()));
+		tt = `Rocket Fuel scaling: /${showNum(tmp.rf.fp)} \n Base cost: ${showNum(tmp.rf.bc)} \n Cost before scaling: ${showNum(tmp.rf.bc.times(ExpantaNum.pow(5, player.rf.div(tmp.rf.fp).pow(ROCKET_UPGS[1].eff()[0]))).round())}`
+		tmp.el.rfName.setAttr("widetooltip", tt);
 	}
 }
 
@@ -771,6 +792,8 @@ function updateRankCheapenersHTML(){
 	let scalType = getScalingId("rankCheap")
 	tmp.el.rankCheapName.changeStyle("color", SCALE_COLOR[scalType]())
 	tmp.el.rankCheapName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
+	let tt = `Rank Cheapener scaling: /${showNum(tmp.rankCheap.fp)} \n Base cost: ${showNum(tmp.rankCheap.bc)} \n Cost before scaling: ${showNum(tmp.rankCheap.bc.times(ExpantaNum.pow(2, player.rankCheap.div(tmp.rankCheap.fp).max(1).sub(1).pow(2))))} \n Your rank cheapeners are dividing Rank requirements by ${showNum(tmp.rankCheap.eff2)}${tmp.rankCheap.eff2.gte(1e100)?" (softcapped)":""} and decreasing their scaling by ${showNum(tmp.rankCheap.eff)}x`
+	tmp.el.rankCheapName.setAttr("widetooltip", tt);
 }
 
 function updateNormalFurnace(){
@@ -948,7 +971,7 @@ function updateStatisticsHTML(){
 			let tt = "";
 			if (name=="hyper") tt = "Hyper scaling is heavily (obscured) at 50% and cannot go below 5%.\n";
 			if (name=="supercritical") tt = "Supercritical scaling is heavily (obscured) at 66.667% and cannot go below 25%.\n";
-			if (name=="meta") tt = "Meta scaling is not affected by any previous effects that delays all scaling starts.\n";
+
 			for (let r=0;r<Object.keys(SCALING_RES).length;r++) { // NESTED LOOP, REMOVE TO REDUCE LAG
 				let func = Object.values(SCALING_RES)[r];
 				let key = Object.keys(SCALING_RES)[r];
@@ -960,7 +983,7 @@ function updateStatisticsHTML(){
 			let blank = ""
 			if (name=="hyper") blank = "Hyper scaling is heavily (obscured) at 50% and cannot go below 5%.\n";
 			if (name=="supercritical") blank = "Supercritical scaling is heavily (obscured) at 66.667% and cannot go below 25%.\n";
-			if (name=="meta") blank = "Meta scaling is not affected by any previous effects that delays all scaling starts.\n";
+
 
 			tmp.el[name+"Stat"].changeStyle("visibility", tt==blank?"hidden":"visible");
 			if (name == "wtf") {
@@ -983,14 +1006,29 @@ function updateStatisticsHTML(){
 			for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
 				let ranks = RANK_DESCS[i];
 				let rankReq = ranks.req;
-				tmp.el["rankReward"+showNum(rankReq, false).replace(/\./g, "_")].setDisplay(player.rank.gt(rankReq));
-				if (tmp.el["rankEff"+showNum(rankReq, false).replace(/\./g, "_")]) tmp.el["rankEff"+showNum(rankReq, false).replace(/\./g, "_")].setTxt(showNum(rankEffects(rankReq)));
+				let n = showNum(rankReq, false).replace(/\./g, "_");
+
+				tmp.el["rankReward"+n].setDisplay(player.rank.gt(rankReq));
+				if (tmp.el["rankEff"+n] && rankEffects(rankReq)) {
+					let eff = rankEffects(rankReq)
+					if (RANK_DESCS[i].effectType == "% weaker") {
+						eff = Decimal.sub(1, Decimal.div(1, eff))
+					}
+					tmp.el["rankEff"+n].setTxt(showNum(eff));
+				}
 			}
 			for (let i=0;i<Object.keys(TIER_DESCS).length;i++) {
 				let tiers = TIER_DESCS[i];
 				let tierReq = tiers.req;
-				tmp.el["tierReward"+showNum(tierReq, false).replace(/\./g, "_")].setDisplay(player.tier.gt(tierReq));
-				if (tmp.el["tierEff"+showNum(tierReq, false).replace(/\./g, "_")]) tmp.el["tierEff"+showNum(tierReq, false).replace(/\./g, "_")].setTxt(showNum(tierEffects(tierReq)));
+				let n = showNum(tierReq, false).replace(/\./g, "_");
+				tmp.el["tierReward"+n].setDisplay(player.tier.gt(tierReq));
+				if (tmp.el["tierEff"+n] && tierEffects(tierReq)) {
+					let eff = rankEffects(tierReq)
+					if (TIER_DESCS[i].effectType == "% weaker") {
+						eff = Decimal.sub(1, Decimal.div(1, eff))
+					}
+					tmp.el["tierEff"+n].setTxt(showNum(eff));
+				}
 			}
 		}
 	}

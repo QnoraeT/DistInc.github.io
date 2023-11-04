@@ -8,8 +8,8 @@ function getRocketSoftcapStart() {
 
 function getRocketEffectSoftcapStart() {
 	let sc = new ExpantaNum(5);
-	if (modeActive("hard")) sc = sc.sub(0.5);
-	if (modeActive("easy")) sc = sc.plus(0.5);
+	if (modeActive("hard")) sc = sc.sub(2);
+	if (modeActive("easy")) sc = sc.plus(1);
 	if (tmp.pathogens && player.pathogens.unl) sc = sc.plus(tmp.pathogens[8].eff());
 	return sc
 }
@@ -25,9 +25,9 @@ function getRocketEffect() {
 	let rocketSoftcapStrength = getRocketSoftcapStrength();
 	let r = player.rockets;
 	if (extremeStadiumActive("nullum", 4)) r = ExpantaNum.pow(10, r.log10().times(0.75));
-	let sc1 = new Decimal(10)
+	let sc1 = new Decimal(4)
 	if (tmp.rockets && player.rocketUPG[1].ascension.gte(2)) sc1 = sc1.pow(ROCKET_UPGS[1].eff()[2]);
-	if (r.gte(sc1)) r = softcap(r, "EP", rocketSoftcapStrength, sc1, 9.77);
+	if (r.gte(sc1)) r = softcap(r, "EP", rocketSoftcapStrength, sc1, 10);
 	if (player.rf.gt(0)) {
 		if (player.rank.gt(2500)){
 			r = r.mul(getFuelEff2());
@@ -64,6 +64,7 @@ function getRocketGainMult() {
 	if (player.tr.upgrades.includes(29) && !HCCBA("noTRU") && modeActive("extreme"))
 		mult = mult.times(
 			player.rockets.plus(1).logBase(2).pow(player.dc.fluid.plus(1).times(10).slog(10).pow(2).max(1))
+			// TODO: remove this slog
 		);
 	if (hasCollapseMilestone(6)) mult = mult.times(10);
 	if (hasCollapseMilestone(8)) mult = mult.times(collapseMile8Eff().max(1));

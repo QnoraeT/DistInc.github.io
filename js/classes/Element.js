@@ -1,7 +1,10 @@
 class Element {
-	constructor(el) {
+	constructor(el, emit = true) {
 		this.id = typeof el == "string" ? el : el.id;
 		this.el = document.getElementById(this.id);
+		if (this.el === null && emit) {
+            console.warn(`[CLASS ELEMENT] ${el} could not be found in the DOM!`);
+        }
 	}
 
 	get style() {
