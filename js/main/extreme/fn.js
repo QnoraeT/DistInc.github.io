@@ -33,9 +33,9 @@ function updateFurnaceUpgradeCosts() {
 			let specialScale = [2, 3, 1.1, 5, 7]
 			scalFN = player.furnace.upgrades[n - 1]
 			scalFN = doAllScaling(scalFN, "fn", false, specialScale)
-			scalFN = ExpantaNum.pow(tmp.fn.upgs[n].base.div(10), scalFN.pow(tmp.fn.bfEff.times(2))).times(tmp.fn.upgs[n].base);
+			scalFN = ExpantaNum.pow(tmp.fn.upgs[n].base.div(10), scalFN.root(tmp.fn.bfEffRecip.div(2))).times(tmp.fn.upgs[n].base);
 			tmp.fn.upgs[n].cost = scalFN
-			scalFN = player.furnace.coal.div(tmp.fn.upgs[n].base).logBase(tmp.fn.upgs[n].base.div(10)).root(tmp.fn.bfEff.times(2));
+			scalFN = player.furnace.coal.div(tmp.fn.upgs[n].base).logBase(tmp.fn.upgs[n].base.div(10)).pow(tmp.fn.bfEffRecip.div(2));
 			scalFN = doAllScaling(scalFN, "fn", true, specialScale)
 			scalFN = scalFN.plus(1).floor();
 			tmp.fn.upgs[n].bulk = scalFN
@@ -57,15 +57,15 @@ function updateBlueFlameEff() {
 	let adj = new ExpantaNum(1);
 	if (player.tr.upgrades.includes(17) && !HCCBA("noTRU") && modeActive("extreme"))
 		adj = adj.times(player.tr.cubes.plus(1).times(10).slog(10));
-	// TODO: remove this slog
+		// TODO: remove this slog
 	if (player.tr.upgrades.includes(26) && !HCCBA("noTRU") && modeActive("extreme"))
 		adj = adj.times(tmp.dc.flow.max(1).log10().plus(1));
 	if (inFC(5)) adj = adj.times(0.725)
 	if (extremeStadiumActive("quantron", 2)) adj = adj.times(0.95)
 	tmp.fn.bfEff = ExpantaNum.div(1, player.furnace.blueFlame.plus(tmp.fn.enh?tmp.fn.enh.eff:0).times(adj).div(4).plus(1));
 	tmp.fn.bfEffRecip = player.furnace.blueFlame.plus(tmp.fn.enh?tmp.fn.enh.eff:0).times(adj).div(4).plus(1)
-	if (tmp.fn.bfEff.lt(0.0098)) tmp.fn.bfEff = tmp.fn.bfEff.sqrt().times(Math.sqrt(0.0098));
-	if (tmp.fn.bfEffRecip.gte(102.04)) tmp.fn.bfEffRecip = softcap(tmp.fn.bfEffRecip, "P", 1, 102.04, 2)
+	if (tmp.fn.bfEff.lt(0.0098)) tmp.fn.bfEff = tmp.fn.bfEff.cbrt().times(0.0098 ** (2/3));
+	if (tmp.fn.bfEffRecip.gte(102.04)) tmp.fn.bfEffRecip = softcap(tmp.fn.bfEffRecip, "P", 1, 102.04, 3)
 	if (inFC(1)) tmp.fn.bfEff = new ExpantaNum(1)
 	if (inFC(1)) tmp.fn.bfEffRecip = new ExpantaNum(1)
 	if (tmp.fn.bfEff==new Decimal(0) || tmp.fn.bfEffRecip==new Decimal(Infinity)) throw new Error("What the fuck? Blue Flame effectiveness is OP! [Hit Infinity]")
@@ -94,7 +94,8 @@ function updateFurnUpgEffs() {
 
 function updateCoalEff() {
 	tmp.fn.eff = player.furnace.coal.plus(1).log10().pow(0.6).div(5);
-	if (tmp.fn.eff.gte(1)) tmp.fn.eff = tmp.fn.eff.log10().plus(1);
+	// if (tmp.fn.eff.gte(1)) tmp.fn.eff = tmp.fn.eff.log10().plus(1);
+	// test at removing this softcap
 	if (tmp.ach[35].has) tmp.fn.eff = tmp.fn.eff.times(2);
 	if (player.tr.upgrades.includes(25) && !HCCBA("noTRU")) tmp.fn.eff = tmp.fn.eff.times(2);
 	if (player.tr.upgrades.includes(31) && !HCCBA("noTRU")) tmp.fn.eff = tmp.fn.eff.times(1.8);
@@ -118,13 +119,6 @@ function updateBlueFlameCost() {
 	scalBFlame = doAllScaling(scalBFlame, "bf", true);
 	scalBFlame = scalBFlame.plus(1).floor();
 	tmp.fn.bfBulk = scalBFlame;
-	// if (scalingActive("bf", player.furnace.blueFlame.max(tmp.fn.bfBulk), "scaled")) {
-	// 	let start = getScalingStart("scaled", "bf")
-	// 	let power = getScalingPower("scaled", "bf")
-	// 	let exp = ExpantaNum.pow(2, power);
-	// 	tmp.fn.bfReq = ExpantaNum.pow(tmp.fn.bfLB, ExpantaNum.pow(tmp.fn.bfBase, player.furnace.blueFlame.pow(exp).div(start.pow(exp.sub(1)))).sub(1)).times(1e6);
-	// 	tmp.fn.bfBulk = player.furnace.coal.div(1e6).max(1).logBase(tmp.fn.bfLB).add(1).logBase(tmp.fn.bfBase).times(start.pow(exp.sub(1))).pow(exp.pow(-1)).add(1);
-	// }
 }
 
 function updateBlueFlameReset() {
@@ -151,7 +145,7 @@ function updateEnhCoalGain() {
 
 function updateEnhCoalEffs() {
 	tmp.fn.enh.eff = tmp.fn.enh.unl?(player.furnace.enhancedCoal.plus(1).log10().plus(1).log10().plus(1).log10().times(5)):new ExpantaNum(0)
-	tmp.fn.enh.eff2exp = ExpantaNum.mul(player.furnace.enhancedUpgrades[12], tmp.fn.enh.upg13eff?tmp.fn.enh.upg13eff:0).times(tmp.fn.enh.upgPow).plus(100)
+	tmp.fn.enh.eff2exp = ExpantaNum.mul(player.furnace.enhancedUpgrades[12], tmp.fn.enh.upg13eff?tmp.fn.enh.upg13eff:0).times(tmp.fn.enh.upgPow).plus(50)
 	tmp.fn.enh.eff2 = tmp.fn.enh.unl?player.furnace.enhancedCoal.plus(1).pow(tmp.fn.enh.eff2exp):new ExpantaNum(1)
 }
 
@@ -202,9 +196,7 @@ function updateEnhFurnUpgCosts() {
 }
 
 function updateEnhFurnUpgEffs() {
-	let endMod = player.inf.endorsements.sub(25).max(0)
-	if (endMod.gte(3)) endMod = endMod.div(3).plus(2)
-	if (endMod.gte(4)) endMod = endMod.sqrt().times(2)
+	let endMod =  softcap(player.inf.endorsements.sub(25).max(0), "P", 1, 1, 2.2) // technically not a softcap
 	tmp.fn.enh.upg1eff = ExpantaNum.pow(ExpantaNum.add(3, ExpantaNum.mul(0.1, endMod)), player.furnace.coal.plus(1).log10().plus(1).log10().plus(1).log10().plus(1)).times(ExpantaNum.pow(1.2, endMod))
 	tmp.fn.enh.upg2eff = new ExpantaNum(0.9)
 	tmp.fn.enh.upg3eff = new ExpantaNum(2.5)
@@ -212,7 +204,7 @@ function updateEnhFurnUpgEffs() {
 		tmp.fn.enh.upg1eff = tmp.fn.enh.upg1eff.times(tmp.fn.pl.boosts[7])
 		tmp.fn.enh.upg3eff = tmp.fn.enh.upg3eff.times(tmp.fn.pl.boosts[7])
 	}
-	tmp.fn.enh.upg13eff = ExpantaNum.add(60, endMod.div(3).floor().times(10).min(10))
+	tmp.fn.enh.upg13eff = ExpantaNum.add(30, endMod.div(3).floor().times(10).min(10))
 	if (player.elementary.bosons.scalar.higgs.upgrades.includes("6;1;0")) tmp.fn.enh.upg13eff = tmp.fn.enh.upg13eff.plus(player.furnace.enhancedUpgrades[12].pow(1.32))
 	if (tmp.fn.pl) if (tmp.fn.pl.unl) tmp.fn.enh.upg13eff = tmp.fn.enh.upg13eff.times(tmp.fn.pl.boosts[8])
 }

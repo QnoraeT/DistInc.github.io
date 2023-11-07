@@ -34,7 +34,7 @@ const ROCKET_UPGS = {
     2: {
         constC: new Decimal("e1.500e15"),
         linearC: new Decimal("e0.200e15"),
-        quadC: new Decimal("e0.00002e15"),
+        quadC: new Decimal("e0.0002e15"),
         extra: function () {
             let extra = new Decimal(0)
             return extra

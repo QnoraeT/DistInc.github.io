@@ -128,22 +128,22 @@ function updateTempInfUpgs() {
 			"<br>" +
 			(!tmp.inf.upgs.has(sel)
 				? "Cost: " +
-				  showNum(ExpantaNum.mul(INF_UPGS.costs[sel], tmp.inf.upgCostMult(sel))) +
-				  " knowledge<br>" +
-				  (INF_UPGS.reqs[sel]
-						? "Req: inf" +
-						  INF_UPGS.reqs[sel].reduce(
-								(x, y, i) => x + (i == INF_UPGS.reqs[sel].length ? "" : ", ") + "inf" + y
-						  ) +
-						  "<br>"
-						: "") +
-				  (INF_UPGS.repeals[sel]
-						? "Repeals: inf" +
-						  INF_UPGS.repeals[sel].reduce(
-								(x, y, i) => x + (i == INF_UPGS.repeals[sel].length ? "" : ", ") + "inf" + y
-						  ) +
-						  "<br>"
-						: "")
+				showNum(ExpantaNum.mul(INF_UPGS.costs[sel], tmp.inf.upgCostMult(sel))) +
+				" knowledge<br>" +
+				(INF_UPGS.reqs[sel]
+					? "Req: inf" +
+					INF_UPGS.reqs[sel].reduce(
+						(x, y, i) => x + (i == INF_UPGS.reqs[sel].length ? "" : ", ") + "inf" + y
+						) +
+						"<br>"
+					: "") +
+				(INF_UPGS.repeals[sel]
+					? "Repeals: inf" +
+					INF_UPGS.repeals[sel].reduce(
+						(x, y, i) => x + (i == INF_UPGS.repeals[sel].length ? "" : ", ") + "inf" + y
+						) +
+						"<br>"
+					: "")
 				: "") +
 			(INF_UPGS.effects[sel] ? "Currently: " + tmp.inf.upgs.current(sel) : "")
 		);
@@ -205,14 +205,14 @@ function updateTempInfLayer() {
 	calcKnowledgeGain()
 	let scalEnd
 	scalEnd = player.inf.endorsements
-	scalEnd = doAllScaling(scalEnd, "endorsements", false, [1.5, 2.5, 1.1, 4, 6])
+	scalEnd = doAllScaling(scalEnd, "endorsements", false)
 	scalEnd = ExpantaNum.pow(tmp.inf.bc, ExpantaNum.pow(ExpantaNum.pow(1.1, tmp.inf.fp), scalEnd));
 	tmp.inf.req = scalEnd
 	if (player.distance.lt(tmp.inf.bc)) {
 		tmp.inf.bulk = new ExpantaNum(0);
 	} else {
 		scalEnd = player.distance.plus(1).logBase(tmp.inf.bc).logBase(ExpantaNum.pow(1.1, tmp.inf.fp))
-		scalEnd = doAllScaling(scalEnd, "endorsements", true, [1.5, 2.5, 1.1, 4, 6])
+		scalEnd = doAllScaling(scalEnd, "endorsements", true)
 		scalEnd = scalEnd.plus(1).floor();
 		tmp.inf.bulk = scalEnd
 	}
@@ -602,14 +602,12 @@ function updateTempPantheon() {
 		tmp.inf.pantheon.soulBoost = adjustedD.div(h.pow(tmp.inf.pantheon.ppe).plus(1)).plus(1).log10().plus(1).log10().plus(1);
 	}
 	if (!mltRewardActive(5)) {
-		// TODO: remove this slog
-		// ! What the hell is this kind of softcap!?
-		if (tmp.inf.pantheon.chipBoost.gte(2)) tmp.inf.pantheon.chipBoost = tmp.inf.pantheon.chipBoost.slog(2).times(2);
-		if (tmp.inf.pantheon.chipBoost.gte(2.5)) tmp.inf.pantheon.chipBoost = tmp.inf.pantheon.chipBoost.logBase(2.5).plus(1.5);
+		tmp.inf.pantheon.chipBoost = softcap(tmp.inf.pantheon.chipBoost, "P", 1, 2, 2)
+		tmp.inf.pantheon.chipBoost = softcap(tmp.inf.pantheon.chipBoost, "P", 1, 2.5, 3)
 	} else tmp.inf.pantheon.chipBoost = tmp.inf.pantheon.chipBoost.pow(1.25);
 	if (!mltRewardActive(5)) {
-		if (tmp.inf.pantheon.soulBoost.gte(2)) tmp.inf.pantheon.soulBoost = tmp.inf.pantheon.soulBoost.slog(2).times(2);
-		if (tmp.inf.pantheon.soulBoost.gte(2.5)) tmp.inf.pantheon.soulBoost = tmp.inf.pantheon.soulBoost.logBase(2.5).plus(1.5);
+		tmp.inf.pantheon.soulBoost = softcap(tmp.inf.pantheon.soulBoost, "P", 1, 2, 2)
+		tmp.inf.pantheon.soulBoost = softcap(tmp.inf.pantheon.soulBoost, "P", 1, 2.5, 3)
 	} else tmp.inf.pantheon.soulBoost = tmp.inf.pantheon.soulBoost.pow(1.25);
 	if (mltRewardActive(5) && !mltActive(5)) {
 		tmp.inf.pantheon.chipBoost = tmp.inf.pantheon.chipBoost.pow(2);
@@ -646,7 +644,7 @@ function updateTempPurge() {
 		.pow(tmp.inf.pantheon.purgeExp)
 		.times(tmp.inf.pantheon.purgeMult);
 	if (modeActive("extreme")) tmp.inf.pantheon.purgeGain = tmp.inf.pantheon.purgeGain.sqrt()
-	if (tmp.inf.pantheon.purgeGain.gte(600)) tmp.inf.pantheon.purgeGain = tmp.inf.pantheon.purgeGain.sqrt().times(Math.sqrt(600));
+	tmp.inf.pantheon.purgeGain = softcap(tmp.inf.pantheon.purgeGain, "P", 1, 600, 2);
 	tmp.inf.pantheon.purgeGain = tmp.inf.pantheon.purgeGain.sub(player.inf.pantheon.purge.power).floor().max(0);
 	tmp.inf.pantheon.purgeNext = ExpantaNum.pow(
 		tmp.inf.pantheon.purgeBase,

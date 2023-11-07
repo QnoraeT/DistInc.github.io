@@ -830,7 +830,7 @@ function updateNormalFurnace(){
 		tmp.el.blueFlameName.changeStyle("color", SCALE_COLOR[scalType]())
 		tmp.el.blueFlameName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 		if (tmp.fn.bfEffRecip.lte(102.04)){
-			tmp.el.bfEff.setTxt(showNum(ExpantaNum.sub(1, tmp.fn.bfEff).times(100))+"%");
+			tmp.el.bfEff.setTxt(showNum(Decimal.sub(1, Decimal.div(1, tmp.fn.bfEffRecip)).mul(100))+"%");
 		} else {
 			tmp.el.bfEff.setTxt(showNum(tmp.fn.bfEffRecip)+"x");
 		}
@@ -1010,9 +1010,9 @@ function updateStatisticsHTML(){
 
 				tmp.el["rankReward"+n].setDisplay(player.rank.gt(rankReq));
 				if (tmp.el["rankEff"+n] && rankEffects(rankReq)) {
-					let eff = rankEffects(rankReq)
+					let eff = rankEffects(rankReq);
 					if (RANK_DESCS[i].effectType == "% weaker") {
-						eff = Decimal.sub(1, Decimal.div(1, eff))
+						eff = Decimal.sub(1, Decimal.div(1, eff)).mul(100);
 					}
 					tmp.el["rankEff"+n].setTxt(showNum(eff));
 				}
@@ -1023,9 +1023,9 @@ function updateStatisticsHTML(){
 				let n = showNum(tierReq, false).replace(/\./g, "_");
 				tmp.el["tierReward"+n].setDisplay(player.tier.gt(tierReq));
 				if (tmp.el["tierEff"+n] && tierEffects(tierReq)) {
-					let eff = rankEffects(tierReq)
+					let eff = tierEffects(tierReq);
 					if (TIER_DESCS[i].effectType == "% weaker") {
-						eff = Decimal.sub(1, Decimal.div(1, eff))
+						eff = Decimal.sub(1, Decimal.div(1, eff)).mul(100);
 					}
 					tmp.el["tierEff"+n].setTxt(showNum(eff));
 				}

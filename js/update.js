@@ -443,18 +443,16 @@ document.onkeydown = function (e) {
 
 function getNews() {
 	let possible = Object.values(NEWS_DATA).filter(data =>
-		(function () {
-			if (data[1] === undefined) return true;
-			else return data[1]();
+		(function() {
+			return data().if
 		})()
 	);
-
 	let txt = "";
 	if (possible.length == 0) txt = "Sorry, we are out of news for the day... try again later?";
-	else if (possible.length == 1) txt = possible[0][0];
+	else if (possible.length == 1) txt = possible[0]().msg;
 	else {
 		let n = Math.floor(Math.random() * possible.length);
-		txt = possible[n][0];
+		txt = possible[n]().msg;
 	}
 
 	return txt;

@@ -1,4 +1,4 @@
-function calcAcceleration(){
+function calcAcceleration() {
 	tmp.acc = new ExpantaNum(0.1);
 	if (modeActive("hard")) tmp.acc = tmp.acc.div(3);
 	if (modeActive("easy")) tmp.acc = tmp.acc.times(2);

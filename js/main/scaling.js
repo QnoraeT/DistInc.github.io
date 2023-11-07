@@ -45,14 +45,14 @@ function getScalingStart(type, name) {
 			if (player.elementary.bosons.scalar.higgs.upgrades.includes("0;0;5") && tmp.elm) start = start.plus(tmp.elm.bos["higgs_0;0;5"]())
 			if (player.elementary.sky.unl && tmp.elm) start = start.plus(tmp.elm.sky.pionEff[1])
 		}
-		
+
 	} else if (name=="rankCheap") {
 		if (type=="scaled") {
 
 		} else if (type=="superscaled") {
 
 		} else if (type=="hyper") {
-			if (player.tier.gt(60)) start = start.add(tierEffects(60).pow(2).mul(2.5))
+
 		}
 		if (tmp.fn) if (tmp.fn.pl) if (tmp.fn.pl.unl) start = start.plus(tmp.fn.pl.boosts[4])
 	} else if (name=="tier") {

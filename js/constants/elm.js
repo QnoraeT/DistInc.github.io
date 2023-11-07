@@ -327,7 +327,7 @@ const TREE_UPGS = {
 		target: function(points) { return points.div(4).max(1).logBase(5).plus(1).floor() },
 		cap: new ExpantaNum(10),
 		desc: "The Theoriverse's nerf is weakened.",
-		effect: function(bought) { return new ExpantaNum(bought).plus(1).times(10).slog(10).sub(1).times(7.6).max(0) },
+		effect: function(bought) { return new ExpantaNum(bought).plus(1).times(10).log(10).log(10).times(7.6).max(0) },
 		effD: function(e) { return "-"+showNum(e)+" Depths" },
 	},
 	5: {
@@ -353,7 +353,7 @@ const TREE_UPGS = {
 		target: function(points) { return points.sub(2).div(3).plus(1).floor() },
 		cap: new ExpantaNum(5),
 		desc: "Scaled Endorsement scaling starts later based on your Primary Strings, and Knowledge gain is boosted in Theoriverse runs.",
-		effect: function(bought) { return player.elementary.theory.strings.amounts[0].plus(1).times(10).slog(10).log10().div(5).times(new ExpantaNum(bought).times(75)) },
+		effect: function(bought) { return player.elementary.theory.strings.amounts[0].plus(1).times(10).log10().log10().log10().div(5).times(new ExpantaNum(bought).times(75)) },
 		effD: function(e) { return "Scaling: "+showNum(e)+" later, Knowledge gain: "+showNum(e.plus(1).pow(10))+"x" },
 	},
 	8: {
@@ -393,7 +393,7 @@ const TREE_UPGS = {
 		cap: new ExpantaNum(5),
 		desc: "The above upgrade gets extra levels added to its effect based on your Preons.",
 		altDesc: "The previous upgrade gets extra levels added to its effect based on your Preons.",
-		effect: function(bought) { return player.elementary.theory.preons.amount.plus(1).times(10).slog(10).times(bought) },
+		effect: function(bought) { return player.elementary.theory.preons.amount.plus(1).times(10).log(10).root(3).times(bought) },
 		effD: function(e) { return showNum(e)+" extra levels" },
 	},
 	12: {
@@ -1007,7 +1007,7 @@ const ENTROPY_UPG_EFFS = {
 	3: function() { return ExpantaNum.pow(1.0015, player.rf) },
 	4: function() { return (tmp.elm?tmp.elm.entropy.omega:false)?(tmp.elm.entropy.omega.times(2)):new ExpantaNum(0) },
 	5: function() { return ExpantaNum.pow(1.03, player.elementary.theory.preons.boosters) },
-	7: function() { return player.elementary.hc.hadrons.plus(1).times(10).slog(10).times(modeActive("extreme")?75:25) },
+	7: function() { return player.elementary.hc.hadrons.max(1e12).log(1e12).root(2).times(modeActive("extreme")?75:25) },
 	8: function() { return player.elementary.theory.accelerons.amount.plus(1).times(player.elementary.theory.inflatons.amount.plus(1)).log10().plus(1).log10().plus(1).sqrt() },
 	9: function() { return player.elementary.sky.amount.plus(1).logBase(2).times(3).plus(1) },
 	14: function() { return player.elementary.entropy.best.plus(1).log10().sqrt().div(6).plus(1) },

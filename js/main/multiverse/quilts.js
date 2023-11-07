@@ -44,7 +44,7 @@ function getQuiltEff(x) {
 	} else if (x==2) return power.plus(1).pow(1.1)
 	else if (x==3) {
 		let eff = power.plus(1).pow(0.9)
-		if (eff.gte(tmp.mlt.quilts[3].scStart)) eff = eff.times(tmp.mlt.quilts[3].scStart.pow(2)).cbrt();
+		eff = softcap(eff, "P", 1, tmp.mlt.quilts[3].scStart, 3)
 		return eff;
 	}
 }

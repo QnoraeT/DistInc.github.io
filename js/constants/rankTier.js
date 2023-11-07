@@ -172,12 +172,12 @@ const RANK_DESCS = {
 		effectType: "% weaker",
 	},
 	34: {
-		text: "scaled Enlightenments are much weaker based off of your Ascension Power (also effects Superscaled at a reduced rate).",
+		text: `scaled Enlightenments are weaker based off of your Ascension Power, starting at ${showNum(Number.MAX_VALUE)}. (also effects Superscaled at a reduced rate).`,
 		req: new ExpantaNum(2000),
 		effectType: "% weaker",
 	},
 	35: {
-		text: "rocket Fuel uses a better effect formula, and its Atomic scaling is weaker based off of Rockets (after e1.0000e9 rockets)",
+		text: `rocket Fuel uses a better effect formula, and its Atomic scaling is weaker based off of Rockets (after ${showNum("ee9")} rockets)`,
 		req: new ExpantaNum(2500),
 		effectType: "% weaker",
 	},
@@ -328,7 +328,7 @@ const TIER_DESCS = {
 		effectType: "% weaker",
 	},
 	18: {
-		text: "hyper Rank Cheapener (or Tier if extreme is not active) starts later based off of your Magma.",
+		text: "hyper Tier starts later based off of your Magma.",
 		req: new ExpantaNum(60),
 		effectType: "+",
 	},

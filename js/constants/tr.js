@@ -165,7 +165,7 @@ const TR_UPGS = {
 		},
 		desc: "Time Cube gain & Coal gain boost each other.",
 		current: function () {
-			return { tc: player.furnace.coal.plus(1).log10().sqrt().plus(1), co: player.tr.cubes.plus(1) };
+			return { tc: player.furnace.coal.plus(1).log10().sqrt().plus(1), co: softcap(player.tr.cubes.plus(1), "EP", 1, "e10000", 4) };
 		},
 		disp: function (g) {
 			return "Cubes: " + showNum(g.tc) + "x, Coal: " + showNum(g.co) + "x";
@@ -177,7 +177,7 @@ const TR_UPGS = {
 		},
 		desc: "Blue Flame is stronger based on your Time Cubes, and getting Rocket Fuel does not reset anything.",
 		current: function () {
-			return player.tr.cubes.plus(1).times(10).slog(10);
+			return player.tr.cubes.add(1).log(10).add(1).mul(10).log(10).sub(1).mul(5).add(1).root(2.8);
 		},
 		disp: function (x) {
 			return showNum(x) + "x";
@@ -226,7 +226,7 @@ const TR_UPGS = {
 		},
 		desc: "Rank Cheapeners are stronger based on your Cadavers (not retroactive).",
 		current: function () {
-			return player.collapse.cadavers.plus(1).times(10).slog(10).sqrt();
+			return player.collapse.cadavers.plus(1).times(10).log(10).log(10).div(2.5).add(1);
 		},
 		disp: function (x) {
 			return showNum(x) + "x";
@@ -265,9 +265,9 @@ const TR_UPGS = {
 		},
 		desc: "Coal boosts Pathogen Upgrade Power.",
 		current: function () {
-			let ret = player.furnace.coal.plus(1).times(10).slog(10).sub(1).div(5).max(0);
-			if (player.tr.upgrades.includes(32)) return player.furnace.coal.plus(1).log10().plus(1).log10().div(7.5).max(ret).times(1.04);
-			else return ret
+			let ret = player.furnace.coal.add(1).times(10).log(10).log(10).root(1.2).sub(1).div(5).max(0);
+			if (player.tr.upgrades.includes(32)) ret = player.furnace.coal.plus(1).log10().plus(1).log10().div(7.5).max(ret).times(1.04);
+			return ret
 		},
 		disp: function (x) {
 			return "+" + showNum(x.times(100)) + "%";

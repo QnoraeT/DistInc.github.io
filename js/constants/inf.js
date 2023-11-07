@@ -432,8 +432,8 @@ const INF_UPGS = {
 			let exp = new ExpantaNum(1);
 			if (tmp.inf) if (tmp.inf.upgs.has("7;4")) exp = exp.times(INF_UPGS.effects["7;4"]());
 			let pow = {
-				knowledge: player.tr.cubes.plus(1).slog(10).plus(1).log10().times(exp),
-				cubes: player.inf.knowledge.plus(1).slog(2).plus(1).log10().times(exp)
+				knowledge: player.tr.cubes.plus(10).log(10).log(10).plus(1).log10().times(exp),
+				cubes: player.inf.knowledge.plus(4).log(2).log(2).plus(1).log10().times(exp)
 			};
 			return {
 				knowledge: player.tr.cubes.plus(1).log10().plus(1).log10().plus(1).pow(pow.knowledge),
