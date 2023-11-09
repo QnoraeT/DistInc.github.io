@@ -88,7 +88,7 @@ function softcap(amt, type, strength, start, powScale = 2) {
                 str = new ExpantaNum(powScale).pow(str);
                 return amt.div(sta).root(str).mul(sta).sub(sta).mul(str).add(sta);
             case "E": // exponential 
-                if (str.gt(1)){console.warn("Softcap \"E\" cannot work correctly with strength > 1 !");str=new ExpantaNum(1)}
+                if (str.gt(1)) {console.warn("Softcap \"E\" cannot work correctly with strength > 1 !");str=new ExpantaNum(1)}
                 str = ExpantaNum.sub(1, str);
                 return amt.log(sta.mul(amt.div(sta).pow(str))).add(1).pow(sta.mul(amt.div(sta).pow(str)).log(2));
             case "EP":

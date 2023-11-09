@@ -256,7 +256,7 @@ const SCALING_STARTS = {
 	},
 	supercritical: { // exponential (weaker than hyper???) 
 			rank: new ExpantaNum(60000), 
-			tier: new ExpantaNum(400), 
+			tier: new ExpantaNum(100), 
 			rf: new ExpantaNum(10000),
 			fn: new ExpantaNum(100000),
 			photons: new ExpantaNum(250000),

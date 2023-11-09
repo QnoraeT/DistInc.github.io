@@ -206,6 +206,7 @@ function getScalingPower(type, name) {
 			if (tmp.inf) if (tmp.inf.upgs.has("10;1")) power = power.times(ExpantaNum.sub(1, INF_UPGS.effects["10;1"]("pth")))
 		} else if (type=="hyper") {
 			if (tmp.ach[185].has) power = power.mul(0.9); // sub by 0.1 might cause issues
+			if (player.rank.gte(4e4)) power = power.div(rankEffects(4e4))
 		}
 	} else if (name=="darkCore") {
 		if (type=="scaled") {

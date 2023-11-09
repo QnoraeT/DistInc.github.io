@@ -35,7 +35,8 @@ function calcDarkFlow(){
 		if (player.elementary.times.gt(0)) tmp.dc.flow = tmp.dc.flow.times(tmp.elm.bos.z2.max(1));
 		if (player.elementary.sky.unl) tmp.dc.flow = tmp.dc.flow.times(tmp.elm.sky.pionEff[5]);
 	}
-	if (tmp.dc.flow.gte("ee11.5")) tmp.dc.flow = softcap(tmp.dc.flow, 'EP', 1, "ee11.5", 4.5) 
+	if (player.rank.gte(1.5e4)) tmp.dc.flow = tmp.dc.flow.mul(rankEffects(1.5e4))
+	if (tmp.dc.flow.gte("ee11")) tmp.dc.flow = softcap(tmp.dc.flow, 'EP', 1, "ee11", 4) 
 	if (extremeStadiumActive("quantron", 5)) tmp.dc.flow = tmp.dc.flow.pow(0.95);
 	if (nerfActive("noDarkFlow")) tmp.dc.flow = new ExpantaNum(0);
 }

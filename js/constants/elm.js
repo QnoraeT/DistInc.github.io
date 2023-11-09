@@ -1172,7 +1172,7 @@ const SKY_FIELDS = {
 		costMult: new ExpantaNum(1e12),
 		pionEff(bought) { 
 			if (bought.gte(3)) bought = bought.logBase(3).plus(2);
-			return ExpantaNum.add(ExpantaNum.cbrt(bought), 1).pow(4) 
+			return ExpantaNum.add(ExpantaNum.cbrt(bought), 1) 
 		},
 		spinorEff(bought) { 
 			if (bought.gte(2)) bought = bought.logBase(2).plus(1).root(5)

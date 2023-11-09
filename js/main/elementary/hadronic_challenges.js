@@ -13,6 +13,7 @@ function updateTempHC() {
 	if (ExpantaNum.gte(player.elementary.theory.tree.upgrades[33]||0, 1)) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(2)
 	if (player.elementary.entropy.upgrades.includes(19) && tmp.elm.entropy) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(tmp.elm.entropy.upgEff[19])
 	if (hasDE(7)) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(getAccelEff())
+	if (tmp.elm.hc.hadIntervalRecip.gte(1e100)) tmp.elm.hc.hadIntervalRecip = softcap(tmp.elm.hc.hadIntervalRecip, "EP", 1, 1e100, 3)
 	tmp.elm.hc.hadronEff = player.elementary.hc.hadrons.log(10).mul(tmp.elm.hc.hadIntervalRecip).floor().times(tmp.elm.hc.hadronBulk)
 	// y = R*log(x)
 	// y = 10^(x/R)

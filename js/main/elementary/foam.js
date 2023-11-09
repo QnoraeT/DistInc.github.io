@@ -307,11 +307,9 @@ function getEntropyGain() {
 	if (HCCBA("etrpy")) return new ExpantaNum(0);
 	let foam = player.elementary.foam.amounts[0]
 	let gain = Decimal.pow(10, Decimal.pow(100, foam.log(1e50).pow(0.75).sub(1)).log(10).pow(0.5))
-	// if (player.elementary.sky.unl && tmp.elm.sky) gain = gain.pow(tmp.elm.sky.spinorEff[10].plus(1)) 
-	// ! test this out
-
+	if (player.elementary.sky.unl && tmp.elm.sky) gain = gain.pow(tmp.elm.sky.spinorEff[10].plus(1)) 
 	if (modeActive("extreme") && ExpantaNum.gte(player.elementary.theory.tree.upgrades[38]||0, 1)) gain = gain.pow(2);
-	return gain.times(tmp.elm.entropy.gainMult).floor().sub(player.elementary.entropy.amount).max(0)
+	return softcap(gain.times(tmp.elm.entropy.gainMult).floor(), "P", 1, 1e6, 4).sub(player.elementary.entropy.amount).max(0)
 }
 
 function getEntropyNext() {
@@ -319,9 +317,9 @@ function getEntropyNext() {
 	let gain = tmp.elm.entropy.gain.plus(player.elementary.entropy.amount).div(tmp.elm.entropy.gainMult).plus(1);
 	if (modeActive("extreme") && ExpantaNum.gte(player.elementary.theory.tree.upgrades[38]||0, 1)) gain = gain.sqrt();
 
-	// if (player.elementary.sky.unl && tmp.elm.sky) gain = gain.root(tmp.elm.sky.spinorEff[10].plus(1))
-	// ! test this out
+	if (player.elementary.sky.unl && tmp.elm.sky) gain = gain.root(tmp.elm.sky.spinorEff[10].plus(1))
 	return Decimal.pow(1e50, Decimal.pow(10, gain.log(10).root(0.5)).log(100).add(1).root(0.75))
+
 }
 
 function entropyReset() {

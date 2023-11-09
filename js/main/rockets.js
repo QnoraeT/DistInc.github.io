@@ -46,6 +46,7 @@ function getRocketEffect() {
 	eff = softcap(eff, "P", rocketSoftcapStrength, 100, 2);
 	eff = softcap(eff, "EP", rocketSoftcapStrength, 100000, 2) // pre-multi softcap
 	if (tmp.inf) if (tmp.inf.stadium.completed("reality") && mltRewardActive(1)) eff = eff.times(8);
+	eff = softcap(eff, "E", rocketSoftcapStrength, 1e6) 
 	return eff;
 }
 

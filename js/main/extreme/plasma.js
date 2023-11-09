@@ -4,7 +4,16 @@ function updateTempPlasma() {
 	tmp.fn.pl.exp = getPlasmaExp()
 	tmp.fn.pl.wfGain = getWhiteFlameGain()
 	if (!tmp.fn.pl.boosts) tmp.fn.pl.boosts = {};
-	for (let i=1;i<=PLASMA_BOOSTS.upgs();i++) tmp.fn.pl.boosts[i] = player.plasma.boosts.gte(i)?PLASMA_BOOSTS[i].eff(player.plasma[PLASMA_BOOSTS[i].type=="plasmic"?"amount":"whiteFlame"].pow((i<9&&tmp.fn.pl.boosts[9])?tmp.fn.pl.boosts[9]:1)):PLASMA_BOOSTS[i].baseEff;
+	for (let i=1;i<=PLASMA_BOOSTS.upgs();i++) {
+		tmp.fn.pl.boosts[i] = player.plasma.boosts.gte(i)
+		?PLASMA_BOOSTS[i].eff(player.plasma[PLASMA_BOOSTS[i].type=="plasmic"
+			?"amount"
+			:"whiteFlame"]
+			.pow((i < 9 && tmp.fn.pl.boosts[9])
+				?tmp.fn.pl.boosts[9]
+				:1))
+		:PLASMA_BOOSTS[i].baseEff;
+	}
 }
 
 function getPlasmaExp() {
@@ -104,7 +113,7 @@ const PLASMA_BOOSTS = {
 	},
 	4: {
 		type: "gleaming",
-		desc: "Make all Rank Cheapener cost scalings start later.",
+		desc: "Make Scaled to Atomic Rank Cheapener cost scalings start later.",
 		baseEff: new ExpantaNum(0),
 		eff: function(amt) { 
 			let eff = amt.plus(1).log10().plus(1).log10().times(250);
@@ -149,8 +158,7 @@ const PLASMA_BOOSTS = {
 		type: "plasmic",
 		desc: "All previous Plasmic & Gleaming Boosts use their respective resource more effectively.",
 		baseEff: new ExpantaNum(1),
-		eff: function(amt) { return amt.plus(1).times(10).slog(10).div(1.75).plus(1) },
-		// TODO: remove this slog
+		eff: function(amt) { return amt.add(10).log10().log10().mul(4/3).pow(2/3) },
 		effD: function(e) { return "+"+showNum(e.sub(1).times(100))+"%" },
 	},
 	10: {

@@ -104,10 +104,10 @@ function rankEffects(num) {
 			temp = player.collapse.cadavers.max("ee8").log(10).log(1e8).root(3.5);
 			break;
 		case "1.5e4":
-			temp = new Decimal(1) // placeholder
+			temp = Decimal.pow(10, Decimal.pow(10, softcap(player.rank, "EP", 1, 45000, 12).div(1.5e4).max(1).log(3).mul(3).pow(2))).div(100).max(1) // placeholder
 			break;
 		case "4e4":
-			temp = new Decimal(1) // placeholder
+			temp = player.rank.div(40000).max(1).pow(player.elementary.particles.max(Number.MAX_VALUE).log(Number.MAX_VALUE)).root(2.3) // placeholder
 			break;
 		case "1e5":
 			temp = new Decimal(1) // placeholder
