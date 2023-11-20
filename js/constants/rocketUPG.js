@@ -10,7 +10,7 @@ const ROCKET_UPGS = {
         eff: function () {
             let effA, effB, effC
             let eff = getRUPGEffective(1)
-            effA = (true == true)
+            effA = (true)
                 ?eff.add(1).log(10).mul(player.rocketUPG[1].tier.add(1).pow(1.2)).div(4).add(1).pow(player.rocketUPG[1].tier.add(1).root(4)).root(5)
                 :new Decimal(1)
             effB = (player.rocketUPG[1].ascension.gte(1))
@@ -41,7 +41,7 @@ const ROCKET_UPGS = {
         },
         eff: function () {
             let effA, effB, effC
-            effA = (true == true)
+            effA = (true)
                 ?5
                 :new Decimal(1)
             effB = (player.rocketUPG[2].ascension.gte(1))
@@ -63,3 +63,4 @@ const ROCKET_UPGS = {
         },
     },
 }
+

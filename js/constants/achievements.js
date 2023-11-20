@@ -1,5 +1,5 @@
 const ACH_DATA = {
-	rows: 19,
+	rows: 20,
 	cols: 8,
 	names: {
 		11: "Quick Sprint",
@@ -172,6 +172,15 @@ const ACH_DATA = {
 		196: "Hadron Manipulation",
 		197: "Billionaire X",
 		198: "Overlord of Everything",
+
+		201: "What? But I thought the game was over!",
+		202: "",
+		203: "",
+		204: "",
+		205: "",
+		206: "",
+		207: "",
+		208: "",
 	},
 	descs: {
 		11: "Go at least formatDistance(100).",
@@ -344,6 +353,15 @@ const ACH_DATA = {
 		196: "Reach formatDistance(4.4e10000026) in Multiverse 5 while in a Hadronic Challenge with a Projected Score of at least boolean(extreme,12,15).",
 		197: "Gain showNum(1e9) Multiversal Energy in one reset.",
 		198: "Reach formatDistance(2.8e1000000026643).",
+
+		201: "Have Rocket Upgrade 1 at Level showNum(1).",
+		202: "",
+		203: "",
+		204: "",
+		205: "",
+		206: "",
+		207: "",
+		208: "",
 	},
 	rewards: {
 		12: "Acceleration is showNum(10)% higherboolean(extreme, and Rank Cheapeners are +0.5x stronger for each achievement gotten).",
@@ -460,5 +478,14 @@ const ACH_DATA = {
 		196: "boolean(extreme+hikers_dream,Useless Theories is boosted by Multiverse Quilt 3's 2nd effect)",
 		197: "Entropy Upgrades are showNum(5)% cheaperboolean(hikers_dream-extreme, and Thrusters V is 12.5% stronger).",
 		198: "Unlock new Hadronic Challenge Selectors, you can extend the Hadronic Challenge goal to your best-ever Distance, and you can extend the HC Theoriverse selector to your best-ever Theoriverse completed (capped at depth 100).",
+
+		201: "",
+		202: "",
+		203: "",
+		204: "",
+		205: "",
+		206: "",
+		207: "",
+		208: "",
 	}
 };

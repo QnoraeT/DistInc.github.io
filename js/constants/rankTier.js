@@ -330,6 +330,7 @@ const TIER_DESCS = {
 	18: {
 		text: "hyper Tier starts later based off of your Magma.",
 		req: new ExpantaNum(60),
+		req2: function() { player.magma.done },
 		effectType: "+",
 	},
 	19: {

@@ -303,7 +303,7 @@ const TR_UPGS = {
 		},
 		desc: "Time Speed is raised to a power based on your Pathogens.",
 		current: function () {
-			return extremeStadiumActive("flamis", 2)?new ExpantaNum(1):player.pathogens.amount.plus(1).log10().plus(1).times(10).slog(10).pow(1.2);
+			return extremeStadiumActive("flamis", 2)?new ExpantaNum(1):player.pathogens.amount.plus(1).log10().plus(1).times(10).log(10).pow(0.5);
 		},
 		disp: function (x) {
 			return "^" + showNum(x);

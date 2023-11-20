@@ -1,5 +1,33 @@
 "use strict";
 
+/**
+ * 
+ * @param {string} type Determines what type of scaling / softcap to use. 
+ * Available are:
+ *   "P" for Polynomial
+ *   "SE" for Semi-Exponential
+ *   "AE" for Alternate-Exponential
+ *   "E" for Exponential
+ *   "EP" for Exponential-Polynomial
+ *   "EEP" for Exponential^2-Polynomial
+ *   "ADt" for Antimatter Dimensions time shards calculations
+ * 
+ * If these types are wrong, this will throw a warning and fallback to "amt"
+ * @param {number} amt 
+ * This is the value of "x" where any formula can be used on it depending on what type is.
+ * @param {boolean} inv 
+ * This is a boolean, showing if its the inverse of these functions or not.
+ * @param {number} a 
+ * These are parameters for the scalings. a is most commonly for the start of scaling.
+ * @param {number} b 
+ * b is most commonly used for scaling strength directly.
+ * @param {number} c 
+ * c is most commonly used for how much on average it should scale, assuming b is at 1.0.
+ * @param {number} d 
+ * @param {number} f 
+ * @param {number} g 
+ * @returns {ExpantaNum}
+ */
 function cSC(type, amt, inv, a, b, c, d, f, g) {
     // 1st arg is type, 2nd arg is effective bought, 3rd arg is if it's inverse, 4th+ are params
     let x = new ExpantaNum(amt);
@@ -13,7 +41,6 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
     switch(type) {
         case "P":
             if (!inv)
-                // temp = x.pow(ExpantaNum.pow(c, b)).div(a.pow(ExpantaNum.pow(c, b).sub(1)));
                 temp = x.div(a).pow(ExpantaNum.pow(c, b)).mul(a).sub(a).div(ExpantaNum.pow(c, b)).add(a);
             else
                 temp = x.sub(a).mul(ExpantaNum.pow(c, b)).add(a).div(a).root(ExpantaNum.pow(c, b)).mul(a);
@@ -24,19 +51,18 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
             else
                 temp = ExpantaNum.pow(a, x.log(a).sub(1).mul(ExpantaNum.pow(c, b)).add(1).root(ExpantaNum.pow(c, b)));
             return temp;
-        case "LE":
+        case "AE":
             if (!inv)
                 temp = ExpantaNum.pow(ExpantaNum.pow(c, b), x.sub(a)).mul(a);
             else
                 temp = x.div(a).log(ExpantaNum.pow(c, b)).add(a);
-            // return (inv)?(ExpantaNum.min(temp,x)):(ExpantaNum.max(temp,x));
-            return temp; // but why would you let hyper anything have the potential to scale way slower than normal
+            return (inv)?(ExpantaNum.min(temp,x)):(ExpantaNum.max(temp,x)); 
         case "E":
             if (!inv)
                 temp = ExpantaNum.pow(ExpantaNum.pow(c, b), x.div(a).sub(1)).mul(a);
             else
                 temp = x.div(a).log(ExpantaNum.pow(c, b)).add(1).mul(a);
-            return (inv)?(ExpantaNum.min(temp,x)):(ExpantaNum.max(temp,x)); // lmao 
+            return (inv)?(ExpantaNum.min(temp,x)):(ExpantaNum.max(temp,x)); 
         case "EP": // a*b^(x+(cx)^2)) - exponential:polynomial
             if (!inv)
                 temp = b.pow(x.mul(c).pow(2).add(x)).mul(a);
@@ -70,7 +96,7 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
             return temp;
         default:
             console.warn("Cost scaling type " + type + " is not defined!!");
-            return new ExpantaNum(10); // fallback cost
+            return x; // fallback cost
     }
 }
 
@@ -104,7 +130,7 @@ function softcap(amt, type, strength, start, powScale = 2) {
     return amt;
 }
 
-function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 = ["P", "P", "LE", "P", "E"]){
+function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 = ["P", "P", "AE", "P", "E"]){
     let scaleSTR;
     let scaleTYP;
     switch (type){
@@ -117,7 +143,7 @@ function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 
             scaleSTR = special[1] !== undefined?special[1]:3;
             break;
         case "hyper":
-            scaleTYP = special2[2] !== undefined?special2[2]:"LE";
+            scaleTYP = special2[2] !== undefined?special2[2]:"AE";
             scaleSTR = special[2] !== undefined?special[2]:1.01;
             break;
         case "atomic":

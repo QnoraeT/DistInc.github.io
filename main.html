@@ -391,6 +391,11 @@
 								Rank/Tier Rewards
 							</button>
 						</td>
+						<td>
+							<button id="statBreakbtn" class="btn tb rckt" onclick="showStatTab('statBreak')">
+								Stat Breakdown
+							</button>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -514,18 +519,42 @@
 			</div>
 		</div>
 		<div id="rockets" class="tab" style="display: none;">
-			<button id="rocketReset" class="btn locked" onclick="tmp.rockets.layer.reset()">
-				Reset all previous progress to gain <span id="rocketGain" class="based2"></span> rockets
-				<span id="rocketGainSC"></span></button
-			><br /><br />
-			You have <span id="rocketsAmt"></span>, which are making your acceleration & maximum velocity boost
-			themselves (log(x+1)<sup><span id="rocketsEff"></span></sup>) <span id="rocketEffSC"></span><br /><br />
-			<button id="rfReset" class="btn locked" onclick="tmp.rf.layer.reset(false, false)">
-				Reset your rockets (but nothing else) to get 1 rocket fuel<br />Req:
-				<span id="rfReq" class="based"></span> rockets.</button
-			><br /><br />
-			You have <span id="rf"></span> <span id="rfName"></span>, which boosts the effect of rockets by
-			<span id="rfEff"></span>%, and adds <span id="rf2"></span> additional rockets to their effect.
+			<div class="band or">
+				<table>
+					<tr>
+						<td><button class="btn tb fn" style="visibility: hidden;"></button></td>
+					</tr>
+					<tr>
+						<td>
+							<button id="mrcabbtn" class="btn tb rckt main" onclick="showRocketsTab('mrc')">
+								Rockets
+							</button>
+						</td>
+						<td>
+							<button id="upgrctabbtn" class="btn tb rckt main" onclick="showRocketsTab('upgrc')">
+								Rocket Upgrades
+							</button>
+						</td>
+					</tr>
+				</table><br>
+			</div><br>
+			<div id="mrc" class="rocketTab">
+				<button id="rocketReset" class="btn locked" onclick="tmp.rockets.layer.reset()">
+					Reset all previous progress to gain <span id="rocketGain" class="based2"></span> rockets
+					<span id="rocketGainSC"></span></button
+				><br /><br />
+				You have <span id="rocketsAmt"></span>, which are making your acceleration & maximum velocity boost
+				themselves (log(x+1)<sup><span id="rocketsEff"></span></sup>) <span id="rocketEffSC"></span><br /><br />
+				<button id="rfReset" class="btn locked" onclick="tmp.rf.layer.reset(false, false)">
+					Reset your rockets (but nothing else) to get 1 rocket fuel<br />Req:
+					<span id="rfReq" class="based"></span> rockets.</button
+				><br /><br />
+				You have <span id="rf"></span> <span id="rfName"></span>, which boosts the effect of rockets by
+				<span id="rfEff"></span>%, and adds <span id="rf2"></span> additional rockets to their effect.
+			</div>
+			<div id="upgrc" class="rocketTab" style="display: none;">
+				You have <span id="rocketsAmtInUpg"></span>
+			</div>
 		</div>
 		<div id="furnace" class="tab" style="display: none;">
 			<div class="band or">

@@ -92,9 +92,7 @@ function updateFurnUpgEffs() {
 }
 
 function updateCoalEff() {
-	tmp.fn.eff = player.furnace.coal.plus(1).log10().pow(0.6).div(5);
-	// if (tmp.fn.eff.gte(1)) tmp.fn.eff = tmp.fn.eff.log10().plus(1);
-	// test at removing this softcap
+	tmp.fn.eff = player.furnace.coal.plus(1).log10().add(1).log10().mul(0.85);
 	if (tmp.ach[35].has) tmp.fn.eff = tmp.fn.eff.times(2);
 	if (player.tr.upgrades.includes(25) && !HCCBA("noTRU")) tmp.fn.eff = tmp.fn.eff.times(2);
 	if (player.tr.upgrades.includes(31) && !HCCBA("noTRU")) tmp.fn.eff = tmp.fn.eff.times(1.8);
@@ -166,15 +164,15 @@ function updateEnhFurnUpgCosts() {
 	};
 	for (let n = 1; n <= 13; n++) {
 		tmp.fn.enh.upgs[n].costAdj = new ExpantaNum(1);
-		if (n==13) tmp.fn.enh.upgs[n].costAdj = new ExpantaNum(0.75);
-		if (FCComp(6)) tmp.fn.enh.upgs[n].costAdj = tmp.fn.enh.upgs[n].costAdj.times(tmp.fn.bfEff.root(100));
+		if (n==13) tmp.fn.enh.upgs[n].costAdj = new ExpantaNum(4/3);
+		if (FCComp(6)) tmp.fn.enh.upgs[n].costAdj = tmp.fn.enh.upgs[n].costAdj.mul(tmp.fn.bfEffRecip.add(1).mul(1e10).log(1e10).sub(1).div(100).add(1).pow(100));
 		if (inFC(6)) tmp.fn.enh.upgs[n].costAdj = tmp.fn.enh.upgs[n].costAdj.div(10);
 		let scalEFN;
 		scalEFN = player.furnace.enhancedUpgrades[n - 1];
 		scalEFN = doAllScaling(scalEFN, "efn", false);
-		scalEFN = ExpantaNum.pow(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1), scalEFN).times(tmp.fn.enh.upgs[n].base);
+		scalEFN = ExpantaNum.pow(tmp.fn.enh.upgs[n].base.div(10), scalEFN.div(tmp.fn.enh.upgs[n].costAdj)).times(tmp.fn.enh.upgs[n].base);
 		tmp.fn.enh.upgs[n].cost = scalEFN;
-		scalEFN = player.furnace.enhancedCoal.div(tmp.fn.enh.upgs[n].base).logBase(tmp.fn.enh.upgs[n].base.div(10).pow(tmp.fn.enh.upgs[n].costAdj||1));
+		scalEFN = player.furnace.enhancedCoal.div(tmp.fn.enh.upgs[n].base).logBase(tmp.fn.enh.upgs[n].base.div(10)).mul(tmp.fn.enh.upgs[n].costAdj);
 		scalEFN = doAllScaling(scalEFN, "efn", true);
 		scalEFN = scalEFN.plus(1).floor();
 		tmp.fn.enh.upgs[n].bulk = scalEFN;
@@ -195,7 +193,7 @@ function updateEnhFurnUpgCosts() {
 }
 
 function updateEnhFurnUpgEffs() {
-	let endMod =  softcap(player.inf.endorsements.sub(25).max(0), "P", 1, 1, 2.2) // technically not a softcap
+	let endMod = player.inf.endorsements.sub(25).max(0).root(1.57)
 	tmp.fn.enh.upg1eff = ExpantaNum.pow(ExpantaNum.add(3, ExpantaNum.mul(0.1, endMod)), player.furnace.coal.plus(1).log10().plus(1).log10().plus(1).log10().plus(1)).times(ExpantaNum.pow(1.2, endMod))
 	tmp.fn.enh.upg2eff = new ExpantaNum(0.9)
 	tmp.fn.enh.upg3eff = new ExpantaNum(2.5)

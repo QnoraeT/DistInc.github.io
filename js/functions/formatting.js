@@ -27,6 +27,19 @@ function showNum(val, notation = true) {
 	return notations[notation?player.options.not:"scientific"](new ExpantaNum(val), (notation?player.options.sf:5) - 1, 2);
 }
 
+function showPerc(val, notation = true) {
+	val = new Decimal(val)
+	if (val.eq(NaN)) return "NaN";
+	if (val.gte(1/0)) return "Infinity";
+	if (val.eq(0)) return "0";
+	if (val.sign == -1) return "-" + showPerc(val.abs());
+	if (val.lt(1000)) {
+		return showNum(Decimal.sub(1, Decimal.div(1, val)).mul(100), notation) + "%"
+	} else {
+		return showNum(val, notation) + "x"
+	}
+}
+
 function addZeroes(orig, num, digits, roundWhole=false) {
 	if (typeof(num)=="string") num = parseFloat(num)
 	let result = (orig==Math.round(orig))?Math.round(num).toString():num.toLocaleString("en", {useGrouping: false, minimumFractionDigits: Math.max(digits, 1)})

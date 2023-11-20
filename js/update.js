@@ -307,6 +307,9 @@ function setupHTML() {
 	// Multiverse Stuff
 	setupMltMilestoneTable()
 
+	// Rocket Upgrades (1000 mlt+)
+	setupRocketUPGs()
+
 	// Version
 	let v = new Element("version")
 	v.setTxt(player.version)

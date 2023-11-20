@@ -42,7 +42,7 @@ function updateTempTiers() {
 function getTierFP() {
 	let fp = new ExpantaNum(1);
 	if (player.elementary.sky.unl && tmp.elm && !scalingActive("tier", player.tier, "scaled")) fp = fp.sub(tmp.elm.sky.pionEff[10]).pow(-1);
-	if (player.tr.upgrades.includes(20) && !HCCBA("noTRU") && modeActive("extreme")) fp = fp.times(player.rankCheap.plus(1).log10().plus(1).log10().plus(1));
+	if (player.tr.upgrades.includes(20) && !HCCBA("noTRU") && modeActive("extreme")) fp = fp.times(getRankCheapEff().root(64));
 	if (extremeStadiumActive("cranius", 5)) fp = fp.div(player.rankCheap.plus(1));
 	if (tmp.ach) if (tmp.ach[194].has) fp = fp.times(1.0069);
 	return fp;
@@ -73,7 +73,7 @@ function tierEffects(num) {
 			temp = player.tier.div(50).pow(2).add(1);
 			break;
 		case "60":
-			temp = player.magma?player.magma.amount.max(20).div(5).pow(1.2).sub(1):new Decimal(1);
+			temp = player.magma ? player.magma.amount.max(5).div(5).pow(1.2).sub(1):new Decimal(1);
 			break;
 		case "85":
 			temp = player.rockets.add(1).log(10).add(1).log(10).pow(4.25).mul(player.rank.mul(player.tier)).root(128).max(1)

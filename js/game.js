@@ -16,6 +16,7 @@ let saveTimer = 0;
 let showContainer = true;
 let infActive = false;
 let fnTab = "nfn";
+let rcTab = "mrc";
 let infTab = "infinity";
 let elmTab = "fermions";
 let bosTab = "gauge";

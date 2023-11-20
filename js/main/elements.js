@@ -181,34 +181,47 @@ function updateMainHTML(){
 
 function updateRocketsHTML(){
 	if (player.tab == "rockets") {
-		// Rockets
-		tmp.el.rocketReset.setClasses({ btn: true, locked: !tmp.rockets.canRocket, rckt: tmp.rockets.canRocket });
-		tmp.el.rocketGain.setTxt(showNum(tmp.rockets.layer.gain));
-		tmp.el.rocketsAmt.setTxt(
-			showNum(player.rockets) +
-				" rockets" +
-				(((tmp.ach[95].has||hasCollapseMilestone(9))&&!nerfActive("noRockets")) ? formatGain(player.rockets, tmp.rockets.layer.gain.div(tmp.ach[95].has?1:100)) : "")
-		);
-		tmp.el.rocketsEff.setTxt(showNum(getRocketEffect()));
-		let tt = `Formula: (${formatDistance(player.distance)} / ${formatDistance(LAYER_REQS['rockets'][1])})^${showNum(0.4)} x ${showNum(getRocketGainMult())}`
-		tmp.el.rocketsAmt.setAttr("widetooltip", tt);
-		tt = `Maximum Velocity: ${showNum(tmp.rockets.mvPow)}x \nAcceleration: ${showNum(tmp.rockets.accPow)}x`;
-		if (tmp.accEn.gte(1) && tmp.rockets.accEnPow) { tt += `\nAccelerational Energy: ${showNum(tmp.rockets.accEnPow)}x` }
-		if (tmp.rockets.tsPow.gt(1)) { tt += `\nTime Speed: ${showNum(tmp.rockets.tsPow)}x` }
-		tmp.el.rocketsEff.setAttr("widetooltip", tt)
+		switch (rcTab) {
+			case "mrc":
+				// Rockets
+				tmp.el.rocketReset.setClasses({ btn: true, locked: !tmp.rockets.canRocket, rckt: tmp.rockets.canRocket });
+				tmp.el.rocketGain.setTxt(showNum(tmp.rockets.layer.gain));
+				tmp.el.rocketsAmt.setTxt(
+					showNum(player.rockets) +
+						" rockets" +
+						(((tmp.ach[95].has||hasCollapseMilestone(9))&&!nerfActive("noRockets")) ? "" + formatGain(player.rockets, tmp.rockets.layer.gain.div(tmp.ach[95].has?1:100)) : "")
+				);
+				tmp.el.rocketsEff.setTxt(showNum(getRocketEffect()));
+				let tt = `Formula: (${formatDistance(player.distance)} / ${formatDistance(LAYER_REQS['rockets'][1])})^${showNum(0.4)} x ${showNum(getRocketGainMult())}`
+				tmp.el.rocketsAmt.setAttr("widetooltip", tt);
+				tt = `Maximum Velocity: ${showNum(tmp.rockets.mvPow)}x \nAcceleration: ${showNum(tmp.rockets.accPow)}x`;
+				if (tmp.accEn.gte(1) && tmp.rockets.accEnPow) { tt += `\nAccelerational Energy: ${showNum(tmp.rockets.accEnPow)}x` }
+				if (tmp.rockets.tsPow.gt(1)) { tt += `\nTime Speed: ${showNum(tmp.rockets.tsPow)}x` }
+				tmp.el.rocketsEff.setAttr("widetooltip", tt)
 
-		// Rocket Fuel
-		tmp.el.rf.setTxt(showNum(player.rf) + (getFreeFuel().gt(0) ? " + " + showNum(getFreeFuel()) : ""));
-		tmp.el.rfReset.setClasses({ btn: true, locked: !tmp.rf.can, rckt: tmp.rf.can });
-		tmp.el.rfReq.setTxt(showNum(tmp.rf.req));
-		tmp.el.rfEff.setTxt(showNum(getFuelEff().sub(1).times(100)));
-		tmp.el.rfName.setTxt(getScalingName("rf") + "Rocket Fuel");
-		let scalType = getScalingId("rf")
-		tmp.el.rfName.changeStyle("color", SCALE_COLOR[scalType]())
-		tmp.el.rfName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
-		tmp.el.rf2.setTxt(showNum(getFuelEff2()));
-		tt = `Rocket Fuel scaling: /${showNum(tmp.rf.fp)} \n Base cost: ${showNum(tmp.rf.bc)} \n Cost before scaling: ${showNum(tmp.rf.bc.times(ExpantaNum.pow(5, player.rf.div(tmp.rf.fp).pow(ROCKET_UPGS[1].eff()[0]))).round())}`
-		tmp.el.rfName.setAttr("widetooltip", tt);
+				// Rocket Fuel
+				tmp.el.rf.setTxt(showNum(player.rf) + (getFreeFuel().gt(0) ? " + " + showNum(getFreeFuel()) : ""));
+				tmp.el.rfReset.setClasses({ btn: true, locked: !tmp.rf.can, rckt: tmp.rf.can });
+				tmp.el.rfReq.setTxt(showNum(tmp.rf.req));
+				tmp.el.rfEff.setTxt(showNum(getFuelEff().sub(1).times(100)));
+				tmp.el.rfName.setTxt(getScalingName("rf") + "Rocket Fuel");
+				let scalType = getScalingId("rf")
+				tmp.el.rfName.changeStyle("color", SCALE_COLOR[scalType]())
+				tmp.el.rfName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
+				tmp.el.rf2.setTxt(showNum(getFuelEff2()));
+				tt = `Rocket Fuel scaling: /${showNum(tmp.rf.fp)} \n Base cost: ${showNum(tmp.rf.bc)} \n Cost before scaling: ${showNum(tmp.rf.bc.times(ExpantaNum.pow(5, player.rf.div(tmp.rf.fp).pow(ROCKET_UPGS[1].eff()[0]))).round())}`
+				tmp.el.rfName.setAttr("widetooltip", tt);
+				break;
+			case "upgrc":
+				tmp.el.rocketsAmtInUpg.setTxt(
+					showNum(player.rockets) +
+						" rockets" +
+						(((tmp.ach[95].has||hasCollapseMilestone(9))&&!nerfActive("noRockets")) ? "" + formatGain(player.rockets, tmp.rockets.layer.gain.div(tmp.ach[95].has?1:100)) : "")
+				);
+				break;
+			default:
+				throw new Error(`Rockets tab "${rcTab}" does not exist!`)
+		}
 	}
 }
 
@@ -1030,6 +1043,9 @@ function updateStatisticsHTML(){
 					tmp.el["tierEff"+n].setTxt(showNum(eff));
 				}
 			}
+		}
+		if (statTab == "statBreak") {
+
 		}
 	}
 }

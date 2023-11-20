@@ -82,7 +82,7 @@ function getScalingStart(type, name) {
 			if (tmp.inf) if (tmp.inf.upgs.has("2;6")) start = start.plus(5)
 		} else if (type=="hyper") {
 			if (tmp.inf) if (tmp.inf.upgs.has("10;7")) start = start.plus(20)
-			if (modeActive("extreme")) start = new ExpantaNum(1)
+			// if (modeActive("extreme")) start = new ExpantaNum(1)
 		} 
 	} else if (name=="pathogenUpg") {
 		if (type=="scaled") {

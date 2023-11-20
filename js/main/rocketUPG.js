@@ -23,3 +23,35 @@ function rUPGstrength(x, type = 0) {
     }
     return str
 }
+
+function setupRocketUPGs() {
+/**
+ * 
+ * 
+ * function setupMltMilestoneTable() {
+	let milestones = new Element("mltMilestoneTable");
+	let data = "<table>";
+	for (let r=1;r<=MLT_MILESTONE_NUM;r++) {
+		let id = r-1;
+		data += "<tr><td id='mltMil"+r+"1' class='mltTD'>Req: "+showNum(MLT_MILESTONES[id].req)+" Total Multiversal Energy</td>"
+		data += "<td id='mltMil"+r+"2' class='mltTD'><span id='mltMil"+r+"desc'></span>"
+		if (MLT_MILESTONES[id].effectDesc) data += "<br><br><span id='mltMil"+r+"effDesc'></span>"
+		data += "</td>"
+	}
+	data += "</table>"
+	milestones.setHTML(data);
+}
+
+* 	<button
+        id="fnu3"
+        class="btn locked"
+        onclick="tmp.fn.upgs[3].buy()"
+        style="min-height: 100px; max-height: 100px;"
+    >
+        Double Rocket gain<br />Cost: <span id="fnu3cost"></span> Coal<br /><span
+            id="fnu3name"
+        ></span
+        >Level: <span id="fnu3lvl"></span>
+    </button>
+ */
+}

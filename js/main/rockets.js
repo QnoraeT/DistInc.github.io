@@ -112,3 +112,33 @@ function updateTempRockets() {
 		tmp.inf.derv.resetDervs();
 	};
 }
+
+const RC_TABBTN_SHOWN = {
+	mrc: function() { return true },
+	upgrc: function() { return tmp.ach[198].has },
+}
+
+function isRCTabShown(name) {
+	return rcTab == name;
+}
+
+function getRCTabBtnsShown() {
+	let btns = [];
+	for (j = 0; j < Object.keys(RC_TABBTN_SHOWN).length; j++)
+		if (Object.values(RC_TABBTN_SHOWN)[i]()) btns.push(Object.keys(RC_TABBTN_SHOWN)[i]);
+	return btns;
+}
+
+function updateRCTabs() {
+	var tabs = document.getElementsByClassName("rocketTab");
+	for (i = 0; i < tabs.length; i++) {
+		var el = new Element(tabs[i].id);
+		el.setDisplay(isRCTabShown(tabs[i].id));
+		var elT = new Element(tabs[i].id + "tabbtn");
+		elT.changeStyle("visibility", getRCTabBtnsShown().includes(tabs[i].id)?"visible":"hidden");
+	}
+}
+
+function showRocketsTab(name) {
+	rcTab = name;
+}

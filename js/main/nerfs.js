@@ -35,7 +35,7 @@ function nerfActive(name) {
 	}
 	if (name == "noTier") {
 		let active = false;
-		active = active || (tmp.inf ? tmp.inf.stadium.active("infinity") : true);
+		active = active || (tmp.inf ? tmp.inf.stadium.active("infinity") : true); 
 		if (extremeStadiumActive("aqualon", 4)) active = true;
 		return active;
 	}
@@ -90,7 +90,7 @@ function nerfActive(name) {
 			active ||
 			(tmp.inf
 				? (((tmp.inf.stadium.active("solaris") && (!modeActive("extreme") || player.inf.stadium.current=="solaris")) ||
-				  tmp.inf.stadium.active("drigganiz", 5)) && !((player.inf.pantheon.purge.active||HCCBA("purge"))&&(tmp.ach[147].has||modeActive("extreme"))))
+					tmp.inf.stadium.active("drigganiz", 5)) && !((player.inf.pantheon.purge.active||HCCBA("purge"))&&(tmp.ach[147].has||modeActive("extreme"))))
 				: true);
 		if (HCCBA("noCad")) active = true
 		return active;
@@ -113,8 +113,8 @@ function nerfActive(name) {
 			active ||
 			(tmp.inf
 				? ((tmp.inf.stadium.active("drigganiz") ||
-				  tmp.inf.stadium.active("eternity", 6)) && !((tmp.ach[147].has||modeActive("extreme"))&&(player.inf.pantheon.purge.active||HCCBA("purge")))) ||
-				  tmp.inf.stadium.active("reality", 6)
+					tmp.inf.stadium.active("eternity", 6)) && !((tmp.ach[147].has||modeActive("extreme"))&&(player.inf.pantheon.purge.active||HCCBA("purge")))) ||
+					tmp.inf.stadium.active("reality", 6)
 				: true);
 		if (HCCBA("noPU")) active = true
 		return active;

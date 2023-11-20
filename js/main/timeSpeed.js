@@ -1,8 +1,8 @@
 function updateTempTimeSpeed() {
-	tmp.timeSpeed = new ExpantaNum(1);
+	tmp.timeSpeed = new ExpantaNum(10);
 	if (modeActive("hard")) tmp.timeSpeed = tmp.timeSpeed.times(0.75);
 	if (modeActive("easy")) tmp.timeSpeed = tmp.timeSpeed.times(2);
-	if (modeActive("extreme")) tmp.timeSpeed = tmp.timeSpeed.times(0.55);
+	if (modeActive("extreme")) tmp.timeSpeed = tmp.timeSpeed.div(0.75);
 	if (player.tr.upgrades.includes(2) && !HCCBA("noTRU")) tmp.timeSpeed = tmp.timeSpeed.times(tr2Eff());
 	if (player.tr.upgrades.includes(7) && !HCCBA("noTRU")) tmp.timeSpeed = tmp.timeSpeed.times(tr7Eff());
 	if (player.tr.upgrades.includes(18) && !HCCBA("noTRU") && modeActive("extreme"))
@@ -45,7 +45,7 @@ function updateTempTimeSpeed() {
 	if (player.tr.upgrades.includes(34) && !HCCBA("noTRU") && modeActive("extreme")) tmp.timeSpeed = tmp.timeSpeed.times(TR_UPGS[34].current())
 	if (nerfActive("nerfTS")) tmp.timeSpeed = tmp.timeSpeed.pow(0.1);
 	if (player.tr.upgrades.includes(30) && !HCCBA("noTRU") && modeActive("extreme"))
-		tmp.timeSpeed = tmp.timeSpeed.pow(player.pathogens.amount.plus(1).log10().plus(1).times(10).log(10).pow(0.5));
+		tmp.timeSpeed = tmp.timeSpeed.pow(TR_UPGS[30].current());
 	if (tmp.rockets) tmp.timeSpeed = tmp.timeSpeed.times(tmp.rockets.tsPow)
 	if (player.mlt.times.gt(0) && tmp.mlt) tmp.timeSpeed = tmp.timeSpeed.times(tmp.mlt.quilts[1].eff);
 	if (modeActive("extreme") && tmp.timeSpeed.gte(Number.MAX_VALUE)) {

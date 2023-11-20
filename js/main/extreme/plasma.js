@@ -144,7 +144,7 @@ const PLASMA_BOOSTS = {
 		type: "plasmic",
 		desc: "EFU1 & EFU3 use stronger multipliers.",
 		baseEff: new ExpantaNum(1),
-		eff: function(amt) { return amt.plus(1).root(200) },
+		eff: function(amt) { return Decimal.min(amt.add(1).root(), Decimal.pow(2, amt.add(1).log(10).root(2))) },
 		effD: function(e) { return showNum(e)+"x" },
 	},
 	8: {
