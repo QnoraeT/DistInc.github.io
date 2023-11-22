@@ -2,7 +2,7 @@
 
 // TODO: REMOVE ALL SOFTCAPS / SCALINGS, REPLACE THEM WITH DIFFERENT FORMULAS AS NECESSARY
 
-const INF_UNL = new ExpantaNum(Number.MAX_VALUE).times(DISTANCES.uni);
+const INF_UNL = new ExpantaNum(Number.MAX_VALUE).mul(DISTANCES.uni);
 const INF_UPGS = {
 	rows: 10,
 	cols: 10,
@@ -388,8 +388,8 @@ const INF_UPGS = {
 			if (nerfActive("noInf1;1") || extremeStadiumActive("spectra", 5)) return new ExpantaNum(1);
 			let total = player.rank.plus(player.tier.pow(2));
 			let exp = new ExpantaNum(3);
-			if (player.modes.includes("extreme")) exp = exp.times(Math.pow(player.inf.upgrades.length+1, 0.54))
-			if (tmp.inf) if (tmp.inf.stadium.completed("spaceon")) exp = exp.times(STADIUM_REWARDS.effects.spaceon());
+			if (player.modes.includes("extreme")) exp = exp.mul(Math.pow(player.inf.upgrades.length+1, 0.54))
+			if (tmp.inf) if (tmp.inf.stadium.completed("spaceon")) exp = exp.mul(STADIUM_REWARDS.effects.spaceon());
 			let ret = total.plus(1).pow(exp);
 			return ret;
 		},
@@ -425,10 +425,10 @@ const INF_UPGS = {
 		},
 		"2;3": function () {
 			let exp = new ExpantaNum(1);
-			if (tmp.inf) if (tmp.inf.upgs.has("7;4")) exp = exp.times(INF_UPGS.effects["7;4"]());
+			if (tmp.inf) if (tmp.inf.upgs.has("7;4")) exp = exp.mul(INF_UPGS.effects["7;4"]());
 			let pow = {
-				knowledge: player.tr.cubes.plus(10).log(10).log(10).plus(1).log10().times(exp),
-				cubes: player.inf.knowledge.plus(4).log(2).log(2).plus(1).log10().times(exp)
+				knowledge: player.tr.cubes.plus(10).log(10).log(10).plus(1).log10().mul(exp),
+				cubes: player.inf.knowledge.plus(4).log(2).log(2).plus(1).log10().mul(exp)
 			};
 			return {
 				knowledge: player.tr.cubes.plus(1).log10().plus(1).log10().plus(1).pow(pow.knowledge),
@@ -442,15 +442,15 @@ const INF_UPGS = {
 		},
 		"2;8": function () {
 			let v = [player.inf.pantheon.heavenlyChips, player.inf.pantheon.demonicSouls];
-			let ret = v[0].plus(1).times(v[1].plus(1)).log10().plus(1);
+			let ret = v[0].plus(1).mul(v[1].plus(1)).log10().plus(1);
 			return ret;
 		},
 		"3;2": function () {
 			let exp = new ExpantaNum(1);
-			if (tmp.inf) if (tmp.inf.upgs.has("7;4")) exp = exp.times(INF_UPGS.effects["7;4"]());
+			if (tmp.inf) if (tmp.inf.upgs.has("7;4")) exp = exp.mul(INF_UPGS.effects["7;4"]());
 			let pow = {
-				knowledge: player.collapse.cadavers.plus(1).log(2).add(1).log10().plus(1).log10().times(exp),
-				cadavers: player.inf.knowledge.plus(1).log10().add(1).log10().plus(1).log10().times(exp)
+				knowledge: player.collapse.cadavers.plus(1).log(2).add(1).log10().plus(1).log10().mul(exp),
+				cadavers: player.inf.knowledge.plus(1).log10().add(1).log10().plus(1).log10().mul(exp)
 			};
 			return {
 				knowledge: player.collapse.cadavers.plus(1).log10().plus(1).log10().plus(1).pow(pow.knowledge),
@@ -471,7 +471,7 @@ const INF_UPGS = {
 			let f1 = tmp.auto.rankbot.interval.pow(-1).plus(1).min(Number.MAX_VALUE).cbrt()
 			let f2 = tmp.auto.tierbot.interval.pow(-1).plus(1).min(Number.MAX_VALUE).cbrt()
 			let f3 = tmp.auto.fuelbot.interval.pow(-1).plus(1).min(Number.MAX_VALUE).sqrt()
-			return f1.times(f2).times(f3).cbrt()
+			return f1.mul(f2).mul(f3).cbrt()
 		},
 		"4;7": function () {
 			let speed = tmp.timeSpeed;
@@ -483,7 +483,7 @@ const INF_UPGS = {
 			let times = new ExpantaNum(player.elementary.times)
 			let exp = new ExpantaNum(5)
 			if (player.elementary.theory.tree.unl) exp = exp.plus(TREE_UPGS[3].effect(player.elementary.theory.tree.upgrades[3]||0))
-			let ret = times.plus(1).times(2).log10().plus(1).pow(exp)
+			let ret = times.plus(1).mul(2).log10().plus(1).pow(exp)
 			return ret
 		},
 		"5;4": function () {
@@ -493,7 +493,7 @@ const INF_UPGS = {
 		"5;5": function () {
 			let base = player.inf.knowledge.plus(1).log10().plus(1).log10().plus(1);
 			let exp = player.inf.endorsements.sqrt();
-			if (modeActive("extreme")) exp = exp.times(1.5)
+			if (modeActive("extreme")) exp = exp.mul(1.5)
 			let ret = base.pow(exp);
 			return ret;
 		},
@@ -539,7 +539,7 @@ const INF_UPGS = {
 			return ret;
 		},
 		"7;5": function () {
-			let ret = player.pathogens.upgrades[5].plus(1).root(modeActive("extreme")?1/3:0.5);
+			let ret = player.pathogens.upgrades[5].plus(1).root(modeActive("extreme")?3:2);
 			return ret;
 		},
 		"7;6": function () {
@@ -589,13 +589,13 @@ const INF_UPGS = {
 		},
 		"9;1": function () {
 			let jerk = player.inf.derivatives.amts.jerk ? player.inf.derivatives.amts.jerk : new ExpantaNum(0);
-			let ret = jerk.add(1).log10().add(1).pow(50).div(1e200).max(jerk.add(1).log10().pow(jerk.add(1).log10().add(1).log10().add(1)))
-			return ret;
+			let ret = jerk.add(1).log10().add(1).pow(50).div(1e200).max(jerk.add(1).log10().pow(jerk.add(1).log10().add(1).log10().add(1).sqrt()))
+			return ret.max(1);
 		},
 		"9;2": function () {
 			let u = player.inf.derivatives.unlocks;
 			let ret = u.sqrt().div(2);
-			return ret.times(10);
+			return ret.mul(10);
 		},
 		"9;3": function () {
 			let a = player.inf.pantheon.angels;
@@ -613,13 +613,13 @@ const INF_UPGS = {
 		},
 		"9;6": function () {
 			let d = player.inf.pantheon.demonicSouls;
-			let ret = d.plus(1).times(10).log(10).div(10).add(1).pow(0.5);
+			let ret = d.plus(1).mul(10).log(10).div(10).add(1).pow(0.5);
 			ret = ExpantaNum.sub(1, ExpantaNum.div(1, ret))
 			return ret;
 		},
 		"9;7": function () {
 			let power = new ExpantaNum(1);
-			if (tmp.inf) if (tmp.inf.upgs.has("1;9")) power = power.times(INF_UPGS.effects["1;9"]());
+			if (tmp.inf) if (tmp.inf.upgs.has("1;9")) power = power.mul(INF_UPGS.effects["1;9"]());
 			let rank = player.rank;
 			let ret = ExpantaNum.pow(Decimal.pow(1.02, power), Decimal.pow(8000, rank.mul(20).log(400).sqrt()));
 			return ret;
@@ -631,7 +631,7 @@ const INF_UPGS = {
 		},
 		"10;1": function(type) {
 			if (type=="pth") {
-				let ret = player.inf.ascension.power.plus(1).times(10).log(10).pow(0.5).div(10).add(1)
+				let ret = player.inf.ascension.power.plus(1).mul(10).log(10).pow(0.5).div(10).add(1)
 				ret = ExpantaNum.sub(1, ExpantaNum.div(1, ret))
 				return ret;
 			} else if (type=="snp") {
@@ -641,7 +641,7 @@ const INF_UPGS = {
 		},
 		"10;2": function() {
 			let base = tmp.maxVel.plus(1).log10().plus(1).log10().plus(1)
-			let exp = tmp.maxVel.plus(1).times(10).slog(10)
+			let exp = tmp.maxVel.plus(1).mul(10).slog(10)
 			return base.pow(exp).pow(12)
 		},
 		"10;4": function() {
@@ -649,7 +649,7 @@ const INF_UPGS = {
 			let f1 = tmp.auto.rankbot.magnitude.plus(1).log10().plus(1).sqrt()
 			let f2 = tmp.auto.tierbot.magnitude.plus(1).log10().plus(1).sqrt()
 			let f3 = tmp.auto.fuelbot.magnitude.plus(1).log10().plus(1).pow(0.75)
-			let ret = f1.times(f2).times(f3).cbrt()
+			let ret = f1.mul(f2).mul(f3).cbrt()
 			if (tmp.elm) if (tmp.elm.bos.hasHiggs("5;0;0")) ret = ret.pow(1.8)
 			return ret
 		},
@@ -671,14 +671,14 @@ const INF_UPGS = {
 				base2 = base2.plus(tiers.plus(1).log10().div(4))
 				if (modeActive("hikers_dream")) {
 					base2 = base2.log10().plus(1)
-					tiers = tiers.times(tiers)
+					tiers = tiers.mul(tiers)
 				}
 			}
 			if (modeActive("hikers_dream") && tmp.ach) if (tmp.ach[145].has) {
 				base1 = base1.log10().plus(1)
-				ranks = ranks.times(ranks.div(200).plus(1))
+				ranks = ranks.mul(ranks.div(200).plus(1))
 			}
-			let ret = ExpantaNum.pow(base1, ranks).times(ExpantaNum.pow(base2, tiers))
+			let ret = ExpantaNum.pow(base1, ranks).mul(ExpantaNum.pow(base2, tiers))
 			return ret
 		},
 	}
@@ -770,7 +770,7 @@ const STADIUM_REWARDS = {
 			let ret = player.rockets.gte(1e100)
 						? player.rockets.log10().log10().log(2).mul(30).add(1.5)
 						: player.rockets.add(1).log10().add(1).mul(1.26732673267).log(2).mul(4.5)
-			ret = ret.times(mult);
+			ret = ret.mul(mult);
 			if (player.modes.includes("extreme")) ret = ret.plus(1).log10().plus(1).log10().div(10).plus(1) // lmao wtf is this
 			return ret;
 		},
@@ -778,13 +778,13 @@ const STADIUM_REWARDS = {
 			if (mltRewardActive(1)) return MLT_1_STADIUM_REWARDS.effects.solaris();
 			let mult = tmp.inf.pantheon.chipBoost;
 			let ret = player.collapse.cadavers.add(10).log10().root(3.5).mul(2).pow(2)
-			ret = ret.times(mult);
+			ret = ret.mul(mult);
 			return ret;
 		},
 		eternity: function () {
 			if (mltRewardActive(1)) return MLT_1_STADIUM_REWARDS.effects.eternity();
 			let mult = tmp.inf.pantheon.chipBoost;
-			let base = player.inf.endorsements.plus(1).times(player.inf.ascension.power.plus(1).log(10).add(1).log(10).plus(1));
+			let base = player.inf.endorsements.plus(1).mul(player.inf.ascension.power.plus(1).log(10).add(1).log(10).plus(1));
 			let exp = player.inf.endorsements.div(15).plus(1).logBase(2).plus(1).pow(6);
 			let totalExp = base.pow(exp);
 			let ret = player.rank.pow(totalExp.log10().div(2));
@@ -808,58 +808,58 @@ const STADIUM_REWARDS = {
 			return "x" + showNum(STADIUM_REWARDS.effects.eternity());
 		},
 		drigganiz: function () {
-			return "+" + showNum(STADIUM_REWARDS.effects.drigganiz().times(100)) + "%";
+			return "+" + showNum(STADIUM_REWARDS.effects.drigganiz().mul(100)) + "%";
 		}
 	}
 };
 const STADIUM_GOALS = {
 	spaceon: [
-		new ExpantaNum("1e800").times(DISTANCES.uni),
-		new ExpantaNum(1e100).times(DISTANCES.uni),
-		new ExpantaNum(1e96).times(DISTANCES.uni),
-		new ExpantaNum(1e128).times(DISTANCES.uni),
-		new ExpantaNum(1e240).times(DISTANCES.uni),
-		new ExpantaNum("1e300").times(DISTANCES.uni)
+		new ExpantaNum("1e800").mul(DISTANCES.uni),
+		new ExpantaNum(1e100).mul(DISTANCES.uni),
+		new ExpantaNum(1e96).mul(DISTANCES.uni),
+		new ExpantaNum(1e128).mul(DISTANCES.uni),
+		new ExpantaNum(1e240).mul(DISTANCES.uni),
+		new ExpantaNum("1e300").mul(DISTANCES.uni)
 	],
 	solaris: [
-		new ExpantaNum(1e20).times(DISTANCES.uni),
-		new ExpantaNum("1e365").times(DISTANCES.uni),
-		new ExpantaNum("1e450").times(DISTANCES.uni),
-		new ExpantaNum("1e500").times(DISTANCES.uni),
-		new ExpantaNum(1.11e111).times(DISTANCES.uni),
-		new ExpantaNum(1e180).times(DISTANCES.uni)
+		new ExpantaNum(1e20).mul(DISTANCES.uni),
+		new ExpantaNum("1e365").mul(DISTANCES.uni),
+		new ExpantaNum("1e450").mul(DISTANCES.uni),
+		new ExpantaNum("1e500").mul(DISTANCES.uni),
+		new ExpantaNum(1.11e111).mul(DISTANCES.uni),
+		new ExpantaNum(1e180).mul(DISTANCES.uni)
 	],
 	infinity: [
-		new ExpantaNum("1e1500").times(DISTANCES.uni),
-		new ExpantaNum("1e125").times(DISTANCES.uni),
-		new ExpantaNum("1e480").times(DISTANCES.uni),
-		new ExpantaNum("1e640").times(DISTANCES.uni),
-		new ExpantaNum("1e1000").times(DISTANCES.uni),
-		new ExpantaNum("1e1200").times(DISTANCES.uni)
+		new ExpantaNum("1e1500").mul(DISTANCES.uni),
+		new ExpantaNum("1e125").mul(DISTANCES.uni),
+		new ExpantaNum("1e480").mul(DISTANCES.uni),
+		new ExpantaNum("1e640").mul(DISTANCES.uni),
+		new ExpantaNum("1e1000").mul(DISTANCES.uni),
+		new ExpantaNum("1e1200").mul(DISTANCES.uni)
 	],
 	eternity: [
-		new ExpantaNum("1e260").times(DISTANCES.uni),
-		new ExpantaNum("1e250").times(DISTANCES.uni),
-		new ExpantaNum("1e295").times(DISTANCES.uni),
-		new ExpantaNum(Number.MAX_VALUE).times(DISTANCES.uni),
-		new ExpantaNum("1e350").times(DISTANCES.uni),
-		new ExpantaNum("1e375").times(DISTANCES.uni)
+		new ExpantaNum("1e260").mul(DISTANCES.uni),
+		new ExpantaNum("1e250").mul(DISTANCES.uni),
+		new ExpantaNum("1e295").mul(DISTANCES.uni),
+		new ExpantaNum(Number.MAX_VALUE).mul(DISTANCES.uni),
+		new ExpantaNum("1e350").mul(DISTANCES.uni),
+		new ExpantaNum("1e375").mul(DISTANCES.uni)
 	],
 	reality: [
-		new ExpantaNum(10).times(DISTANCES.uni),
-		new ExpantaNum(100).times(DISTANCES.pc),
-		new ExpantaNum(3).times(DISTANCES.ly),
-		new ExpantaNum(800).times(DISTANCES.Gm),
+		new ExpantaNum(10).mul(DISTANCES.uni),
+		new ExpantaNum(100).mul(DISTANCES.pc),
+		new ExpantaNum(3).mul(DISTANCES.ly),
+		new ExpantaNum(800).mul(DISTANCES.Gm),
 		new ExpantaNum(250),
 		new ExpantaNum(150)
 	],
 	drigganiz: [
-		new ExpantaNum(1e16).times(DISTANCES.uni),
-		new ExpantaNum(1e10).times(DISTANCES.uni),
-		new ExpantaNum(1e25).times(DISTANCES.uni),
-		new ExpantaNum(1e40).times(DISTANCES.uni),
-		new ExpantaNum(1e150).times(DISTANCES.uni),
-		new ExpantaNum(1e200).times(DISTANCES.uni)
+		new ExpantaNum(1e16).mul(DISTANCES.uni),
+		new ExpantaNum(1e10).mul(DISTANCES.uni),
+		new ExpantaNum(1e25).mul(DISTANCES.uni),
+		new ExpantaNum(1e40).mul(DISTANCES.uni),
+		new ExpantaNum(1e150).mul(DISTANCES.uni),
+		new ExpantaNum(1e200).mul(DISTANCES.uni)
 	]
 };
 
@@ -875,12 +875,12 @@ const EXTREME_STADIUM_DATA = {
 		],
 		reward: "Superscaled Rank Cheapener scaling is 90% weaker.",
 		goals: [
-			new ExpantaNum("1e1600").times(DISTANCES.uni),
-			new ExpantaNum("1e1750").times(DISTANCES.uni),
-			new ExpantaNum("1e1950").times(DISTANCES.uni),
-			new ExpantaNum("1e2000").times(DISTANCES.uni),
-			new ExpantaNum("1e2500").times(DISTANCES.uni),
-			new ExpantaNum("1e2600").times(DISTANCES.uni),
+			new ExpantaNum("1e1600").mul(DISTANCES.uni),
+			new ExpantaNum("1e1750").mul(DISTANCES.uni),
+			new ExpantaNum("1e1950").mul(DISTANCES.uni),
+			new ExpantaNum("1e2000").mul(DISTANCES.uni),
+			new ExpantaNum("1e2500").mul(DISTANCES.uni),
+			new ExpantaNum("1e2600").mul(DISTANCES.uni),
 		],
 	},
 	cranius: {
@@ -894,12 +894,12 @@ const EXTREME_STADIUM_DATA = {
 		],
 		reward: "Knowledge gain is boosted by second row Stadium Completions.",
 		goals: [
-			new ExpantaNum("1e1390").times(DISTANCES.uni),
-			new ExpantaNum("1e1500").times(DISTANCES.uni),
-			new ExpantaNum("1e1600").times(DISTANCES.uni),
-			new ExpantaNum("1e1750").times(DISTANCES.uni),
-			new ExpantaNum("1e2000").times(DISTANCES.uni),
-			new ExpantaNum("1e2050").times(DISTANCES.uni),
+			new ExpantaNum("1e1390").mul(DISTANCES.uni),
+			new ExpantaNum("1e1500").mul(DISTANCES.uni),
+			new ExpantaNum("1e1600").mul(DISTANCES.uni),
+			new ExpantaNum("1e1750").mul(DISTANCES.uni),
+			new ExpantaNum("1e2000").mul(DISTANCES.uni),
+			new ExpantaNum("1e2050").mul(DISTANCES.uni),
 		],
 		effect: function() { 
 			let x = (player.extremeStad||[]).length
@@ -920,14 +920,14 @@ const EXTREME_STADIUM_DATA = {
 		],
 		reward: "Rank Cheapeners use a weaker cost formula based on their amount.",
 		goals: [
-			new ExpantaNum("1e3200").times(DISTANCES.uni),
-			new ExpantaNum("1e3750").times(DISTANCES.uni),
-			new ExpantaNum("1e4000").times(DISTANCES.uni),
-			new ExpantaNum("1e4125").times(DISTANCES.uni),
-			new ExpantaNum("1e4500").times(DISTANCES.uni),
-			new ExpantaNum("1e4650").times(DISTANCES.uni),
+			new ExpantaNum("1e3200").mul(DISTANCES.uni),
+			new ExpantaNum("1e3750").mul(DISTANCES.uni),
+			new ExpantaNum("1e4000").mul(DISTANCES.uni),
+			new ExpantaNum("1e4125").mul(DISTANCES.uni),
+			new ExpantaNum("1e4500").mul(DISTANCES.uni),
+			new ExpantaNum("1e4650").mul(DISTANCES.uni),
 		],
-		effect: function() { return player.rankCheap.times(tmp.rankCheap.manPow).times(tmp.rankCheap.pow).pow(0.4).plus(1) },
+		effect: function() { return player.rankCheap.mul(tmp.rankCheap.manPow).mul(tmp.rankCheap.pow).pow(0.4).plus(1) },
 		disp: function() { return showNum(EXTREME_STADIUM_DATA.spectra.effect())+"x weaker" },
 	},
 	aqualon: {
@@ -941,12 +941,12 @@ const EXTREME_STADIUM_DATA = {
 		],
 		reward: "All pre-Infinity resources are generated 3x faster.",
 		goals: [
-			new ExpantaNum("1e1500").times(DISTANCES.uni),
-			new ExpantaNum("1e1625").times(DISTANCES.uni),
-			new ExpantaNum("1e1700").times(DISTANCES.uni),
-			new ExpantaNum("1e1800").times(DISTANCES.uni),
-			new ExpantaNum("1e2000").times(DISTANCES.uni),
-			new ExpantaNum("1e2050").times(DISTANCES.uni),
+			new ExpantaNum("1e1500").mul(DISTANCES.uni),
+			new ExpantaNum("1e1625").mul(DISTANCES.uni),
+			new ExpantaNum("1e1700").mul(DISTANCES.uni),
+			new ExpantaNum("1e1800").mul(DISTANCES.uni),
+			new ExpantaNum("1e2000").mul(DISTANCES.uni),
+			new ExpantaNum("1e2050").mul(DISTANCES.uni),
 		],
 	},
 	nullum: {
@@ -960,12 +960,12 @@ const EXTREME_STADIUM_DATA = {
 		],
 		reward: "All perks are 25% stronger.",
 		goals: [
-			new ExpantaNum("1e2000").times(DISTANCES.uni),
-			new ExpantaNum("1e2250").times(DISTANCES.uni),
-			new ExpantaNum("1e2325").times(DISTANCES.uni),
-			new ExpantaNum("1e2500").times(DISTANCES.uni),
-			new ExpantaNum("1e2645").times(DISTANCES.uni),
-			new ExpantaNum("1e2650").times(DISTANCES.uni),
+			new ExpantaNum("1e2000").mul(DISTANCES.uni),
+			new ExpantaNum("1e2250").mul(DISTANCES.uni),
+			new ExpantaNum("1e2325").mul(DISTANCES.uni),
+			new ExpantaNum("1e2500").mul(DISTANCES.uni),
+			new ExpantaNum("1e2645").mul(DISTANCES.uni),
+			new ExpantaNum("1e2650").mul(DISTANCES.uni),
 		],
 	},
 	quantron: {
@@ -979,18 +979,18 @@ const EXTREME_STADIUM_DATA = {
 		],
 		reward: "Pathogen Upgrades are stronger based on your Coal.",
 		goals: [
-			new ExpantaNum("1e3000").times(DISTANCES.uni),
-			new ExpantaNum("1e3100").times(DISTANCES.uni),
-			new ExpantaNum("1e2900").times(DISTANCES.uni),
-			new ExpantaNum("1e3200").times(DISTANCES.uni),
-			new ExpantaNum("1e2800").times(DISTANCES.uni),
-			new ExpantaNum("1e720").times(DISTANCES.uni),
+			new ExpantaNum("1e3000").mul(DISTANCES.uni),
+			new ExpantaNum("1e3100").mul(DISTANCES.uni),
+			new ExpantaNum("1e2900").mul(DISTANCES.uni),
+			new ExpantaNum("1e3200").mul(DISTANCES.uni),
+			new ExpantaNum("1e2800").mul(DISTANCES.uni),
+			new ExpantaNum("1e720").mul(DISTANCES.uni),
 		],
 		effect: function() { 
 			let ret = player.furnace.coal.plus(1).log10().plus(1).log10().div(6.09);
 			return ret;
 		},
-		disp: function() { return "+"+showNum(EXTREME_STADIUM_DATA.quantron.effect().times(100))+"%" },
+		disp: function() { return "+"+showNum(EXTREME_STADIUM_DATA.quantron.effect().mul(100))+"%" },
 	},
 }
 

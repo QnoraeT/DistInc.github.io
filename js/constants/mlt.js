@@ -92,7 +92,7 @@ const MLT_MILESTONES = [
 		desc: "Unspent Multiversal Energy reduces base Skyrmion requirements.",
 		effect: function() { 
 			let e = player.mlt.energy
-			if (e.gte(100)) e = ExpantaNum.pow(10, e.log10().times(2).sqrt())
+			if (e.gte(100)) e = ExpantaNum.pow(10, e.log10().mul(2).sqrt())
 			return e.plus(1).logBase(1.6).plus(1).sqrt().min(1e3);
 		},
 		effectDesc: function() { return "Distance: "+formatDistance(SKY_REQ[0])+" -> "+formatDistance(getSkyReqData(0, "mlt"))+"<br>Quark Req: "+showNum(SKY_REQ[1])+" -> "+showNum(getSkyReqData(1, "mlt"))+"<br>Lepton Req: "+showNum(SKY_REQ[2])+" -> "+showNum(getSkyReqData(2, "mlt")) },
@@ -113,7 +113,7 @@ const MLT_MILESTONES = [
 		req: new ExpantaNum(100),
 		desc: "Atomic Rank scaling is weaker based on your Tiers.",
 		effect: function() { return ExpantaNum.div(1, player.tier.plus(1).logBase(6).plus(1)) },
-		effectDesc: function() { return "Currently: -"+showNum(ExpantaNum.sub(1, tmp.mlt.mil15reward).times(100)||0)+"%" },
+		effectDesc: function() { return "Currently: -"+showNum(ExpantaNum.sub(1, tmp.mlt.mil15reward).mul(100)||0)+"%" },
 	}, {
 		req: new ExpantaNum(180),
 		desc: "inf10;1 always affects the last Derivative, and its effect uses a better formula.",
@@ -121,8 +121,8 @@ const MLT_MILESTONES = [
 		req: new ExpantaNum(300),
 		desc: "Multiversal Quilt Upgrade effects are increased based on your Distance.",
 		extremeDesc: "Multiversal Quilt Upgrade effects are increased based on your Distance, and gain 100x more White Flame.",
-		effect: function() { return player.distance.max(1).logBase(DISTANCES.mlt).plus(1).logBase(2).times(0.01) },
-		effectDesc: function() { return "Currently: +"+showNum(tmp.mlt.mil17reward.times(100)||0)+"%" },
+		effect: function() { return player.distance.max(1).logBase(DISTANCES.mlt).plus(1).logBase(2).mul(0.01) },
+		effectDesc: function() { return "Currently: +"+showNum(tmp.mlt.mil17reward.mul(100)||0)+"%" },
 	}, {
 		req: new ExpantaNum(1.25e3),
 		desc: "Foam effect exponents are increased by 0.05.",
@@ -174,28 +174,28 @@ const MLT_1_STADIUM_REWARDS = {
 		spaceon: function () {
 			let mult = tmp.inf.pantheon.chipBoost;
 			let ret = player.rockets.plus(1).log10().plus(1).log().pow(2.25).plus(1);
-			if (ret.gte(30)) ret = ret.logBase(30).times(30).min(ret);
-			ret = ret.times(mult);
+			if (ret.gte(30)) ret = ret.logBase(30).mul(30).min(ret);
+			ret = ret.mul(mult);
 			if (player.modes.includes("extreme")) ret = ret.plus(1).log10().plus(1).log10().div(10).plus(1)
-			return ret.times(player.rf.times(10).plus(1));
+			return ret.mul(player.rf.mul(10).plus(1));
 		},
 		solaris: function () {
 			let mult = tmp.inf.pantheon.chipBoost;
 			let ret = player.collapse.cadavers.plus(1).log10().plus(1).log10().pow(3.25);
-			if (ret.gte(15)) ret = ret.logBase(15).times(15).min(ret);
-			ret = ret.times(mult);
+			if (ret.gte(15)) ret = ret.logBase(15).mul(15).min(ret);
+			ret = ret.mul(mult);
 			return ret;
 		},
 		eternity: function () {
 			let mult = tmp.inf.pantheon.chipBoost;
-			let base = player.inf.endorsements.plus(1).times(player.inf.ascension.power.plus(1).log10().plus(1).sqrt());
+			let base = player.inf.endorsements.plus(1).mul(player.inf.ascension.power.plus(1).log10().plus(1).sqrt());
 			let exp = player.inf.endorsements.div(10).plus(1).logBase(1.75).plus(1).pow(9);
 			let totalExp = base.pow(exp);
 			if (totalExp.gte("1e50000"))
 				totalExp = softcap(totalExp, "EP", 1, "1e50000", 3)
 			let ret = player.rank.pow(totalExp.logBase(2));
 			ret = ret.pow(mult);
-			return ret.times("ee6").max(1);
+			return ret.mul("ee6").max(1);
 		},
 		drigganiz: function () {
 			let ret = ExpantaNum.mul(0.015+0.0001*player.achievements.length, player.achievements.length);
@@ -213,7 +213,7 @@ const MLT_1_STADIUM_REWARDS = {
 			return "x" + showNum(STADIUM_REWARDS.effects.eternity());
 		},
 		drigganiz: function () {
-			return "+" + showNum(STADIUM_REWARDS.effects.drigganiz().times(100)) + "%";
+			return "+" + showNum(STADIUM_REWARDS.effects.drigganiz().mul(100)) + "%";
 		}
 	}
 }

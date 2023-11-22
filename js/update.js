@@ -310,6 +310,19 @@ function setupHTML() {
 	// Rocket Upgrades (1000 mlt+)
 	setupRocketUPGs()
 
+	// Multiplier Breakdown
+	data = ``
+	for (i in multiBreakdown) {
+		data += `
+		<td>
+			<button class="btn tb rckt" onclick="showMultiBreakdown('${multiBreakdown[i].name}')">
+				${multiBreakdown[i].name}
+			</button>
+		</td>
+	`
+	}
+	new Element("multiBreak").setHTML(data)
+
 	// Version
 	let v = new Element("version")
 	v.setTxt(player.version)

@@ -237,7 +237,7 @@ function getInfo(sav) {
 		info +=
 			"Total Spectral Gems: " +
 			showNum(
-				new ExpantaNum(sav.inf.pantheon.gems).plus(sav.inf.pantheon.angels).plus(sav.inf.pantheon.demons)
+				new ExpantaNum(sav.inf.pantheon.gems).add(sav.inf.pantheon.angels).add(sav.inf.pantheon.demons)
 			) +
 			", ";
 	else if (new ExpantaNum(sav.inf.endorsements).gte(15))
@@ -245,7 +245,7 @@ function getInfo(sav) {
 	else if (new ExpantaNum(sav.inf.endorsements).gte(10)) {
 		let enl = new ExpantaNum(0);
 		for (let i = 0; i < sav.inf.ascension.enlightenments.length; i++)
-			enl = enl.plus(sav.inf.ascension.enlightenments[i]);
+			enl = enl.add(sav.inf.ascension.enlightenments[i]);
 		info +=
 			"Ascension Power: " +
 			showNum(new ExpantaNum(sav.inf.ascension.power)) +

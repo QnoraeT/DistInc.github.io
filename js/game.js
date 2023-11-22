@@ -15,6 +15,58 @@ let notifier = new Notifier();
 let saveTimer = 0;
 let showContainer = true;
 let infActive = false;
+let currentMB = ""
+let multiBreakdown = [
+	{
+		name: "Acceleration",
+		show: true,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(new Decimal(0.1))}`,
+				now: ``
+			}
+		]
+	},
+	{
+		name: "Coal",
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(new Decimal(1))}`,
+				now: ``
+			}
+		]
+	},
+	{
+		name: "Pathogens",
+		show: false,
+		data: [
+			{
+				name: "Base Gain",
+				format: `(${showNum(new Decimal(0))} * ${showNum(new Decimal(0))}) ^ 0.5`,
+				now: ``
+			},
+			{
+				name: "Gain Softcap 1",
+				format: `/${showNum(new Decimal(1))}`,
+				now: ``
+			},
+		]
+	},
+	{
+		name: "Pathogen Upgrade Power",
+		show: false,
+		data: [
+			{
+				name: "Base Power",
+				format: `${showNum(new Decimal(100))}%`,
+				now: ``
+			},
+		]
+	}
+];
 let fnTab = "nfn";
 let rcTab = "mrc";
 let infTab = "infinity";
@@ -50,23 +102,33 @@ function tickWithoutTS(diff) {
 	saveTimer += diff.toNumber();
 	player.bestEnd = player.bestEnd.max(player.inf.endorsements)
 
-	if (tmp.ach[95].has && !nerfActive("noRockets"))
-		player.rockets = player.rockets.plus(tmp.rockets.layer.gain.times(diff));
-	else if (hasCollapseMilestone(9) && !nerfActive("noRockets"))
-		player.rockets = player.rockets.plus(tmp.rockets.layer.gain.times(diff.div(100)));
+	if (!nerfActive("noRockets")) {
+		if (tmp.ach[95].has) {
+			player.rockets = player.rockets.plus(tmp.rockets.layer.gain.times(diff));
+		} else if (hasCollapseMilestone(9)) {
+			player.rockets = player.rockets.plus(tmp.rockets.layer.gain.times(diff.div(100)));
+		}
+	}
 
-	if (tmp.ach[96].has && !nerfActive("noCadavers"))
-		player.collapse.cadavers = player.collapse.cadavers.plus(tmp.collapse.layer.gain.times(diff));
-	else if (tmp.inf.upgs.has("2;4") && !nerfActive("noCadavers"))
-		player.collapse.cadavers = player.collapse.cadavers.plus(tmp.collapse.layer.gain.times(diff.div(100)));
-	if (tmp.ach[97].has && !nerfActive("noLifeEssence"))
-		player.collapse.lifeEssence = player.collapse.lifeEssence.plus(
-			player.collapse.cadavers.times(tmp.collapse.sacEff).max(1).times(diff)
-		);
-	else if (tmp.inf.upgs.has("5;3") && !nerfActive("noLifeEssence"))
-		player.collapse.lifeEssence = player.collapse.lifeEssence.plus(
-			player.collapse.cadavers.times(tmp.collapse.sacEff).max(1).times(diff.div(10))
-		);
+	if (!nerfActive("noCadavers")) {
+		if (tmp.ach[96].has) {
+			player.collapse.cadavers = player.collapse.cadavers.plus(tmp.collapse.layer.gain.times(diff));
+		} else if (tmp.inf.upgs.has("2;4")) {
+			player.collapse.cadavers = player.collapse.cadavers.plus(tmp.collapse.layer.gain.times(diff.div(100)));
+		}
+	}
+
+	if (!nerfActive("noLifeEssence")) {
+		if (tmp.ach[97].has) {
+			player.collapse.lifeEssence = player.collapse.lifeEssence.plus(
+				player.collapse.cadavers.times(tmp.collapse.sacEff).max(1).times(diff)
+			);
+		} else if (tmp.inf.upgs.has("5;3")) {
+			player.collapse.lifeEssence = player.collapse.lifeEssence.plus(
+				player.collapse.cadavers.times(tmp.collapse.sacEff).max(1).times(diff.div(10))
+			);
+		}
+	}
 
 	if (player.pathogens.unl)
 		player.pathogens.amount = player.pathogens.amount.plus(

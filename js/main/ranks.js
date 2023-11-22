@@ -8,11 +8,11 @@ function updateTempRanks() {
 	let scalRank
 	scalRank = player.rank
 	scalRank = doAllScaling(scalRank, "rank", false)
-	scalRank = new ExpantaNum(bc).times(ExpantaNum.pow(2, scalRank.div(fp).max(1).sub(1).pow(2))).div(divide);
+	scalRank = new ExpantaNum(bc).mul(ExpantaNum.pow(2, scalRank.div(fp).max(1).sub(1).pow(2))).div(divide);
 	tmp.ranks.req = scalRank
 	scalRank = player.distance.mul(divide).div(bc).max(1).logBase(2).sqrt().add(1).mul(fp)
 	scalRank = doAllScaling(scalRank, "rank", true)
-	scalRank = scalRank.plus(1).floor();
+	scalRank = scalRank.add(1).floor();
 	tmp.ranks.bulk = scalRank
 	if (player.rank.gte(RANK_DESCS[Object.keys(RANK_DESCS).length-1].req)){
 		tmp.ranks.desc = DEFAULT_RANK_DESC
@@ -41,19 +41,19 @@ function updateTempRanks() {
 
 function getRankFP() {
 	let fp = new ExpantaNum(1);
-	if (player.tier.gt(0)) fp = fp.times(1.25);
-	if (player.tier.gt(2)) fp = fp.times(tierEffects(2));
-	if (tmp.ach) if (tmp.ach[43].has) fp = fp.times(1.025);
-	if (player.tr.upgrades.includes(3) && !HCCBA("noTRU")) fp = fp.times(1.1);
-	if (tmp.rankCheap && modeActive("extreme")) fp = fp.times(getRankCheapEff());
+	if (player.tier.gt(0)) fp = fp.mul(1.25);
+	if (player.tier.gt(2)) fp = fp.mul(tierEffects(2));
+	if (tmp.ach) if (tmp.ach[43].has) fp = fp.mul(1.025);
+	if (player.tr.upgrades.includes(3) && !HCCBA("noTRU")) fp = fp.mul(1.1);
+	if (tmp.rankCheap && modeActive("extreme")) fp = fp.mul(getRankCheapEff());
 	return fp;
 }
 
 function getRankBaseCost() {
 	let bc = new ExpantaNum(10);
-	if (modeActive("extreme") && player.rank < 3) bc = bc.times(2);
+	if (modeActive("extreme") && player.rank < 3) bc = bc.mul(2);
 	if (modeActive("easy") && player.rank < 3) bc = bc.div(3);
-	if (tmp.inf) if (tmp.inf.stadium.active("spaceon", 5) || tmp.inf.stadium.active("solaris", 6)) bc = bc.times(10);
+	if (tmp.inf) if (tmp.inf.stadium.active("spaceon", 5) || tmp.inf.stadium.active("solaris", 6)) bc = bc.mul(10);
 	// if (tmp.rankCheap && modeActive("extreme")) bc = bc.div(tmp.rankCheap.eff2).max(1e-100);
 	return bc;
 }
@@ -75,7 +75,7 @@ function rankEffects(num) {
 			temp = ExpantaNum.pow(1.1, player.rank);
 			break;
 		case "14":
-			temp = ExpantaNum.pow(player.rf.plus(1), 1.6);
+			temp = ExpantaNum.pow(player.rf.add(1), 1.6);
 			break;
 		case "40":
 			let eff = primesLTE(player.automation.scraps).max(1);

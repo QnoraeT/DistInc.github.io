@@ -18,8 +18,8 @@ function updateTempPlasma() {
 
 function getPlasmaExp() {
 	if (tmp.fn?(!tmp.fn.pl.unl):true) return new ExpantaNum(0);
-	let exp = player.elementary.sky.amount.plus(1).log10().plus(1);
-	if (hasMltMilestone(13)) exp = exp.plus(player.inf.derivatives.unlocks);
+	let exp = player.elementary.sky.amount.add(1).log10().add(1);
+	if (hasMltMilestone(13)) exp = exp.add(player.inf.derivatives.unlocks);
 	if (tmp.fn.pl.boosts) exp = exp.times(tmp.fn.pl.boosts[2]);
 	if (player.elementary.entropy.upgrades.includes(24)) exp = exp.times(tmp.elm.entropy.upgEff[24]);
 	if (tmp.fn.pl.boosts) exp = exp.times(tmp.fn.pl.boosts[12]);
@@ -34,9 +34,9 @@ function getPlasmaExp() {
 
 function getWhiteFlameGain() {
 	if (tmp.fn?(!tmp.fn.pl.unl):true) return new ExpantaNum(0);
-	let pl = player.plasma.amount.plus(1);
+	let pl = player.plasma.amount.add(1);
 	if (pl.gte(1e125)) pl = softcap(pl, "EP", 1, 1e125, 2);
-	let gain = pl.pow(player.furnace.blueFlame.plus(1).sqrt().div(12.5)).sub(1);
+	let gain = pl.pow(player.furnace.blueFlame.add(1).sqrt().div(12.5)).sub(1);
 	if (hasMltMilestone(14)) gain = gain.times(10);
 	if (hasMltMilestone(17)) gain = gain.times(100);
 	if (hasMltMilestone(18)) gain = gain.times(ExpantaNum.pow(20, Math.max(mltMilestonesGotten()-17, 0)));
@@ -59,7 +59,7 @@ function getPlasmaBoostReq() {
 function getPlasmaBoostBulk() {
 	let amt = player.plasma.whiteFlame;
 	let target = amt.div(250).max(1).logBase(50).root(1.25)
-	return target.plus(1).floor();
+	return target.add(1).floor();
 }
 
 function canBuyPlasmaBoost() {
@@ -74,7 +74,7 @@ function buyPlasmaBoost(max=false) {
 	if (max) player.plasma.boosts = player.plasma.boosts.max(getPlasmaBoostBulk());
 	else {
 		player.plasma.whiteFlame = player.plasma.whiteFlame.sub(cost);
-		player.plasma.boosts = player.plasma.boosts.plus(1);
+		player.plasma.boosts = player.plasma.boosts.add(1);
 	}
 }
 
@@ -87,7 +87,7 @@ const PLASMA_BOOSTS = {
 		desc: "The Extreme mode nerf to Foam gain starts later.",
 		baseEff: new ExpantaNum(1),
 		eff: function(amt) { 
-			let eff = amt.plus(1).log10().times(tmp.fn.pl.exp).plus(1).pow(3);
+			let eff = amt.add(1).log10().times(tmp.fn.pl.exp).add(1).pow(3);
 			if (tmp.fn.pl.boosts[11]) eff = eff.pow(tmp.fn.pl.boosts[11]);
 			return eff;
 		},
@@ -98,7 +98,7 @@ const PLASMA_BOOSTS = {
 		desc: "Boost the Plasma Exponent.",
 		baseEff: new ExpantaNum(1),
 		eff: function(amt) { 
-			let eff = amt.plus(1).log10().sqrt().div(2).plus(1);
+			let eff = amt.add(1).log10().sqrt().div(2).add(1);
 			if (tmp.fn.pl.boosts[11]) eff = eff.times(tmp.fn.pl.boosts[11]);
 			return eff;
 		},
@@ -108,7 +108,7 @@ const PLASMA_BOOSTS = {
 		type: "plasmic",
 		desc: "All Pion/Spinor Upgrades are stronger.",
 		baseEff: new ExpantaNum(1),
-		eff: function(amt) { return ExpantaNum.sub(1.5, ExpantaNum.div(1, amt.plus(1).log10().plus(1).log10().plus(1).pow(2))) },
+		eff: function(amt) { return ExpantaNum.sub(1.5, ExpantaNum.div(1, amt.add(1).log10().add(1).log10().add(1).pow(2))) },
 		effD: function(e) { return showNum(e.sub(1).times(100))+"% stronger" },
 	},
 	4: {
@@ -116,7 +116,7 @@ const PLASMA_BOOSTS = {
 		desc: "Make Scaled to Atomic Rank Cheapener cost scalings start later.",
 		baseEff: new ExpantaNum(0),
 		eff: function(amt) { 
-			let eff = amt.plus(1).log10().plus(1).log10().times(250);
+			let eff = amt.add(1).log10().add(1).log10().times(250);
 			if (tmp.fn.pl.boosts[11]) eff = eff.times(tmp.fn.pl.boosts[11]);
 			return eff;
 		},
@@ -127,7 +127,7 @@ const PLASMA_BOOSTS = {
 		desc: "Boost Pion/Spinor gain.",
 		baseEff: new ExpantaNum(1),
 		eff: function(amt) { 
-			let mult = amt.plus(1).root(10);
+			let mult = amt.add(1).root(10);
 			if (mult.gte(1e250)) mult = softcap(mult, "EP", 1, 1e250, 2);
 			return mult;
 		},
@@ -137,7 +137,7 @@ const PLASMA_BOOSTS = {
 		type: "gleaming",
 		desc: "Multiply the Derivative Boost Base.",
 		baseEff: new ExpantaNum(1),
-		eff: function(amt) { return amt.plus(1).pow(1e4) },
+		eff: function(amt) { return amt.add(1).pow(1e4) },
 		effD: function(e) { return showNum(e)+"x" },
 	},
 	7: {
@@ -151,7 +151,7 @@ const PLASMA_BOOSTS = {
 		type: "gleaming",
 		desc: "EFU13's first effect & Skyrmion gain are buffed.",
 		baseEff: new ExpantaNum(1),
-		eff: function(amt) { return amt.plus(1).log10().plus(1).log10().plus(1).sqrt() },
+		eff: function(amt) { return amt.add(1).log10().add(1).log10().add(1).sqrt() },
 		effD: function(e) { return showNum(e)+"x" },
 	},
 	9: {
@@ -165,21 +165,21 @@ const PLASMA_BOOSTS = {
 		type: "gleaming",
 		desc: "The Magma cost increases slower.",
 		baseEff: new ExpantaNum(0),
-		eff: function(amt) { return ExpantaNum.sub(0.95, ExpantaNum.div(0.95, amt.plus(1).log10().plus(1).log10().div(2).plus(1))) },
+		eff: function(amt) { return ExpantaNum.sub(0.95, ExpantaNum.div(0.95, amt.add(1).log10().add(1).log10().div(2).add(1))) },
 		effD: function(e) { return showNum(e.times(100))+"% slower" },
 	},
 	11: {
 		type: "plasmic",
 		desc: "The first Plasmic Boost and the first two Gleaming Boosts are stronger based on your Best Entropy.",
 		baseEff: new ExpantaNum(1),
-		eff: function(amt) { return amt.plus(1).log10().times(player.elementary.entropy.best.plus(1)).plus(1).log10().div(10).plus(1) },
+		eff: function(amt) { return amt.add(1).log10().times(player.elementary.entropy.best.add(1)).add(1).log10().div(10).add(1) },
 		effD: function(e) { return showNum(e.sub(1).times(100))+"% stronger" },
 	},
 	12: {
 		type: "gleaming",
 		desc: "Multiversal Energy boosts the Plasma exponent.",
 		baseEff: new ExpantaNum(1),
-		eff: function(amt) { return player.mlt.energy.times(amt.plus(1).log10()).plus(1).log10().cbrt().plus(1) },
+		eff: function(amt) { return player.mlt.energy.times(amt.add(1).log10()).add(1).log10().cbrt().add(1) },
 		effD: function(e) { return showNum(e)+"x" },
 	},
 }

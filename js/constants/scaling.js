@@ -231,7 +231,7 @@ const SCALING_STARTS = {
 		fn: new ExpantaNum(40),
 			efn: new ExpantaNum(1000),
 		pathogenUpg: new ExpantaNum(65),
-			darkCore: new ExpantaNum(40),
+			darkCore: new ExpantaNum(70),
 			dervBoost: new ExpantaNum(30),
 			endorsements: new ExpantaNum(100),
 			photons: new ExpantaNum(125),
@@ -240,7 +240,7 @@ const SCALING_STARTS = {
 	},
 	atomic: { // polynomial
 		rank: new ExpantaNum(800), 
-			rankCheap: new ExpantaNum(1200),
+			rankCheap: new ExpantaNum(4000),
 		tier: new ExpantaNum(40), 
 		rf: new ExpantaNum(300),
 			bf: new ExpantaNum(150),
@@ -256,11 +256,11 @@ const SCALING_STARTS = {
 	},
 	supercritical: { // exponential (weaker than hyper???) 
 			rank: new ExpantaNum(60000), 
-			tier: new ExpantaNum(100), 
+			tier: new ExpantaNum(500), 
 			rf: new ExpantaNum(10000),
 			fn: new ExpantaNum(100000),
 			photons: new ExpantaNum(250000),
-			spectralGems: new ExpantaNum(4600),
+			spectralGems: new ExpantaNum(500),
 			pathogenUpg: new ExpantaNum(999),
 	},
 	meta: { // logarithmic-polynomial 

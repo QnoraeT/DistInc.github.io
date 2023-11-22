@@ -73,3 +73,7 @@ function updateStatTabs() {
 function showStatTab(name) {
 	statTab = name;
 }
+
+function showMultiBreakdown(name) {
+	currentMB = name;
+}

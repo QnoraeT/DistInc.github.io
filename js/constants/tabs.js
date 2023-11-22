@@ -66,4 +66,5 @@ const STAT_TABBTN_SHOWN = {
 	mainStats() { return true },
 	scalings() { return statScalingsShown },
 	rankTiers() { return player.rank.gt(1)||player.tier.gt(0) },
+	statBreak() { return true}
 }

@@ -5,11 +5,11 @@ function updateTempTiers() {
 	let scalTier;
 	scalTier = player.tier;
 	scalTier = doAllScaling(scalTier, "tier", false);
-	scalTier = new ExpantaNum(tmp.tiers.bc).plus(scalTier.div(tmp.tiers.fp).pow(2));
+	scalTier = new ExpantaNum(tmp.tiers.bc).add(scalTier.div(tmp.tiers.fp).pow(2));
 	tmp.tiers.req = scalTier;
-	scalTier = player.rank.sub(tmp.tiers.bc).max(0).sqrt().times(tmp.tiers.fp);
+	scalTier = player.rank.sub(tmp.tiers.bc).max(0).sqrt().mul(tmp.tiers.fp);
 	scalTier = doAllScaling(scalTier, "tier", true);
-	scalTier = scalTier.plus(1).floor();
+	scalTier = scalTier.add(1).floor();
 	tmp.tiers.bulk = scalTier;
 	if (player.tier.gte(TIER_DESCS[Object.keys(TIER_DESCS).length-1].req)){
 		tmp.tiers.desc = DEFAULT_TIER_DESC
@@ -42,17 +42,17 @@ function updateTempTiers() {
 function getTierFP() {
 	let fp = new ExpantaNum(1);
 	if (player.elementary.sky.unl && tmp.elm && !scalingActive("tier", player.tier, "scaled")) fp = fp.sub(tmp.elm.sky.pionEff[10]).pow(-1);
-	if (player.tr.upgrades.includes(20) && !HCCBA("noTRU") && modeActive("extreme")) fp = fp.times(getRankCheapEff().root(64));
-	if (extremeStadiumActive("cranius", 5)) fp = fp.div(player.rankCheap.plus(1));
-	if (tmp.ach) if (tmp.ach[194].has) fp = fp.times(1.0069);
+	if (player.tr.upgrades.includes(20) && !HCCBA("noTRU") && modeActive("extreme")) fp = fp.mul(TR_UPGS[20].current());
+	if (extremeStadiumActive("cranius", 5)) fp = fp.div(player.rankCheap.add(1));
+	if (tmp.ach) if (tmp.ach[194].has) fp = fp.mul(1.0069);
 	return fp;
 }
 
 function getTierBaseCost() {
 	let bc = new ExpantaNum(3);
-	if (modeActive("extreme") && player.tier.lt(2)) bc = bc.plus(1);
+	if (modeActive("extreme") && player.tier.lt(2)) bc = bc.add(1);
 	if (modeActive("easy") && player.tier.lt(2)) bc = bc.sub(1);
-	if (tmp.inf) if (tmp.inf.stadium.active("solaris", 5) || tmp.inf.stadium.active("spaceon", 6)) bc = bc.plus(25);
+	if (tmp.inf) if (tmp.inf.stadium.active("solaris", 5) || tmp.inf.stadium.active("spaceon", 6)) bc = bc.add(25);
 	return bc;
 }
 
@@ -67,7 +67,7 @@ function tierEffects(num) {
 			temp = ExpantaNum.pow(1.1, player.rf);
 			break;
 		case "9":
-			temp = player.automation.intelligence.plus(1).log10().plus(1).sqrt();
+			temp = player.automation.intelligence.add(1).log10().add(1).sqrt();
 			break;
 		case "50":
 			temp = player.tier.div(50).pow(2).add(1);

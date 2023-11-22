@@ -165,7 +165,7 @@ const TR_UPGS = {
 		},
 		desc: "Time Cube gain & Coal gain boost each other.",
 		current: function () {
-			return { tc: player.furnace.coal.plus(1).log10().sqrt().plus(1), co: softcap(player.tr.cubes.plus(1), "EP", 1, "e10000", 4) };
+			return { tc: player.furnace.coal.plus(1).log10().sqrt().plus(1), co: Decimal.pow(10, player.tr.cubes.plus(1).log10().pow(0.85)) };
 		},
 		disp: function (g) {
 			return "Cubes: " + showNum(g.tc) + "x, Coal: " + showNum(g.co) + "x";
@@ -213,7 +213,7 @@ const TR_UPGS = {
 		},
 		desc: "Rank Cheapeners also cheapen Tiers, but at a very reduced rate.",
 		current: function () {
-			return player.rankCheap.plus(1).log10().plus(1).log10().plus(1);
+			return getRankCheapEff().root(64);
 		},
 		disp: function (x) {
 			return "The tier cost increases " + showNum(x) + "x slower";
@@ -224,7 +224,7 @@ const TR_UPGS = {
 		cost: function(){
 			return new ExpantaNum(1e24)
 		},
-		desc: "Rank Cheapeners are stronger based on your Cadavers (not retroactive).",
+		desc: "Rank Cheapeners are stronger based on your Cadavers.",
 		current: function () {
 			return player.collapse.cadavers.plus(1).times(10).log(10).log(10).div(2.5).add(1);
 		},

@@ -172,19 +172,19 @@ function adjustGen(val, type) {
 		type == "derv" || preinf;
 	let post_elm = type == "quarks" || type == "leptons" || type == "gauge" || type == "scalar" || type=="ss" || type=="str" || type=="preons" || type=="accelerons" || type=="inflatons" || type=="hc" || type=="foam" || type=="sky" || type=="plasma";
 	let exp = new ExpantaNum(1);
-	if (player.elementary.theory.supersymmetry.unl && pre_elem && tmp.elm) val = new ExpantaNum(val).times(new ExpantaNum(tmp.elm.theory.ss.waveEff||1).max(1))
+	if (player.elementary.theory.supersymmetry.unl && pre_elem && tmp.elm) val = new ExpantaNum(val).mul(new ExpantaNum(tmp.elm.theory.ss.waveEff||1).max(1))
 	if (nerfActive("preInf.1") && preinf) exp = exp.div(10);
 	if ((player.inf.pantheon.purge.active||HCCBA("purge")) && type == "vel") exp = exp.div(modeActive('extreme')?0.925:3);
 	if (mltActive(4) && (pre_elem||type=="sky")) {
 		let depth = modeActive("extreme")?4.25:4.5
-		exp = tmp.elm?(exp.times(ExpantaNum.pow(0.8, ExpantaNum.cbrt(depth).times(Math.max(depth-3, 1))))):new ExpantaNum(0)
+		exp = tmp.elm?(exp.mul(ExpantaNum.pow(0.8, ExpantaNum.cbrt(depth).mul(Math.max(depth-3, 1))))):new ExpantaNum(0)
 	}
 	if ((player.elementary.theory.active||HCTVal("tv").gt(-1))) {
 		if (pre_elem) {
 			if (!tmp.elm) {
 				exp = new ExpantaNum(0)
 			} else {
-				exp = exp.times(tmp.elm.theory.nerf)
+				exp = exp.mul(tmp.elm.theory.nerf)
 			}
 		}
 	}
@@ -192,9 +192,9 @@ function adjustGen(val, type) {
 		let e = new ExpantaNum(FCComp(4)?0.825:0.75);
 		if (player.elementary.entropy.upgrades.includes(23)) e = new ExpantaNum(0.875);
 		if (extremeStadiumActive("spectra")) e = e.pow(2)
-		exp = exp.times(e);
+		exp = exp.mul(e);
 	}
-	if (modeActive("extreme") && post_elm && type!="scalar") exp = exp.times(ExpantaNum.gte(player.elementary.theory.tree.upgrades[37]||0, 1)?.95:.9)
+	if (modeActive("extreme") && post_elm && type!="scalar") exp = exp.mul(ExpantaNum.gte(player.elementary.theory.tree.upgrades[37]||0, 1)?.95:.9)
 	let newVal = val.pow(exp);
 	if (modeActive("hard") && (type=="inflatons"||type=="foam"||type=="sky")) newVal = newVal.div(5)
 	else if (modeActive("hard") && !modeActive("extreme")) newVal = newVal.div(3.2)
@@ -208,7 +208,7 @@ function adjustGen(val, type) {
 		newVal = softcap(newVal, "EP", 1, mlt500, 2)
 	}
 	if (newVal.gte("ee14")) newVal = Decimal.pow(10, softcap(newVal.log(10), "EP", 1, "1e14", 3))
-	if (modeActive("hard") && (type=="pathogens"||(extremeStadiumComplete("aqualon") && preinf))) newVal = newVal.times(3)
+	if (modeActive("hard") && (type=="pathogens"||(extremeStadiumComplete("aqualon") && preinf))) newVal = newVal.mul(3)
 	if (extremeStadiumActive("aqualon") && preinf) newVal = newVal.div(9e15)
 	return newVal;
 }

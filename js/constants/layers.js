@@ -55,7 +55,7 @@ const LAYER_REQS = {
 	rockets: ["distance", 5e7],
 	rf: ["rockets", 25],
 	collapse: ["distance", 50 * DISTANCES.Mpc],
-	inf: ["distance", new ExpantaNum(Number.MAX_VALUE).times(DISTANCES.uni)],
+	inf: ["distance", new ExpantaNum(Number.MAX_VALUE).mul(DISTANCES.uni)],
 	elementary: [
 		["rockets", new ExpantaNum("1e300000")],
 		["cadavers", new ExpantaNum("1e30000")],

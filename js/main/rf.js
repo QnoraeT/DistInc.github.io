@@ -1,6 +1,6 @@
 function getFuelPow() {
 	let pow = new ExpantaNum(1);
-	if (player.tr.upgrades.includes(5) && !HCCBA("noTRU")) pow = pow.times(1.1);
+	if (player.tr.upgrades.includes(5) && !HCCBA("noTRU")) pow = pow.mul(1.1);
 	return pow
 }
 
@@ -10,21 +10,21 @@ function getFreeFuel() {
 
 function getFuelEff() {
 	let rf = player.rf;
-	if (modeActive("extreme") && rf.gte(10) && !player.rank.gt(2500)) rf = rf.log10().times(10);
-	let trf = rf.plus(getFreeFuel()).times(getFuelPow());
+	if (modeActive("extreme") && rf.gte(10) && !player.rank.gt(2500)) rf = rf.log10().mul(10);
+	let trf = rf.add(getFreeFuel()).mul(getFuelPow());
 	let eff 
 	if (player.rank.gt(2500)) {
 		eff = trf.add(1).root(7.5)
 	} else {
-		eff = trf.plus(1)
+		eff = trf.add(1)
 		.logBase(2)
-		.plus(1)
+		.add(1)
 		.pow(0.05);
 	}
-	// if (tmp.inf ? (tmp.inf.stadium.completed("infinity") && mltRewardActive(1)) : false) eff = eff.max(trf.plus(1).pow(0.1));
+	// if (tmp.inf ? (tmp.inf.stadium.completed("infinity") && mltRewardActive(1)) : false) eff = eff.max(trf.add(1).pow(0.1));
 	if (modeActive("hard")) eff = eff.sub(0.08);
-	if (modeActive('easy')) eff = eff.plus(0.012);
-	if (tmp.inf) if (tmp.inf.stadium.completed("infinity")) eff = eff.sub(1).times(mltRewardActive(1)?10:2).add(1);
+	if (modeActive('easy')) eff = eff.add(0.012);
+	if (tmp.inf) if (tmp.inf.stadium.completed("infinity")) eff = eff.sub(1).mul(mltRewardActive(1)?10:2).add(1);
 	if (nerfActive("noRF")) eff = new ExpantaNum(1);
 	return eff;
 }
@@ -34,7 +34,7 @@ function getFuelEff2() {
 	if (player.rank.gt(2500)) {
 		eff = Decimal.pow(1.1, player.rf.pow(1.5).div(50)).mul(player.rf.add(1).pow(2))
 	} else {
-		eff = player.rf.sqrt().div(2).min(player.rockets.plus(1).times(10));
+		eff = player.rf.sqrt().div(2).min(player.rockets.add(1).mul(10));
 	}
 	if (nerfActive("noRF")) eff = new ExpantaNum(0);
 	return eff;
@@ -48,11 +48,11 @@ function updateTempRF() {
 	let scalRF;
 	scalRF = player.rf;
 	scalRF = doAllScaling(scalRF, "rf", false);
-	scalRF = tmp.rf.bc.times(ExpantaNum.pow(5, scalRF.div(tmp.rf.fp).pow(ROCKET_UPGS[1].eff()[0]))).round();
+	scalRF = tmp.rf.bc.mul(ExpantaNum.pow(5, scalRF.div(tmp.rf.fp).pow(ROCKET_UPGS[1].eff()[0]))).round();
 	tmp.rf.req = scalRF;
-	scalRF = player.rockets.div(tmp.rf.bc).max(1).logBase(5).pow(Decimal.div(1, ROCKET_UPGS[1].eff()[0])).times(tmp.rf.fp);
+	scalRF = player.rockets.div(tmp.rf.bc).max(1).logBase(5).pow(Decimal.div(1, ROCKET_UPGS[1].eff()[0])).mul(tmp.rf.fp);
 	scalRF = doAllScaling(scalRF, "rf", true);
-	scalRF = scalRF.plus(1).floor();
+	scalRF = scalRF.add(1).floor();
 	tmp.rf.bulk = scalRF;
 	tmp.rf.can = player.rockets.gte(tmp.rf.req);
 	if (extremeStadiumActive("aqualon", 2)) tmp.rf.can = false;

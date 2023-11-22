@@ -9,7 +9,7 @@ function getMagmaEff() {
 	if (!modeActive("extreme")) return new ExpantaNum(1);
 	let amt = player.magma.amount;
 	if (player.elementary.bosons.scalar.higgs.upgrades.includes("1;1;1")) amt = amt.pow(1.6);
-	let eff = amt.sqrt().div(75).plus(1)
+	let eff = amt.sqrt().div(75).add(1)
 	return eff;
 }
 
@@ -18,10 +18,10 @@ function getMagmaReformEff() {
 	let eff = player.magma.ref.pow(2).div(2)
 	if (ExpantaNum.gte(player.elementary.theory.tree.upgrades[35]||0, 1)) eff = eff.times(ExpantaNum.pow(1.4, player.magma.ref))
 	if (player.elementary.theory.tree.unl) {
-		eff = eff.times(player.elementary.theory.points.plus(1).log10().plus(1).log10().plus(1))
-		if (player.elementary.theory.depth.gte(6)) eff = eff.pow(player.elementary.theory.strings.amounts[0].plus(1).log10().plus(1).log10().times(1.2).plus(1))
+		eff = eff.times(player.elementary.theory.points.add(1).log10().add(1).log10().add(1))
+		if (player.elementary.theory.depth.gte(6)) eff = eff.pow(player.elementary.theory.strings.amounts[0].add(1).log10().add(1).log10().times(1.2).add(1))
 	}
-	return eff.plus(1);
+	return eff.add(1);
 }
 
 function getMagmaReqScaling() {
@@ -43,14 +43,14 @@ function getMagmaBulk() {
 	if (!modeActive("extreme")) return new ExpantaNum(0);
 	let req = player.furnace.enhancedCoal.max(1).log10().div(200).max(1).logBase(1.25).div(getMagmaReqScaling())
 	req = doAllScaling(req, "magma", true)
-	return req.plus(1).floor();
+	return req.add(1).floor();
 }
 
 function magmaSearch(max=false) {
 	if (!modeActive("extreme")) return;
 	if (player.furnace.enhancedCoal.lt(getMagmaReq())) return;
 	if (max) player.magma.amount = player.magma.amount.max(getMagmaBulk());
-	else player.magma.amount = player.magma.amount.plus(1);
+	else player.magma.amount = player.magma.amount.add(1);
 }
 
 function getMagmaReformReq() {
@@ -59,7 +59,7 @@ function getMagmaReformReq() {
 	// if (r.gte(28)) r = ExpantaNum.pow(1.1, r.sub(27)).times(28) // this is basically a scaling
 	r = doAllScaling(r, "rmagma", false, [1.1], ["LE"])
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) r = r.pow(TREE_UPGS[34].effect(player.elementary.theory.tree.upgrades[34]||0))
-	let req = r.times(2).plus(1)
+	let req = r.times(2).add(1)
 	return req.round();
 }
 
@@ -82,7 +82,7 @@ function getMagmaReformBulk() {
 	if (modeActive("extreme+hikers_dream")?hasDE(5):player.elementary.hc.unl) ret2 = ret2.root(TREE_UPGS[36].effect(player.elementary.theory.tree.upgrades[36]||0));
 	ret2 = doAllScaling(ret2, "rmagma", true);
 	
-	return ret1.min(ret2).plus(1).floor();
+	return ret1.min(ret2).add(1).floor();
 }
 
 function reformMagma(max=false) {
@@ -92,6 +92,6 @@ function reformMagma(max=false) {
 	if (max) player.magma.ref = player.magma.ref.max(getMagmaReformBulk());
 	else {
 		player.magma.amount = player.magma.amount.sub(req);
-		player.magma.ref = player.magma.ref.plus(1);
+		player.magma.ref = player.magma.ref.add(1);
 	}
 }

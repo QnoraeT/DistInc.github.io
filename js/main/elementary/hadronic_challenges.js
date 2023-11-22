@@ -3,22 +3,22 @@ function updateTempHC() {
 	tmp.elm.hc.currScore = getProjectedHadronicScore()
 	tmp.elm.hc.mltMode = HCMltMode();
 	tmp.elm.hc.hadronBulk = new ExpantaNum(1)
-	if (player.elementary.theory.inflatons.unl) tmp.elm.hc.hadronBulk = tmp.elm.hc.hadronBulk.plus(getInflatonEff2())
+	if (player.elementary.theory.inflatons.unl) tmp.elm.hc.hadronBulk = tmp.elm.hc.hadronBulk.add(getInflatonEff2())
 	tmp.elm.hc.hadronGain = player.elementary.hc.unl ? player.elementary.hc.best.pow(1.5).div(10) : new ExpantaNum(0)
-	tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.times(TREE_UPGS[31].effect(player.elementary.theory.tree.upgrades[31]||0))
-	if (player.elementary.foam.unl && tmp.elm.qf) tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.times(tmp.elm.qf.boost7)
-	if (modeActive("hikers_dream") && player.energyUpgs.includes(27)) tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.times(tmp.hd.enerUpgs[27])
+	tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.mul(TREE_UPGS[31].effect(player.elementary.theory.tree.upgrades[31]||0))
+	if (player.elementary.foam.unl && tmp.elm.qf) tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.mul(tmp.elm.qf.boost7)
+	if (modeActive("hikers_dream") && player.energyUpgs.includes(27)) tmp.elm.hc.hadronGain = tmp.elm.hc.hadronGain.mul(tmp.hd.enerUpgs[27])
 	
 	tmp.elm.hc.hadIntervalRecip = player.elementary.hc.best.add(1).ln().add(1).mul(200/9)
 	if (ExpantaNum.gte(player.elementary.theory.tree.upgrades[33]||0, 1)) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(2)
 	if (player.elementary.entropy.upgrades.includes(19) && tmp.elm.entropy) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(tmp.elm.entropy.upgEff[19])
 	if (hasDE(7)) tmp.elm.hc.hadIntervalRecip = tmp.elm.hc.hadIntervalRecip.mul(getAccelEff())
 	if (tmp.elm.hc.hadIntervalRecip.gte(1e100)) tmp.elm.hc.hadIntervalRecip = softcap(tmp.elm.hc.hadIntervalRecip, "EP", 1, 1e100, 3)
-	tmp.elm.hc.hadronEff = player.elementary.hc.hadrons.log(10).mul(tmp.elm.hc.hadIntervalRecip).floor().times(tmp.elm.hc.hadronBulk)
+	tmp.elm.hc.hadronEff = player.elementary.hc.hadrons.log(10).mul(tmp.elm.hc.hadIntervalRecip).floor().mul(tmp.elm.hc.hadronBulk)
 	// y = R*log(x)
 	// y = 10^(x/R)
 	tmp.elm.hc.next = Decimal.pow(10, new ExpantaNum(player.elementary.hc.claimed||0).div(tmp.elm.hc.hadIntervalRecip.mul(tmp.elm.hc.hadronBulk)))
-	let rg = new ExpantaNum(getHCSelector("goal")).times(DISTANCES.uni);
+	let rg = new ExpantaNum(getHCSelector("goal")).mul(DISTANCES.uni);
 	if (getHCSelector("goalMlt")) rg = ExpantaNum.pow(DISTANCES.mlt, getHCSelector("goal"));
 	tmp.elm.hc.complPerc = player.distance.log10().div(rg.log10()).min(1);
 	// why is this here
@@ -38,63 +38,63 @@ function getProjectedHadronicScore() {
 	let score = new ExpantaNum(0)
 	
 	// Pre-Collapse Modifiers
-	if (getHCSelector("rockets")) score = score.times(1.025).plus(0.025)
-	if (getHCSelector("rf")) score = score.times(1.005).plus(0.005)
-	if (getHCSelector("noTRU")) score = score.times(1.08).plus(0.08)
+	if (getHCSelector("rockets")) score = score.mul(1.025).add(0.025)
+	if (getHCSelector("rf")) score = score.mul(1.005).add(0.005)
+	if (getHCSelector("noTRU")) score = score.mul(1.08).add(0.08)
 	
 	// Collapse Modifiers
-	if (getHCSelector("noCad")) score = score.times(1.05).plus(0.05)
-	if (getHCSelector("noPU")) score = score.times(1.1).plus(0.1)
-	if (getHCSelector("noDC")) score = score.times(1.04).plus(0.04)
+	if (getHCSelector("noCad")) score = score.mul(1.05).add(0.05)
+	if (getHCSelector("noPU")) score = score.mul(1.1).add(0.1)
+	if (getHCSelector("noDC")) score = score.mul(1.04).add(0.04)
 	
 	// Infinity Modifiers
-	if (getHCSelector("noIU")) score = score.times(1.1).plus(0.1)
+	if (getHCSelector("noIU")) score = score.mul(1.1).add(0.1)
 	let challMod = modeActive("extreme")?72:36
-	score = score.plus(new ExpantaNum(getHCSelector("spaceon")).div(challMod))
-	score = score.plus(new ExpantaNum(getHCSelector("solaris")).div(challMod))
-	score = score.plus(new ExpantaNum(getHCSelector("infinity")).div(challMod))
-	score = score.plus(new ExpantaNum(getHCSelector("eternity")).div(challMod))
-	score = score.plus(new ExpantaNum(getHCSelector("reality")).div(challMod))
-	score = score.plus(new ExpantaNum(getHCSelector("drigganiz")).div(challMod))
+	score = score.add(new ExpantaNum(getHCSelector("spaceon")).div(challMod))
+	score = score.add(new ExpantaNum(getHCSelector("solaris")).div(challMod))
+	score = score.add(new ExpantaNum(getHCSelector("infinity")).div(challMod))
+	score = score.add(new ExpantaNum(getHCSelector("eternity")).div(challMod))
+	score = score.add(new ExpantaNum(getHCSelector("reality")).div(challMod))
+	score = score.add(new ExpantaNum(getHCSelector("drigganiz")).div(challMod))
 	if (modeActive("extreme")) {
-		score = score.plus(new ExpantaNum(getHCSelector("flamis")).div(challMod))
-		score = score.plus(new ExpantaNum(getHCSelector("cranius")).div(challMod))
-		score = score.plus(new ExpantaNum(getHCSelector("spectra")).div(challMod))
-		score = score.plus(new ExpantaNum(getHCSelector("aqualon")).div(challMod))
-		score = score.plus(new ExpantaNum(getHCSelector("nullum")).div(challMod))
-		score = score.plus(new ExpantaNum(getHCSelector("quantron")).div(challMod))
+		score = score.add(new ExpantaNum(getHCSelector("flamis")).div(challMod))
+		score = score.add(new ExpantaNum(getHCSelector("cranius")).div(challMod))
+		score = score.add(new ExpantaNum(getHCSelector("spectra")).div(challMod))
+		score = score.add(new ExpantaNum(getHCSelector("aqualon")).div(challMod))
+		score = score.add(new ExpantaNum(getHCSelector("nullum")).div(challMod))
+		score = score.add(new ExpantaNum(getHCSelector("quantron")).div(challMod))
 	}
-	if (getHCSelector("noGems")) score = score.times(1.01).plus(0.01)
-	if (getHCSelector("purge")) score = score.times(3).plus(2)
-	if (getHCSelector("noDS")) score = score.times(1.03).plus(0.03)
-	if (getHCSelector("noDB")) score = score.times(1.03).plus(0.03)
+	if (getHCSelector("noGems")) score = score.mul(1.01).add(0.01)
+	if (getHCSelector("purge")) score = score.mul(3).add(2)
+	if (getHCSelector("noDS")) score = score.mul(1.03).add(0.03)
+	if (getHCSelector("noDB")) score = score.mul(1.03).add(0.03)
 		
 	// Elementary Modifiers
-	if (getHCSelector("elm")) score = score.times(1.125).plus(0.125);
-	if (getHCSelector("fermbos")) score = score.times(1.075).plus(0.075);
-	score = score.times(new ExpantaNum(getHCSelector("tv")).plus(2).pow(0.25)).plus(new ExpantaNum(getHCSelector("tv")).plus(1).div(20))
-	if (getHCSelector("sprsym")) score = score.times(1.125).plus(0.05);
-	if (getHCSelector("tree")) score = score.times(1.04).plus(0.04);
-	score = score.times(ExpantaNum.sub(12, ExpantaNum.mul(11**0.998, ExpantaNum.sub(11, getHCSelector("string")).pow(0.002))));
-	if (getHCSelector("preontb")) score = score.times(1.02).plus(0.02);
-	if (getHCSelector("aclron")) score = score.times(1.02).plus(0.02);
-	score = score.times(ExpantaNum.sub(12, ExpantaNum.mul(11**0.996, ExpantaNum.sub(11, getHCSelector("de")).pow(0.004))));
-	if (getHCSelector("infl")) score = score.times(1.02).plus(0.02);
-	score = score.times(ExpantaNum.sub(12, ExpantaNum.mul(11**0.999, ExpantaNum.sub(11, getHCSelector("rfrm")).pow(0.001))));
-	if (getHCSelector("etrpy")) score = score.times(1.04).plus(0.04);
-	if (getHCSelector("sky")) score = score.times(1.05).plus(0.05);
+	if (getHCSelector("elm")) score = score.mul(1.125).add(0.125);
+	if (getHCSelector("fermbos")) score = score.mul(1.075).add(0.075);
+	score = score.mul(new ExpantaNum(getHCSelector("tv")).add(2).pow(0.25)).add(new ExpantaNum(getHCSelector("tv")).add(1).div(20))
+	if (getHCSelector("sprsym")) score = score.mul(1.125).add(0.05);
+	if (getHCSelector("tree")) score = score.mul(1.04).add(0.04);
+	score = score.mul(ExpantaNum.sub(12, ExpantaNum.mul(11**0.998, ExpantaNum.sub(11, getHCSelector("string")).pow(0.002))));
+	if (getHCSelector("preontb")) score = score.mul(1.02).add(0.02);
+	if (getHCSelector("aclron")) score = score.mul(1.02).add(0.02);
+	score = score.mul(ExpantaNum.sub(12, ExpantaNum.mul(11**0.996, ExpantaNum.sub(11, getHCSelector("de")).pow(0.004))));
+	if (getHCSelector("infl")) score = score.mul(1.02).add(0.02);
+	score = score.mul(ExpantaNum.sub(12, ExpantaNum.mul(11**0.999, ExpantaNum.sub(11, getHCSelector("rfrm")).pow(0.001))));
+	if (getHCSelector("etrpy")) score = score.mul(1.04).add(0.04);
+	if (getHCSelector("sky")) score = score.mul(1.05).add(0.05);
 	
 	// Multiversal Modifiers
-	if (getHCSelector("q1")) score = score.times(1.2).plus(0.6)
-	if (getHCSelector("q2")) score = score.times(1.15).plus(0.575)
-	if (getHCSelector("q3")) score = score.times(1.175).plus(0.5875)
-	for (let i=1;i<=5;i++) if (getHCSelector("mlt"+i)) score = score.times(1.1).plus(0.3);
+	if (getHCSelector("q1")) score = score.mul(1.2).add(0.6)
+	if (getHCSelector("q2")) score = score.mul(1.15).add(0.575)
+	if (getHCSelector("q3")) score = score.mul(1.175).add(0.5875)
+	for (let i=1;i<=5;i++) if (getHCSelector("mlt"+i)) score = score.mul(1.1).add(0.3);
 	
 	// Goal Modifier
 	let goal = new ExpantaNum(getHCSelector("goal"))
 	if (getHCSelector("goalMlt")) goal = ExpantaNum.pow(DISTANCES.mlt, goal);
 	if (goal.gte("e1e7")) goal = ExpantaNum.pow("e1e7", goal.log("e1e7").sqrt());
-	score = score.times(goal.log10().div(Math.log10(Number.MAX_VALUE)).log10().plus(1))
+	score = score.mul(goal.log10().div(Math.log10(Number.MAX_VALUE)).log10().add(1))
 	
 	if (modeActive("easy")) score = score.pow(1.025)
 	return score
@@ -245,8 +245,8 @@ function HCTVal(name) {
 function claimHadronEff() {
 	let diff = tmp.elm.hc.hadronEff.sub(player.elementary.hc.claimed||0).floor()
 	if (diff.gte(1)) {
-		player.elementary.theory.points = player.elementary.theory.points.plus(diff)
-		player.elementary.hc.claimed = player.elementary.hc.claimed.plus(diff)
+		player.elementary.theory.points = player.elementary.theory.points.add(diff)
+		player.elementary.hc.claimed = player.elementary.hc.claimed.add(diff)
 	}
 }
 

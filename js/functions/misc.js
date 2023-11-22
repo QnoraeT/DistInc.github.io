@@ -356,8 +356,8 @@ function primesLTE(x) {
 	if (x.lte(1)) return new ExpantaNum(0);
 	if (x.lte(11))
 		return ExpantaNum.mul(2.7135e-158, ExpantaNum.pow(2.116e14, x))
-			.sub(x.pow(2).times(0.053030303))
-			.plus(x.times(1.02576))
+			.sub(x.pow(2).mul(0.053030303))
+			.plus(x.mul(1.02576))
 			.sub(0.9)
 			.round();
 	let ret = x.div(x.ln());
@@ -446,6 +446,20 @@ function sleep(s) {
 
 function nerfOfflineProg(time) {
 	time = new ExpantaNum(time).div(1000);
-	if (time.gt(60)) time = time.pow(3/4).times(Math.pow(60, 1/4));
-	return time.times(1000).max(0);
+	if (time.gt(60)) time = time.pow(3/4).mul(Math.pow(60, 1/4));
+	return time.mul(1000).max(0);
+}
+
+function toMultiList(id, name, text, now) {
+	multiBreakdown[id].data.push( { name: name, format: text, now: now} )
+}
+
+function setMultilist(id, dataID, name, text, now) {
+	multiBreakdown[id].data[dataID].name = name
+	multiBreakdown[id].data[dataID].text = text
+	multiBreakdown[id].data[dataID].now = now
+}
+
+function setMultiList(id, show) {
+	multiBreakdown[id].show = show
 }

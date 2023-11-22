@@ -1,22 +1,22 @@
 function getCadaverEffSoftcapStart() {
 	let sc = new ExpantaNum(1e12);
 	if (modeActive("hard")) sc = sc.div(100);
-	if (modeActive("easy")) sc = sc.times(80);
-	if (tmp.pathogens && player.pathogens.unl) sc = sc.times(tmp.pathogens[10].eff());
-	if (tmp.inf) sc = sc.times(tmp.inf.asc.perkEff(3));
+	if (modeActive("easy")) sc = sc.mul(80);
+	if (tmp.pathogens && player.pathogens.unl) sc = sc.mul(tmp.pathogens[10].eff());
+	if (tmp.inf) sc = sc.mul(tmp.inf.asc.perkEff(3));
 	return sc;
 }
 
 function getCadaverEffSoftcapPower() {
 	let pow = new ExpantaNum(1);
-	if (tmp.inf) if (tmp.inf.upgs.has("8;5")) pow = pow.times(0.9);
+	if (tmp.inf) if (tmp.inf.upgs.has("8;5")) pow = pow.mul(0.9);
 	return pow;
 }
 
 function getCadaverEff() {
 	let scs = getCadaverEffSoftcapStart()
 	let scp = getCadaverEffSoftcapPower()
-	let eff = ExpantaNum.log10(player.rank.plus(player.tier.times(5)).plus(player.collapse.cadavers).plus(1))
+	let eff = ExpantaNum.log10(player.rank.plus(player.tier.mul(5)).plus(player.collapse.cadavers).plus(1))
 		.pow(softcap(
 			player.collapse.cadavers.plus(1).logBase(2)
 			, "EP", 1, 10, 2.5))
@@ -32,7 +32,7 @@ function getCadaverEff() {
 
 function sacrificeToLifeEssence() {
 	if (player.collapse.cadavers.eq(0) || nerfActive("noLifeEssence")) return;
-	let cLEGain = player.collapse.cadavers.times(tmp.collapse.sacEff).div(4).max(1)
+	let cLEGain = player.collapse.cadavers.mul(tmp.collapse.sacEff).div(4).max(1)
 	if (cLEGain.gte("ee12")) cLEGain = Decimal.pow(10, Decimal.pow(10, softcap(cLEGain.log(10).log(10), "EP", 1, 12, 1.25)))// quadlog ^0.8 softcap after ee12
 	player.collapse.lifeEssence = player.collapse.lifeEssence.plus(cLEGain);
 	if (tmp.inf ? !tmp.inf.upgs.has("2;4") : true) player.collapse.cadavers = new ExpantaNum(0);
@@ -44,15 +44,15 @@ function hasCollapseMilestone(n) {
 
 function calcCollapseSCS(){ // nice typo
 	tmp.collapse.sc = new ExpantaNum(LAYER_SC["collapse"]);
-	if (tmp.pathogens && player.pathogens.unl) tmp.collapse.sc = tmp.collapse.sc.times(tmp.pathogens[9].eff());
-	if (tmp.inf) tmp.collapse.sc = tmp.collapse.sc.times(tmp.inf.asc.perkEff(4));
+	if (tmp.pathogens && player.pathogens.unl) tmp.collapse.sc = tmp.collapse.sc.mul(tmp.pathogens[9].eff());
+	if (tmp.inf) tmp.collapse.sc = tmp.collapse.sc.mul(tmp.inf.asc.perkEff(4));
 }
 
 function calcCollapseSacEff(){
 	tmp.collapse.sacEff = new ExpantaNum(1);
 	if (modeActive("hard")) tmp.collapse.sacEff = tmp.collapse.sacEff.div(1.4);
-	if (modeActive("easy")) tmp.collapse.sacEff = tmp.collapse.sacEff.times(1.6);
-	if (tmp.pathogens && player.pathogens.unl) tmp.collapse.sacEff = tmp.collapse.sacEff.times(tmp.pathogens[6].eff());
+	if (modeActive("easy")) tmp.collapse.sacEff = tmp.collapse.sacEff.mul(1.6);
+	if (tmp.pathogens && player.pathogens.unl) tmp.collapse.sacEff = tmp.collapse.sacEff.mul(tmp.pathogens[6].eff());
 }
 
 function updateTempCollapse() {
@@ -103,20 +103,20 @@ function collapseMile10Eff() {
 
 function getCadaverGainMult() {
 	let mult = new ExpantaNum(1);
-	if (hasCollapseMilestone(5)) mult = mult.times(collapseMile5Eff());
-	if (hasCollapseMilestone(10)) mult = mult.times(collapseMile10Eff());
-	if (tmp.ach[38].has) mult = mult.times(2);
-	if (tmp.ach[65].has) mult = mult.times(1.4);
-	if (tmp.ach[131].has) mult = mult.times(2);
-	if (player.tr.upgrades.includes(14) && !HCCBA("noTRU")) mult = mult.times(tr14Eff()["cd"]);
-	if (tmp.inf) if (tmp.inf.upgs.has("3;2")) mult = mult.times(INF_UPGS.effects["3;2"]()["cadavers"]);
+	if (hasCollapseMilestone(5)) mult = mult.mul(collapseMile5Eff());
+	if (hasCollapseMilestone(10)) mult = mult.mul(collapseMile10Eff());
+	if (tmp.ach[38].has) mult = mult.mul(2);
+	if (tmp.ach[65].has) mult = mult.mul(1.4);
+	if (tmp.ach[131].has) mult = mult.mul(2);
+	if (player.tr.upgrades.includes(14) && !HCCBA("noTRU")) mult = mult.mul(tr14Eff()["cd"]);
+	if (tmp.inf) if (tmp.inf.upgs.has("3;2")) mult = mult.mul(INF_UPGS.effects["3;2"]()["cadavers"]);
 	if (tmp.collapse) if (modeActive("extreme") && (tmp.collapse.layer.gain.gte(10) || (tmp.clghm && tmp.collapse.layer.gain.gte(5)))) {
 		mult = mult.div(2);
 		tmp.clghm = true;
 	}
-	if (modeActive("extreme") && FCComp(5)) mult = mult.times(ExpantaNum.pow(2, player.furnace.upgrades[4].times(tmp.fn ? tmp.fn.upgPow : 1)))
-	if (tmp.ach[68].has && modeActive("extreme")) mult = mult.times(5);
-	if (tmp.collapse) if (modeActive("easy")) mult = mult.times(3);
-	if (tmp.elm) if (player.elementary.times.gt(0)) mult = mult.times(tmp.elm.ferm.quarkR("down").max(1));
+	if (modeActive("extreme") && FCComp(5)) mult = mult.mul(ExpantaNum.pow(2, player.furnace.upgrades[4].mul(tmp.fn ? tmp.fn.upgPow : 1)))
+	if (tmp.ach[68].has && modeActive("extreme")) mult = mult.mul(5);
+	if (tmp.collapse) if (modeActive("easy")) mult = mult.mul(3);
+	if (tmp.elm) if (player.elementary.times.gt(0)) mult = mult.mul(tmp.elm.ferm.quarkR("down").max(1));
 	return mult
 }

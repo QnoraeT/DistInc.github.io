@@ -75,18 +75,18 @@ function updateElementaryLayer() {
 		let f1 = player.rockets.max(1).log10().div(LAYER_REQS.elementary[0][1].log10()).sqrt();
 		let f2 = player.collapse.cadavers.max(1).log10().div(LAYER_REQS.elementary[1][1].log10());
 		let f3 = ExpantaNum.pow(2, player.inf.endorsements.div(LAYER_REQS.elementary[2][1]).sub(1));
-		let gain = f1.times(f2).times(f3);
-		gain = gain.times(tmp.higgs110?tmp.higgs110:1)
-		gain = gain.times(tmp.higgs300?tmp.higgs300:1)
-		gain = gain.times(tmp.lu4?tmp.lu4:1)
+		let gain = f1.mul(f2).mul(f3);
+		gain = gain.mul(tmp.higgs110?tmp.higgs110:1)
+		gain = gain.mul(tmp.higgs300?tmp.higgs300:1)
+		gain = gain.mul(tmp.lu4?tmp.lu4:1)
 		let exp = new ExpantaNum(1)
-		if (hasDE(5) && (player.elementary.theory.tree.upgrades[20]||new ExpantaNum(0)).gte(1)) exp = exp.times(0.5)
-		if (tmp.ach[172].has) exp = exp.div(player.elementary.times.plus(1).logBase(1e3).times(0.2).plus(1))
+		if (hasDE(5) && (player.elementary.theory.tree.upgrades[20]||new ExpantaNum(0)).gte(1)) exp = exp.mul(0.5)
+		if (tmp.ach[172].has) exp = exp.div(player.elementary.times.add(1).logBase(1e3).mul(0.2).add(1))
 		if (player.tier.gt(50)) exp = exp.div(tierEffects(50))
 		gain = softcap(gain, "P", exp, tmp.elm.softcap, 4)
-		if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.times(tmp.elm.qf.boost12) // not affected by softcap hehe
+		if (player.elementary.foam.unl && tmp.elm.qf) gain = gain.mul(tmp.elm.qf.boost12) // not affected by softcap hehe
 	
-		if (modeActive("extreme")) gain = gain.div(3).plus(gain.gte(1)?1:0)
+		if (modeActive("extreme")) gain = gain.div(3).add(gain.gte(1)?1:0)
 		return gain.floor();
 	});
 	tmp.elm.layer = new Layer("elementary", tmp.elm.can, "multi-res", true, "elm");
@@ -96,15 +96,15 @@ function updateElementaryLayer() {
 			if (!confirm("Are you sure you want to do this? It will take some time for you to get back here!")) return "NO";
 		}
 		if (player.elementary.theory.active) {
-			player.elementary.theory.points = player.elementary.theory.points.plus(tmp.thGain?tmp.thGain:new ExpantaNum(0))
-			player.elementary.theory.depth = player.elementary.theory.depth.plus(1)
+			player.elementary.theory.points = player.elementary.theory.points.add(tmp.thGain?tmp.thGain:new ExpantaNum(0))
+			player.elementary.theory.depth = player.elementary.theory.depth.add(1)
 			player.elementary.theory.bestDepth = player.elementary.theory.bestDepth.max(player.elementary.theory.depth);
 			player.elementary.theory.active = false
 		} else {
 			player.bestEP = player.bestEP.max(tmp.elm.layer.gain)
-			player.elementary.particles = player.elementary.particles.plus(tmp.elm.layer.gain);
+			player.elementary.particles = player.elementary.particles.add(tmp.elm.layer.gain);
 		}
-		player.elementary.times = player.elementary.times.plus(getElementariesGained());
+		player.elementary.times = player.elementary.times.add(getElementariesGained());
 		
 		// Achievement Rewards
 		if (player.inf.derivatives.unlocks.lte(tmp.inf.derv.maxShifts)) tmp.ach[137].grant()
@@ -170,13 +170,12 @@ function updateTempPerkAccelerator() {
 	tmp.elm.pa.active = tmp.elm.bos.hasHiggs("0;0;2")
 	tmp.elm.pa.stateStarts = {
 		weakened: new ExpantaNum(1e5),
-		broken: new ExpantaNum(1e10),
-		collapsed: new ExpantaNum(1e30),
+		broken: new ExpantaNum(1e10)
 	}
-	if (player.elementary.theory.accelerons.unl) tmp.elm.pa.stateStarts.weakened = tmp.elm.pa.stateStarts.weakened.times(getAccelEff())
+	if (player.elementary.theory.accelerons.unl) tmp.elm.pa.stateStarts.weakened = tmp.elm.pa.stateStarts.weakened.mul(getAccelEff())
 	if (player.elementary.foam.unl && tmp.elm.qf) {
-		tmp.elm.pa.stateStarts.weakened = tmp.elm.pa.stateStarts.weakened.times(tmp.elm.qf.boost22)
-		tmp.elm.pa.stateStarts.broken = tmp.elm.pa.stateStarts.broken.times(tmp.elm.qf.boost22)
+		tmp.elm.pa.stateStarts.weakened = tmp.elm.pa.stateStarts.weakened.mul(tmp.elm.qf.boost22)
+		tmp.elm.pa.stateStarts.broken = tmp.elm.pa.stateStarts.broken.mul(tmp.elm.qf.boost22)
 	}
 	if (player.elementary.entropy.upgrades.includes(19)) {
 		tmp.elm.pa.stateStarts.weakened = new ExpantaNum(1/0)
@@ -188,14 +187,11 @@ function updateTempPerkAccelerator() {
 	if (tmp.elm.pa.speedBoost.gte(tmp.elm.pa.stateStarts.broken)) tmp.elm.pa.state = "broken"
 	if (tmp.elm.pa.state=="weakened") tmp.elm.pa.speedBoost = softcap(tmp.elm.pa.speedBoost, "P", 1, tmp.elm.pa.stateStarts.weakened, 2)
 	if (tmp.elm.pa.state=="broken") tmp.elm.pa.speedBoost = softcap(tmp.elm.pa.speedBoost, "EP", 1, tmp.elm.pa.stateStarts.broken, 2)
-	// what are the point of these softcaps??
 	
-	tmp.elm.pa.boost = tmp.inf.asc.perkTimeO.div(10).pow(0.07)
+	tmp.elm.pa.boost = tmp.elm.pa.speedBoost.pow(0.07)
 	if (tmp.inf.upgs.has("10;8")) tmp.elm.pa.boost = tmp.elm.pa.boost.max(tmp.inf.asc.perkTimeO.div(10).pow(0.2))
 	if (tmp.ach[174].has) tmp.elm.pa.boost = tmp.elm.pa.boost.pow(1.05)
 	if (player.elementary.sky.unl && tmp.elm.sky)  tmp.elm.pa.boost = tmp.elm.pa.boost.pow(tmp.elm.sky.pionEff[13])
-	if (tmp.elm.pa.boost.gte(tmp.elm.pa.stateStarts.collapsed)) tmp.elm.pa.state = "collapsed"
-	if (tmp.elm.pa.state=="collapsed") tmp.elm.pa.boost = Decimal.pow(10, softcap(tmp.elm.pa.boost.log(10), "EP", 1, tmp.elm.pa.stateStarts.collapsed.log(10), 2))
 }
 
 function updateTempElementary() {
@@ -213,72 +209,72 @@ function updateTempElementary() {
 }
 
 function elTick(diff) {
-	player.elementary.time = player.elementary.time.plus(diff)
-	player.elementary.fermions.quarks.amount = new ExpantaNum(player.elementary.fermions.quarks.amount).plus(
-		adjustGen(tmp.elm.ferm.quarkGain, "quarks").times(diff)
+	player.elementary.time = player.elementary.time.add(diff)
+	player.elementary.fermions.quarks.amount = new ExpantaNum(player.elementary.fermions.quarks.amount).add(
+		adjustGen(tmp.elm.ferm.quarkGain, "quarks").mul(diff)
 	);
-	player.elementary.fermions.leptons.amount = new ExpantaNum(player.elementary.fermions.leptons.amount).plus(
-		adjustGen(tmp.elm.ferm.leptonGain, "leptons").times(diff)
+	player.elementary.fermions.leptons.amount = new ExpantaNum(player.elementary.fermions.leptons.amount).add(
+		adjustGen(tmp.elm.ferm.leptonGain, "leptons").mul(diff)
 	);
-	player.elementary.bosons.gauge.amount = new ExpantaNum(player.elementary.bosons.gauge.amount).plus(
-		adjustGen(tmp.elm.bos.gaugeGain, "gauge").times(diff)
+	player.elementary.bosons.gauge.amount = new ExpantaNum(player.elementary.bosons.gauge.amount).add(
+		adjustGen(tmp.elm.bos.gaugeGain, "gauge").mul(diff)
 	);
-	player.elementary.bosons.gauge.force = new ExpantaNum(player.elementary.bosons.gauge.force).plus(
-		adjustGen(tmp.elm.bos.forceGain, "gauge").times(diff)
+	player.elementary.bosons.gauge.force = new ExpantaNum(player.elementary.bosons.gauge.force).add(
+		adjustGen(tmp.elm.bos.forceGain, "gauge").mul(diff)
 	);
 	player.elementary.bosons.gauge.photons.amount = new ExpantaNum(
 		player.elementary.bosons.gauge.photons.amount
-	).plus(adjustGen(tmp.elm.bos.photonGain, "gauge").times(diff));
-	player.elementary.bosons.gauge.w = new ExpantaNum(player.elementary.bosons.gauge.w).plus(
-		adjustGen(tmp.elm.bos.wg, "gauge").times(diff)
+	).add(adjustGen(tmp.elm.bos.photonGain, "gauge").mul(diff));
+	player.elementary.bosons.gauge.w = new ExpantaNum(player.elementary.bosons.gauge.w).add(
+		adjustGen(tmp.elm.bos.wg, "gauge").mul(diff)
 	);
-	player.elementary.bosons.gauge.z = new ExpantaNum(player.elementary.bosons.gauge.z).plus(
-		adjustGen(tmp.elm.bos.zg, "gauge").times(diff)
+	player.elementary.bosons.gauge.z = new ExpantaNum(player.elementary.bosons.gauge.z).add(
+		adjustGen(tmp.elm.bos.zg, "gauge").mul(diff)
 	);
 	for (let i = 0; i < GLUON_COLOURS.length; i++)
 		player.elementary.bosons.gauge.gluons[GLUON_COLOURS[i]].amount = new ExpantaNum(
 			player.elementary.bosons.gauge.gluons[GLUON_COLOURS[i]].amount
-		).plus(adjustGen(tmp.elm.bos[GLUON_COLOURS[i] + "g"], "gauge").times(diff));
-	player.elementary.bosons.gauge.gravitons = new ExpantaNum(player.elementary.bosons.gauge.gravitons).plus(
-		adjustGen(tmp.elm.bos.gravGain, "gauge").times(diff)
+		).add(adjustGen(tmp.elm.bos[GLUON_COLOURS[i] + "g"], "gauge").mul(diff));
+	player.elementary.bosons.gauge.gravitons = new ExpantaNum(player.elementary.bosons.gauge.gravitons).add(
+		adjustGen(tmp.elm.bos.gravGain, "gauge").mul(diff)
 	);
-	player.elementary.bosons.scalar.amount = new ExpantaNum(player.elementary.bosons.scalar.amount).plus(
-		adjustGen(tmp.elm.bos.scalarGain, "scalar").times(diff)
+	player.elementary.bosons.scalar.amount = new ExpantaNum(player.elementary.bosons.scalar.amount).add(
+		adjustGen(tmp.elm.bos.scalarGain, "scalar").mul(diff)
 	);
-	player.elementary.bosons.scalar.higgs.amount = new ExpantaNum(player.elementary.bosons.scalar.higgs.amount).plus(
-		adjustGen(tmp.elm.bos.higgsGain, "scalar").times(diff)
+	player.elementary.bosons.scalar.higgs.amount = new ExpantaNum(player.elementary.bosons.scalar.higgs.amount).add(
+		adjustGen(tmp.elm.bos.higgsGain, "scalar").mul(diff)
 	);
 	if (player.elementary.theory.supersymmetry.unl) {
 		for (let i=0;i<4;i++) {
 			let type = ["squark", "slepton", "neutralino", "chargino"][i]
-			player.elementary.theory.supersymmetry[type+"s"] = player.elementary.theory.supersymmetry[type+"s"].plus(adjustGen(tmp.elm.theory.ss[type+"Gain"], "ss").times(diff))
+			player.elementary.theory.supersymmetry[type+"s"] = player.elementary.theory.supersymmetry[type+"s"].add(adjustGen(tmp.elm.theory.ss[type+"Gain"], "ss").mul(diff))
 		}
 	}
 	if (player.elementary.theory.strings.unl) {
 		for (let i=1;i<=TOTAL_STR;i++) {
-			player.elementary.theory.strings.amounts[i-1] = player.elementary.theory.strings.amounts[i-1].plus(adjustGen(getStringGain(i), "str").times(diff))
+			player.elementary.theory.strings.amounts[i-1] = player.elementary.theory.strings.amounts[i-1].add(adjustGen(getStringGain(i), "str").mul(diff))
 		}
 	}
-	if (tmp.ach[163].has) player.elementary.theory.strings.entangled = player.elementary.theory.strings.entangled.plus(getEntangleGain().div(10).times(diff))
-	if (player.elementary.theory.preons.unl && !HCCBA("preontb")) player.elementary.theory.preons.amount = player.elementary.theory.preons.amount.plus(adjustGen(getPreonGain(), "preons").times(diff))
-	if (player.elementary.theory.accelerons.unl && !HCCBA("aclron")) player.elementary.theory.accelerons.amount = player.elementary.theory.accelerons.amount.plus(adjustGen(getAccelGain(), "accelerons").times(diff))
-	if (player.elementary.theory.inflatons.unl && !HCCBA("infl")) player.elementary.theory.inflatons.amount = player.elementary.theory.inflatons.amount.plus(adjustGen(tmp.elm.hc.infGain, "inflatons").times(diff))
-	if (player.elementary.hc.unl) player.elementary.hc.hadrons = player.elementary.hc.hadrons.plus(adjustGen(tmp.elm.hc.hadronGain, "hc").times(diff))
+	if (tmp.ach[163].has) player.elementary.theory.strings.entangled = player.elementary.theory.strings.entangled.add(getEntangleGain().div(10).mul(diff))
+	if (player.elementary.theory.preons.unl && !HCCBA("preontb")) player.elementary.theory.preons.amount = player.elementary.theory.preons.amount.add(adjustGen(getPreonGain(), "preons").mul(diff))
+	if (player.elementary.theory.accelerons.unl && !HCCBA("aclron")) player.elementary.theory.accelerons.amount = player.elementary.theory.accelerons.amount.add(adjustGen(getAccelGain(), "accelerons").mul(diff))
+	if (player.elementary.theory.inflatons.unl && !HCCBA("infl")) player.elementary.theory.inflatons.amount = player.elementary.theory.inflatons.amount.add(adjustGen(tmp.elm.hc.infGain, "inflatons").mul(diff))
+	if (player.elementary.hc.unl) player.elementary.hc.hadrons = player.elementary.hc.hadrons.add(adjustGen(tmp.elm.hc.hadronGain, "hc").mul(diff))
 	if (player.elementary.foam.unl) qfTick(diff)
 	if (player.elementary.entropy.upgrades.includes(12)) {
-		player.elementary.particles = player.elementary.particles.plus(tmp.elm.layer.gain.times(diff).div(100))
+		player.elementary.particles = player.elementary.particles.add(tmp.elm.layer.gain.mul(diff).div(100))
 		player.bestEP = player.bestEP.max(tmp.elm.layer.gain.div(100))
 		if (!HCCBA("fermbos")) {
-			player.elementary.fermions.amount = player.elementary.fermions.amount.plus(player.elementary.particles.times(diff).div(100))
-			player.elementary.bosons.amount = player.elementary.bosons.amount.plus(player.elementary.particles.times(diff).div(100))
+			player.elementary.fermions.amount = player.elementary.fermions.amount.add(player.elementary.particles.mul(diff).div(100))
+			player.elementary.bosons.amount = player.elementary.bosons.amount.add(player.elementary.particles.mul(diff).div(100))
 		}
 	}
 	if (player.elementary.sky.unl && !HCCBA("sky")) {
-		player.elementary.sky.pions.amount = player.elementary.sky.pions.amount.plus(adjustGen(tmp.elm.sky.pionGain.times(diff), "sky"));
-		player.elementary.sky.spinors.amount = player.elementary.sky.spinors.amount.plus(adjustGen(tmp.elm.sky.spinorGain.times(diff), "sky"));
-		if (hasMltMilestone(10)) player.elementary.sky.amount = player.elementary.sky.amount.plus(getSkyGain().times(diff))
+		player.elementary.sky.pions.amount = player.elementary.sky.pions.amount.add(adjustGen(tmp.elm.sky.pionGain.mul(diff), "sky"));
+		player.elementary.sky.spinors.amount = player.elementary.sky.spinors.amount.add(adjustGen(tmp.elm.sky.spinorGain.mul(diff), "sky"));
+		if (hasMltMilestone(10)) player.elementary.sky.amount = player.elementary.sky.amount.add(getSkyGain().mul(diff))
 	}
-	if (hasMltMilestone(7)) player.elementary.times = player.elementary.times.plus(getElementariesGained().times(diff))
+	if (hasMltMilestone(7)) player.elementary.times = player.elementary.times.add(getElementariesGained().mul(diff))
 }
 
 function elmReset(force=false, auto=false) {
@@ -292,6 +288,6 @@ function elmReset(force=false, auto=false) {
 function getElementariesGained() {
 	if (HCCBA("elm")) return new ExpantaNum(0);
 	let e = new ExpantaNum(1)
-	if (hasDE(4)) e = e.times(getGravBoostMult())
+	if (hasDE(4)) e = e.mul(getGravBoostMult())
 	return e.max(1).floor()
 }

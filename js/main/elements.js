@@ -114,11 +114,11 @@ function updateOptionsHTML(){
 function updatePreRanksHTML(){
 	tmp.el.distance.setTxt(
 		formatDistance(player.distance) +
-			" " + formatGain(player.distance, player.velocity.times(nerfActive("noTS") ? 1 : tmp.timeSpeed).times(modeActive("hikers_dream")?tmp.hd.enEff:1), "dist", true)
+			" " + formatGain(player.distance, player.velocity.mul(nerfActive("noTS") ? 1 : tmp.timeSpeed).mul(modeActive("hikers_dream")?tmp.hd.enEff:1), "dist", true)
 	);
 	tmp.el.velocity.setTxt(
-		formatDistance(player.velocity.times(modeActive("hikers_dream")?tmp.hd.enEff:1)) +
-			"/s " + formatGain(player.velocity.times(modeActive("hikers_dream")?tmp.hd.enEff:1), tmp.acc.times(nerfActive("noTS") ? 1 : tmp.timeSpeed), "vel", true)
+		formatDistance(player.velocity.mul(modeActive("hikers_dream")?tmp.hd.enEff:1)) +
+			"/s " + formatGain(player.velocity.mul(modeActive("hikers_dream")?tmp.hd.enEff:1), tmp.acc.mul(nerfActive("noTS") ? 1 : tmp.timeSpeed), "vel", true)
 	);
 	tmp.el.maxVel.setTxt(formatDistance(tmp.maxVel));
 	tmp.el.acceleration.setTxt(formatDistance(tmp.acc));
@@ -142,7 +142,7 @@ function updateRanksHTML(){
 	f = f ? "1/" : "" 
 	let tt = `Rank scaling: /${showNum(getRankFP())} \n Base cost: ` 
 	+ f
-	+ `${showNum(m)} \n Cost before scaling: ${showNum(getRankBaseCost().times(ExpantaNum.pow(2, player.rank.div(getRankFP()).max(1).sub(1).pow(2))))}`
+	+ `${showNum(m)} \n Cost before scaling: ${showNum(getRankBaseCost().mul(ExpantaNum.pow(2, player.rank.div(getRankFP()).max(1).sub(1).pow(2))))}`
 	tmp.el.rankName.setAttr("widetooltip", tt);
 }
 
@@ -155,7 +155,7 @@ function updateTiersHTML(){
 	let scalType = getScalingId("tier")
 	tmp.el.tierName.changeStyle("color", SCALE_COLOR[scalType]())
 	tmp.el.tierName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
-	let tt = `Tier scaling: /${showNum(getTierFP())} \n Base cost: ${showNum(getTierBaseCost())} \n Cost before scaling: ${showNum(getTierBaseCost().plus(player.tier.div(getTierFP()).pow(2)))}`
+	let tt = `Tier scaling: /${showNum(getTierFP())} \n Base cost: ${showNum(getTierBaseCost())} \n Cost before scaling: ${showNum(getTierBaseCost().add(player.tier.div(getTierFP()).pow(2)))}`
 	tmp.el.tierName.setAttr("widetooltip", tt);
 }
 
@@ -197,19 +197,21 @@ function updateRocketsHTML(){
 				tt = `Maximum Velocity: ${showNum(tmp.rockets.mvPow)}x \nAcceleration: ${showNum(tmp.rockets.accPow)}x`;
 				if (tmp.accEn.gte(1) && tmp.rockets.accEnPow) { tt += `\nAccelerational Energy: ${showNum(tmp.rockets.accEnPow)}x` }
 				if (tmp.rockets.tsPow.gt(1)) { tt += `\nTime Speed: ${showNum(tmp.rockets.tsPow)}x` }
+				if (player.tr.upgrades.includes(33) && !HCCBA("noTRU") && (tmp.rockets?tmp.rockets.clPow:false)) { tt += `\nCoal: ${showNum(tmp.rockets.clPow)}x` }
+				
 				tmp.el.rocketsEff.setAttr("widetooltip", tt)
 
 				// Rocket Fuel
 				tmp.el.rf.setTxt(showNum(player.rf) + (getFreeFuel().gt(0) ? " + " + showNum(getFreeFuel()) : ""));
 				tmp.el.rfReset.setClasses({ btn: true, locked: !tmp.rf.can, rckt: tmp.rf.can });
 				tmp.el.rfReq.setTxt(showNum(tmp.rf.req));
-				tmp.el.rfEff.setTxt(showNum(getFuelEff().sub(1).times(100)));
+				tmp.el.rfEff.setTxt(showNum(getFuelEff().sub(1).mul(100)));
 				tmp.el.rfName.setTxt(getScalingName("rf") + "Rocket Fuel");
 				let scalType = getScalingId("rf")
 				tmp.el.rfName.changeStyle("color", SCALE_COLOR[scalType]())
 				tmp.el.rfName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 				tmp.el.rf2.setTxt(showNum(getFuelEff2()));
-				tt = `Rocket Fuel scaling: /${showNum(tmp.rf.fp)} \n Base cost: ${showNum(tmp.rf.bc)} \n Cost before scaling: ${showNum(tmp.rf.bc.times(ExpantaNum.pow(5, player.rf.div(tmp.rf.fp).pow(ROCKET_UPGS[1].eff()[0]))).round())}`
+				tt = `Rocket Fuel scaling: /${showNum(tmp.rf.fp)} \n Base cost: ${showNum(tmp.rf.bc)} \n Cost before scaling: ${showNum(tmp.rf.bc.mul(ExpantaNum.pow(5, player.rf.div(tmp.rf.fp).pow(ROCKET_UPGS[1].eff()[0]))).round())}`
 				tmp.el.rfName.setAttr("widetooltip", tt);
 				break;
 			case "upgrc":
@@ -254,11 +256,11 @@ function updateAchievementsHTML(){
 function updateRobotsHTML(){
 	tmp.el.scraps.setTxt(
 		showNum(player.automation.scraps) +
-			" scraps " + formatGain(player.automation.scraps, getScrapGain().times(nerfActive("noTS") ? 1 : tmp.timeSpeed), "scraps")
+			" scraps " + formatGain(player.automation.scraps, getScrapGain().mul(nerfActive("noTS") ? 1 : tmp.timeSpeed), "scraps")
 	);
 	tmp.el.intAmt.setTxt(
 		showNum(player.automation.intelligence) +
-			" intelligence " + formatGain(player.automation.intelligence, getIntelligenceGain().times(nerfActive("noTS") ? 1 : tmp.timeSpeed), "intel")
+			" intelligence " + formatGain(player.automation.intelligence, getIntelligenceGain().mul(nerfActive("noTS") ? 1 : tmp.timeSpeed), "intel")
 	);
 	for (let i = 0; i < Object.keys(ROBOT_REQS).length; i++) {
 		tmp.el[Object.keys(ROBOT_REQS)[i]].setTxt(tmp.auto[Object.keys(ROBOT_REQS)[i]].btnTxt);
@@ -331,7 +333,7 @@ function updateTimeReversalHTML(){
 		tmp.el.rt.setTxt(tmp.tr.txt);
 		tmp.el.tc.setTxt(
 			showNum(player.tr.cubes) +
-				" Time Cubes " + formatGain(player.tr.cubes, getTimeCubeGain().times(nerfActive("noTS") ? 1 : tmp.timeSpeed), "tc")
+				" Time Cubes " + formatGain(player.tr.cubes, getTimeCubeGain().mul(nerfActive("noTS") ? 1 : tmp.timeSpeed), "tc")
 		);
 		tmp.el.frf.setTxt(showNum(tmp.tr.eff));
 		for (let i = 1; i <= TR_UPG_AMT; i++) {
@@ -379,7 +381,7 @@ function updateCollapseHTML(){
 			"<span class='alive'>" +
 				showNum(player.collapse.lifeEssence) +
 				"</span> life essence <span class='alive'>" +
-				(((tmp.ach[97].has||tmp.inf.upgs.has("5;3"))&&!nerfActive("noLifeEssence"))?formatGain(player.collapse.lifeEssence, player.collapse.cadavers.times(tmp.collapse.sacEff).max(1).div(tmp.ach[97].has?1:100)):"")+"</span>"
+				(((tmp.ach[97].has||tmp.inf.upgs.has("5;3"))&&!nerfActive("noLifeEssence"))?formatGain(player.collapse.lifeEssence, player.collapse.cadavers.mul(tmp.collapse.sacEff).max(1).div(tmp.ach[97].has?1:100)):"")+"</span>"
 		);
 		for (let i = 1; i <= EM_AMT; i++) {
 			let ms = ESSENCE_MILESTONES[i];
@@ -432,7 +434,7 @@ function upadtePathogenHTML(){
 		);
 		upadtePathogenUpgradesHTML()
 		tmp.el.pthUpgPow.setHTML(
-			!tmp.pathogens.upgPow.eq(1) ? ("Upgrade Power: " + showNum(tmp.pathogens.upgPow.times(100)) + "%"+(tmp.pathogens.upgPow.gte(10)?" <span class='sc'>(softcapped)</span>":"")+"<br>") : ""
+			!tmp.pathogens.upgPow.eq(1) ? ("Upgrade Power: " + showNum(tmp.pathogens.upgPow.mul(100)) + "%"+(tmp.pathogens.upgPow.gte(10)?" <span class='sc'>(softcapped)</span>":"")+"<br>") : ""
 		);
 		tmp.el.tdeEff.setHTML(
 			tmp.ach[63].has
@@ -496,7 +498,7 @@ function updateDarkCircleHTML(){
 				showNum(tmp.dc.coreCost) +
 				" Cadavers" +
 				(tmp.dc.coreEff.gt(0)
-					? "<br>Effect: +" + showNum(tmp.dc.coreEff.times(100)) + "% Pathogen Upgrade Power"
+					? "<br>Effect: +" + showNum(tmp.dc.coreEff.mul(100)) + "% Pathogen Upgrade Power"
 					: "")
 		);
 		tmp.el.darkMatter.setClasses({darkcircle: true, dcAnim: player.options.dcPulse})
@@ -589,7 +591,7 @@ function updateAscensionHTML(){
 				);
 				tmp.el["perkEff" + i].setTxt(showNum(tmp.inf.asc.perkEff(i)));
 				tmp.el["enl" + i].setTxt(showNum(player.inf.ascension.enlightenments[i - 1]));
-				tmp.el["enleff" + i].setTxt(showNum(tmp.inf.asc.enlEff(i).times(100)));
+				tmp.el["enleff" + i].setTxt(showNum(tmp.inf.asc.enlEff(i).mul(100)));
 				tmp.el["buyEnl" + i].setTxt("Cost: " + showNum(tmp.inf.asc.enlCost(i)) + " Ascension Power");
 				tmp.el["buyEnl" + i].setClasses({
 					btn: true,
@@ -602,7 +604,7 @@ function updateAscensionHTML(){
 				tmp.el["enlScale" + i].changeStyle("color", SCALE_COLOR[scalType]())
 				tmp.el["enlScale" + i].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 			}
-			tmp.el.perkPower.setTxt("Perk Strength: " + showNum(tmp.inf.asc.perkStrength.times(100)) + "%");
+			tmp.el.perkPower.setTxt("Perk Strength: " + showNum(tmp.inf.asc.perkStrength.mul(100)) + "%");
 			tmp.el.perkPower.setDisplay(!tmp.inf.asc.perkStrength.eq(1));
 			tmp.el.ascPower.setHTML(
 				"Ascension Power: <span style='font-size: 25px; color: red;'>" +
@@ -707,8 +709,8 @@ function updateAngelsChipsHTML(){
 	tmp.el.spectralGemName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 	tmp.el.respecSpectralGems.setClasses({
 		btn: true,
-		inf: player.inf.pantheon.angels.plus(player.inf.pantheon.demons).gt(0),
-		locked: !player.inf.pantheon.angels.plus(player.inf.pantheon.demons).gt(0)
+		inf: player.inf.pantheon.angels.add(player.inf.pantheon.demons).gt(0),
+		locked: !player.inf.pantheon.angels.add(player.inf.pantheon.demons).gt(0)
 	});
 	tmp.el.angels.setTxt(showNum(player.inf.pantheon.angels));
 	tmp.el.demons.setTxt(showNum(player.inf.pantheon.demons));
@@ -724,19 +726,19 @@ function updateAngelsChipsHTML(){
 	});
 	tmp.el.chips.setTxt(showNum(player.inf.pantheon.heavenlyChips));
 	tmp.el.chipGain.setTxt(formatGain(player.inf.pantheon.heavenlyChips, tmp.inf.pantheon.chipGain, "heavenlyChips"));
-	tmp.el.chipBoost.setTxt(showNum(tmp.inf.pantheon.chipBoost.sub(1).times(100)));
+	tmp.el.chipBoost.setTxt(showNum(tmp.inf.pantheon.chipBoost.sub(1).mul(100)));
 	let mltr5 = mltRewardActive(5)
-	tmp.el.soulNerf.setHTML(mltr5?("multiply by <span class='spectral'>"+showNum(player.inf.pantheon.demonicSouls.pow(tmp.inf.pantheon.ppe.times(-1)).plus(1))+"</span>"):("divide by <span class='spectral'>"+showNum(player.inf.pantheon.demonicSouls.pow(tmp.inf.pantheon.ppe).plus(1))+"</span>"))
+	tmp.el.soulNerf.setHTML(mltr5?("multiply by <span class='spectral'>"+showNum(player.inf.pantheon.demonicSouls.pow(tmp.inf.pantheon.ppe.mul(-1)).add(1))+"</span>"):("divide by <span class='spectral'>"+showNum(player.inf.pantheon.demonicSouls.pow(tmp.inf.pantheon.ppe).add(1))+"</span>"))
 	tmp.el.souls.setTxt(showNum(player.inf.pantheon.demonicSouls));
 	tmp.el.soulGain.setTxt(formatGain(player.inf.pantheon.demonicSouls, tmp.inf.pantheon.soulGain, "demonicSouls"));
-	tmp.el.soulBoost.setTxt(showNum(tmp.inf.pantheon.soulBoost.sub(1).times(100)));
-	tmp.el.chipNerf.setHTML(mltr5?("multiply by <span class='spectral'>"+showNum(player.inf.pantheon.heavenlyChips.pow(tmp.inf.pantheon.ppe.times(-1)).plus(1))+"</span>"):("divide by <span class='spectral'>"+showNum(player.inf.pantheon.heavenlyChips.pow(tmp.inf.pantheon.ppe).plus(1))+"</span>"))
+	tmp.el.soulBoost.setTxt(showNum(tmp.inf.pantheon.soulBoost.sub(1).mul(100)));
+	tmp.el.chipNerf.setHTML(mltr5?("multiply by <span class='spectral'>"+showNum(player.inf.pantheon.heavenlyChips.pow(tmp.inf.pantheon.ppe.mul(-1)).add(1))+"</span>"):("divide by <span class='spectral'>"+showNum(player.inf.pantheon.heavenlyChips.pow(tmp.inf.pantheon.ppe).add(1))+"</span>"))
 	tmp.el.phantomDiv.setDisplay(mltr5);
 	if (mltr5) {
 		tmp.el.phantoms.setTxt(showNum(tmp.inf.pantheon.phantoms));
 		tmp.el.hauntingEnergy.setTxt(showNum(player.inf.pantheon.hauntingEnergy||0));
 		tmp.el.hauntingEnergyGain.setTxt(formatGain(player.inf.pantheon.hauntingEnergy, tmp.inf.pantheon.hauntingEnergyGain, "hauntingEnergy"))
-		tmp.el.hauntingEnergyBoost.setTxt(showNum(tmp.inf.pantheon.hauntingEnergyBoost.sub(1).times(100)));
+		tmp.el.hauntingEnergyBoost.setTxt(showNum(tmp.inf.pantheon.hauntingEnergyBoost.sub(1).mul(100)));
 		tmp.el.hauntingEnergyBoost2.setTxt(showNum(tmp.inf.pantheon.hauntingEnergyBoost2))
 	}
 }
@@ -805,7 +807,7 @@ function updateRankCheapenersHTML(){
 	let scalType = getScalingId("rankCheap")
 	tmp.el.rankCheapName.changeStyle("color", SCALE_COLOR[scalType]())
 	tmp.el.rankCheapName.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
-	let tt = `Rank Cheapener scaling: /${showNum(tmp.rankCheap.fp)} \n Base cost: ${showNum(tmp.rankCheap.bc)} \n Cost before scaling: ${showNum(tmp.rankCheap.bc.times(ExpantaNum.pow(2, player.rankCheap.div(tmp.rankCheap.fp).max(1).sub(1).pow(2))))} \n Your rank cheapeners are dividing Rank requirements by ${showNum(tmp.rankCheap.eff2)}${tmp.rankCheap.eff2.gte(1e100)?" (softcapped)":""} and decreasing their scaling by ${showNum(tmp.rankCheap.eff)}x`
+	let tt = `Rank Cheapener scaling: /${showNum(tmp.rankCheap.fp)} \n Base cost: ${showNum(tmp.rankCheap.bc)} \n Cost before scaling: ${showNum(tmp.rankCheap.bc.mul(ExpantaNum.pow(2, player.rankCheap.div(tmp.rankCheap.fp).max(1).sub(1).pow(2))))} \n Your rank cheapeners are dividing Rank requirements by ${showNum(tmp.rankCheap.eff2)}${tmp.rankCheap.eff2.gte(1e100)?" (softcapped)":""} and decreasing their scaling by ${showNum(tmp.rankCheap.eff)}x`
 	tmp.el.rankCheapName.setAttr("widetooltip", tt);
 }
 
@@ -881,7 +883,7 @@ function updateEnhanceFurnace(){
 			tmp.el["efnu" + i + "name"].changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]())
 		}
 		tmp.el.efnu1eff.setTxt(showNum(tmp.fn.enh.upg1eff))
-		tmp.el.efnu2eff.setTxt(showNum(tmp.fn.enh.upg2eff.times(100)))
+		tmp.el.efnu2eff.setTxt(showNum(tmp.fn.enh.upg2eff.mul(100)))
 		tmp.el.efnu3eff.setTxt(showNum(tmp.fn.enh.upg3eff))
 		tmp.el.efnu13eff.setTxt(showNum(tmp.fn.enh.upg13eff))
 		tmp.el.moltBr.setDisplay(tmp.fn.enh.moltBr.gte(1))
@@ -905,7 +907,7 @@ function updateMagma() {
 		let scalType = getScalingId("magma");
 		tmp.el.magmaDesc.changeStyle("color", SCALE_COLOR[scalType]());
 		tmp.el.magmaDesc.changeStyle("text-shadow", SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_TEXT_SHADOW[scalType] + "px " + SCALE_COLOR_DARK[scalType]());
-		tmp.el.magmaEff.setTxt(showNum(tmp.fn.magma.eff.sub(1).times(100)));
+		tmp.el.magmaEff.setTxt(showNum(tmp.fn.magma.eff.sub(1).mul(100)));
 		let req2 = getMagmaReformReq();
 		let req2b = getMagmaReformReq2();
 		tmp.el.reformMagma.setClasses({
@@ -934,7 +936,7 @@ function updatePlasma() {
 		let boostReq = getPlasmaBoostReq();
 		tmp.el.plasmaBoostBtn.setDisplay(canBuyPlasmaBoost())
 		if (canBuyPlasmaBoost()) {
-			tmp.el.plasmaBoostBtn.setHTML("Unlock a new "+getPlasmaBoostType(player.plasma.boosts.plus(1), true)+" Boost<br><br>Cost: "+showNum(boostReq)+" White Flame.")
+			tmp.el.plasmaBoostBtn.setHTML("Unlock a new "+getPlasmaBoostType(player.plasma.boosts.add(1), true)+" Boost<br><br>Cost: "+showNum(boostReq)+" White Flame.")
 			tmp.el.plasmaBoostBtn.setClasses({
 				btn: true,
 				plasma: player.plasma.whiteFlame.gte(boostReq),
@@ -991,7 +993,7 @@ function updateStatisticsHTML(){
 				let amt = func(1);
 				if (MULTI_SCALINGS.includes(key)) for (let i=1;i<=SCALING_AMTS[key];i++) amt = ExpantaNum.max(amt, func(i));
 				if (amt.eq(0)||((key=="rankCheap"||key=="fn")&&!modeActive("extreme"))) continue
-				if (amt.gte(getScalingStart(name, key))) tt += capitalFirst(REAL_SCALING_NAMES[key])+" ("+showNum(getScalingPowerDisplay(name, key).times(100))+"%): Starts at "+showNum(getScalingStart(name, key))+"\n";
+				if (amt.gte(getScalingStart(name, key))) tt += capitalFirst(REAL_SCALING_NAMES[key])+" ("+showNum(getScalingPowerDisplay(name, key).mul(100))+"%): Starts at "+showNum(getScalingStart(name, key))+"\n";
 			}
 			let blank = ""
 			if (name=="hyper") blank = "Hyper scaling is heavily (obscured) at 50% and cannot go below 5%.\n";
@@ -1045,7 +1047,7 @@ function updateStatisticsHTML(){
 			}
 		}
 		if (statTab == "statBreak") {
-
+			
 		}
 	}
 }
@@ -1315,7 +1317,7 @@ function updatePreonsHTML(){
 		tmp.el.theoryBoost.setHTML("Gain 1 Theoretical Booster (+"+showNum(getTBGain())+" Theory Points)<br>Cost: "+showNum(getTBCost())+" Preons")
 		tmp.el.theoryBoosters.setTxt(showNum(player.elementary.theory.preons.boosters))
 		let t = player.elementary.theory.preons.boosters
-		tmp.el.theoryBoostersEff.setTxt(showNum(player.elementary.entropy.upgrades.includes(17)?(ExpantaNum.div(t.pow(2).times(t.plus(1).pow(2)).times(t.pow(2).times(2).plus(t.times(2)).sub(1)), 12).round()):(t.div(2).times(t.plus(1)))))
+		tmp.el.theoryBoostersEff.setTxt(showNum(player.elementary.entropy.upgrades.includes(17)?(ExpantaNum.div(t.pow(2).mul(t.add(1).pow(2)).mul(t.pow(2).mul(2).add(t.mul(2)).sub(1)), 12).round()):(t.div(2).mul(t.add(1)))))
 	}
 }
 
@@ -1382,7 +1384,7 @@ function updateTheoryverseMainHTML(){
 	if (elmTab=="theory") {
 		tmp.el.thp.setTxt(showNum(player.elementary.theory.points))
 		if (thTab=="tv") {
-			tmp.el.theoriverse.setHTML(HCTVal("tv").gt(-1)?"Trapped in the Theoriverse!":hasMltMilestone(4)?("Theoriverse Depth: "+showNum(player.elementary.theory.depth)+("<br>Total TP: "+showNum(tmp.elm.theory.gainMult.times(ExpantaNum.sub(1, ExpantaNum.pow(2, player.elementary.theory.depth))).times(-1)))):(player.elementary.theory.active?("Exit The Theoriverse early for no reward."):("Enter The Theoriverse at Depth "+showNum(player.elementary.theory.depth))))
+			tmp.el.theoriverse.setHTML(HCTVal("tv").gt(-1)?"Trapped in the Theoriverse!":hasMltMilestone(4)?("Theoriverse Depth: "+showNum(player.elementary.theory.depth)+("<br>Total TP: "+showNum(tmp.elm.theory.gainMult.mul(ExpantaNum.sub(1, ExpantaNum.pow(2, player.elementary.theory.depth))).mul(-1)))):(player.elementary.theory.active?("Exit The Theoriverse early for no reward."):("Enter The Theoriverse at Depth "+showNum(player.elementary.theory.depth))))
 			tmp.el.theoriverse.setTooltip(hasMltMilestone(4)?("Nerf: x^"+showNum(tmp.elm.theory.nerf)):("Entering The Theoriverse does an Elementary reset, and puts you in The Theoriverse, which will make all pre-Elementary resource generation (x^"+showNum(tmp.elm.theory.nerf)+")"))
 		}
 		updateSuperSymmetryHTML()
@@ -1430,7 +1432,7 @@ function updateHadronicChallenges(){
 		tmp.el["hcCurrentstring"].setTxt("Currently: "+showNum(getHCSelector("string")))
 		tmp.el["hcCurrentde"].setTxt("Currently: "+showNum(getHCSelector("de")))
 		tmp.el["hcCurrentrfrm"].setTxt("Currently: "+showNum(getHCSelector("rfrm")))
-		tmp.el.hcPerc.setTxt(player.elementary.hc.active?(showNum(tmp.elm.hc.complPerc.times(100).max(0))+"% complete"):"")
+		tmp.el.hcPerc.setTxt(player.elementary.hc.active?(showNum(tmp.elm.hc.complPerc.mul(100).max(0))+"% complete"):"")
 		let ach198 = tmp.ach[198].has;
 		tmp.el.mltHCTabButton.setDisplay(ach198);
 		tmp.el.hcSelectorTitlegoal.setTxt("Challenge goal (in "+((ach198&&getHCSelector("goalMlt"))?"mlt":"uni")+")")
@@ -1449,7 +1451,7 @@ function updateMainEnergyTabHTML(){
 			locked: !player.canRefill,
 		})
 		tmp.el.motive.setTxt(showNum(tmp.hd.motive))
-		tmp.el.nextMotive.setHTML(tmp.hd.motive.lte(((player.energyUpgs.includes(24)) ? (tmp.hd.enerUpgs ? tmp.hd.enerUpgs[24] : new ExpantaNum(0)) : new ExpantaNum(0)).max(0))?("[<span class='energy'>"+showNum(player.spentMotive.plus(player.spentMotiveGens).sub(tmp.hd.totalMotive).plus((player.energyUpgs.includes(24)) ? (tmp.hd.enerUpgs ? tmp.hd.enerUpgs[24] : new ExpantaNum(0)) : new ExpantaNum(0)).max(0))+"</span> left]"):"")
+		tmp.el.nextMotive.setHTML(tmp.hd.motive.lte(((player.energyUpgs.includes(24)) ? (tmp.hd.enerUpgs ? tmp.hd.enerUpgs[24] : new ExpantaNum(0)) : new ExpantaNum(0)).max(0))?("[<span class='energy'>"+showNum(player.spentMotive.add(player.spentMotiveGens).sub(tmp.hd.totalMotive).add((player.energyUpgs.includes(24)) ? (tmp.hd.enerUpgs ? tmp.hd.enerUpgs[24] : new ExpantaNum(0)) : new ExpantaNum(0)).max(0))+"</span> left]"):"")
 		for (let i=1;i<=36;i++) {
 			let cost = getEnergyUpgCost(i)
 			tmp.el["energyUpg"+i].setClasses({
@@ -1484,7 +1486,7 @@ function updateGeneratorsHTML(){
 		tmp.el.superEn.setTxt(showNum(tmp.hd.superEn))
 		tmp.el.superEnEff.setTxt(showNum(tmp.hd.superEnEff))
 		tmp.el.superEnEff2Div.setDisplay(player.geners.gt(1))
-		tmp.el.superEnEff2.setTxt(showNum(tmp.hd.superEnEff2.sub(1).times(100)))
+		tmp.el.superEnEff2.setTxt(showNum(tmp.hd.superEnEff2.sub(1).mul(100)))
 		tmp.el.newGen.setDisplay(player.inf.endorsements.gte(21))
 		let cost2 = getNewGenCost()
 		tmp.el.newGen.setClasses({
@@ -1562,7 +1564,7 @@ function updateQFHTML() {
 		if (foamTab=="foamBoosts") {
 			for (let b=1;b<=25;b++) {
 				tmp.el["qfb"+b].setDisplay(tmp.elm.qf.boostData[b].gt(0))
-				tmp.el["qfb"+b+"amt"].setTxt(showNum(tmp.elm.qf.boostData[b])+(((b<5&&tmp.elm.qf.boost5.plus(tmp.elm.qf.boost13).plus(tmp.elm.qf.boost25).gt(0))||(b<13&&tmp.elm.qf.boost13.plus(tmp.elm.qf.boost25).gt(0))||(b<25&&tmp.elm.qf.boost25.gt(0)))?(" + "+showNum(tmp.elm.qf.boost25.plus(b>=13?0:tmp.elm.qf.boost13).plus(b>=5?0:tmp.elm.qf.boost5))):""))
+				tmp.el["qfb"+b+"amt"].setTxt(showNum(tmp.elm.qf.boostData[b])+(((b<5&&tmp.elm.qf.boost5.add(tmp.elm.qf.boost13).add(tmp.elm.qf.boost25).gt(0))||(b<13&&tmp.elm.qf.boost13.add(tmp.elm.qf.boost25).gt(0))||(b<25&&tmp.elm.qf.boost25.gt(0)))?(" + "+showNum(tmp.elm.qf.boost25.add(b>=13?0:tmp.elm.qf.boost13).add(b>=5?0:tmp.elm.qf.boost5))):""))
 				tmp.el["qfb"+b+"eff"].setTxt(showNum(tmp.elm.qf["boost"+b]))
 			}
 			tmp.el.ach162span.setDisplay(tmp.ach[162].has)
@@ -1728,11 +1730,11 @@ function updateOverallMultiverseHTML() {
 			}
 		} else if (mltTab == "quilts") {
 			for (let i=1;i<=3;i++) {
-				tmp.el["quilt"+i+"Strength"].setTxt(showNum(tmp.mlt.quilts[i].strength.times(100)))
-				tmp.el["quilt"+i+"Eff"].setTxt(showNum(i==1?tmp.mlt.quilts[i].eff:tmp.mlt.quilts[i].eff.sub(1).times(100)))
+				tmp.el["quilt"+i+"Strength"].setTxt(showNum(tmp.mlt.quilts[i].strength.mul(100)))
+				tmp.el["quilt"+i+"Eff"].setTxt(showNum(i==1?tmp.mlt.quilts[i].eff:tmp.mlt.quilts[i].eff.sub(1).mul(100)))
 				tmp.el["quilt"+i+"Eff2"].setTxt(showNum(tmp.mlt.quilts[i].eff2))
 				tmp.el["quiltUpg"+i].setClasses({btn: true, locked: player.mlt.energy.lt(tmp.mlt.quilts[i].upgCost), mlt: player.mlt.energy.gte(tmp.mlt.quilts[i].upgCost)})
-				tmp.el["quiltUpg"+i].setHTML("Energize this Quilt by "+showNum(tmp.mlt.quilts[i].upgPow.times(10))+"%<br>Currently: +"+showNum(tmp.mlt.quilts[i].upgEff.times(100))+"%<br>Cost: "+showNum(tmp.mlt.quilts[i].upgCost)+" ME")
+				tmp.el["quiltUpg"+i].setHTML("Energize this Quilt by "+showNum(tmp.mlt.quilts[i].upgPow.mul(10))+"%<br>Currently: +"+showNum(tmp.mlt.quilts[i].upgEff.mul(100))+"%<br>Cost: "+showNum(tmp.mlt.quilts[i].upgCost)+" ME")
 			}
 			tmp.el.quilt2Eff2Desc.setTxt(hasMltMilestone(6)?", Pion gain, & Spinor gain":"")
 			tmp.el.quilt3sc.setTxt(tmp.mlt.quilts[3].eff.gte(tmp.mlt.quilts[3].scStart)?" (softcapped)":"")
