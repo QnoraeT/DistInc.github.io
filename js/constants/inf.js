@@ -237,7 +237,7 @@ const INF_UPGS = {
 		"8;2": "Accelerational Energy & Purge Power gain are synergized.",
 		"8;3": "Heavenly Chip & Demonic Soul gain are boosted by Endorsements.",
 		"8;4": "The Time Doesn't Exist reward softcap start is multiplied by your Purge Power ^17.",
-		"8;5": "The Cadaver effect softcap is 10% weaker.",
+		"8;5": "The Cadaver effect softcap is 64% weaker.",
 		"8;6": "Scaled Dark Core & Hyper Rank scaling is weaker based on Endorsements.",
 		"8;7": "Scaled Pathogen Upgrade scaling is 84% weaker.",
 		"8;8": "inf8;1 & inf3;8 are stronger based on your Purge Power.",
@@ -771,13 +771,13 @@ const STADIUM_REWARDS = {
 						? player.rockets.log10().log10().log(2).mul(30).add(1.5)
 						: player.rockets.add(1).log10().add(1).mul(1.26732673267).log(2).mul(4.5)
 			ret = ret.mul(mult);
-			if (player.modes.includes("extreme")) ret = ret.plus(1).log10().plus(1).log10().div(10).plus(1) // lmao wtf is this
+			if (player.modes.includes("extreme")) ret = ret.root(1.7)
 			return ret;
 		},
 		solaris: function () {
 			if (mltRewardActive(1)) return MLT_1_STADIUM_REWARDS.effects.solaris();
 			let mult = tmp.inf.pantheon.chipBoost;
-			let ret = player.collapse.cadavers.add(10).log10().root(3.5).mul(2).pow(2)
+			let ret = player.collapse.cadavers.add(10).log10().root(4).mul(2).pow(2).div(12).sub(1)
 			ret = ret.mul(mult);
 			return ret;
 		},

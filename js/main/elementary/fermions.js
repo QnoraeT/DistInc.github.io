@@ -64,7 +64,7 @@ function updateTempLeptons() {
 	if (modeActive("easy")) tmp.elm.ferm.leptonGain = tmp.elm.ferm.leptonGain.mul(4)
 	if (tmp.elm.ferm.leptonGain.gte("e616")) tmp.elm.ferm.leptonGain = softcap(tmp.elm.ferm.leptonGain, "EP", 1, "e616", 3)
 	tmp.elm.ferm.leptonRewards = new ExpantaNum(player.elementary.fermions.leptons.amount).max(1).logBase(100).floor();
-	if (tmp.elm.ferm.leptonRewards.gte(7)) tmp.elm.ferm.leptonRewards = tmp.elm.ferm.leptonRewards.sqrt().mul(Math.sqrt(7))
+	if (tmp.elm.ferm.leptonRewards.gte(7)) tmp.elm.ferm.leptonRewards = softcap(tmp.elm.ferm.leptonRewards, "P", 1, 7, 2)
 	if (!tmp.elm.ferm.leptonName) tmp.elm.ferm.leptonName = function (noExp = false) {
 		let name = LEPTON_NAMES[player.elementary.fermions.leptons.type - 1];
 		let stacks = getLeptonStacks(tmp.elm.ferm.leptonRewards)

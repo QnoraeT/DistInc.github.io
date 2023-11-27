@@ -14,18 +14,18 @@ function updateTempRanks() {
 	scalRank = doAllScaling(scalRank, "rank", true)
 	scalRank = scalRank.add(1).floor();
 	tmp.ranks.bulk = scalRank
-	if (player.rank.gte(RANK_DESCS[Object.keys(RANK_DESCS).length-1].req)){
+	if (player.rank.gte(RANK_DESCS[Object.keys(RANK_DESCS).length - 1].req)) {
 		tmp.ranks.desc = DEFAULT_RANK_DESC
 	} else {
-		for (let i=0;i<Object.keys(RANK_DESCS).length;i++) {
-			if (player.rank.lt(RANK_DESCS[i].req)){
+		for (let i = 0; i < Object.keys(RANK_DESCS).length; i++) {
+			if (player.rank.lt(RANK_DESCS[i].req)) {
 				tmp.ranks.desc = RANK_DESCS[i].text + "  (Next reward at " + showNum(RANK_DESCS[i].req) + " ranks.)"
 				break;
 			}
 		}
 	}
 	tmp.ranks.canRankUp = player.distance.gte(tmp.ranks.req);
-	if (nerfActive("noRank")) {tmp.ranks.canRankUp = false;}
+	if (nerfActive("noRank")) { tmp.ranks.canRankUp = false; }
 	tmp.ranks.layer = new Layer("rank", tmp.ranks.canRankUp, "semi-forced");
 	if (!tmp.rank) tmp.rank = {};
 	if (!tmp.rank.onReset) tmp.rank.onReset = function (prev) {
@@ -36,7 +36,7 @@ function updateTempRanks() {
 			}
 		if (!tmp.inf.upgs.has("4;9")) tmp.inf.derv.resetDervs();
 	};
-	if (!tmp.rank.updateOnReset) tmp.rank.updateOnReset = function() { updateTempRanks(); }
+	if (!tmp.rank.updateOnReset) tmp.rank.updateOnReset = function () { updateTempRanks(); }
 }
 
 function getRankFP() {
@@ -61,7 +61,7 @@ function getRankBaseCost() {
 function rankEffects(num) {
 	let temp
 	num = showNum(new Decimal(num), false)
-	switch(num) {
+	switch (num) {
 		case "2":
 			temp = ExpantaNum.pow(1.1, player.rank);
 			break;
@@ -107,7 +107,7 @@ function rankEffects(num) {
 			temp = Decimal.pow(10, Decimal.pow(10, softcap(player.rank, "EP", 1, 45000, 12).div(1.5e4).max(1).log(3).mul(3).pow(2))).div(100).max(1) // placeholder
 			break;
 		case "4e4":
-			temp = player.rank.div(40000).max(1).pow(player.elementary.particles.max(Number.MAX_VALUE).log(Number.MAX_VALUE)).root(2.3) // placeholder
+			temp = player.rank.div(40000).max(1).pow(player.elementary.particles.max(Number.MAX_VALUE).log(Number.MAX_VALUE)).root(2.3)
 			break;
 		case "1e5":
 			temp = new Decimal(1) // placeholder

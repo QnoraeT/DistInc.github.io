@@ -31,6 +31,7 @@ function updateTemp() {
 }
 
 function setupHTML() {
+	let data
 	tmp.el = {}
 	// Achievement Table
 	let achTable = new Element("achTable");
@@ -92,6 +93,59 @@ function setupHTML() {
 		tmp.el[`tierReward${showNum(tiers.req, false).replace(/\./g, "_")}`] = new Element(`tierReward${showNum(tiers.req, false).replace(/\./g, "_")}`)
 	}
 
+	// Multiplier Breakdown
+	data = `<td>`
+	for (i in multiBreakdown) {
+		data += `
+			<button id="multiB${i}" class="btn tb rckt" onclick="showMultiBreakdown('${i}')">
+				${i}
+			</button>
+	`
+	}
+	data += `</td>`
+	new Element("multiBreakButtons").setHTML(data)
+
+	data = `
+	<tr class="flexContainer">
+		<br>
+		<table>
+			<td><div id="mBSource">
+
+			</div></td>
+			<td><div id="mBEffect">
+
+			</div></td>
+			<td><div id="mBResult">
+
+			</div></td>
+		</table>
+	</tr>
+	`
+	new Element("multiBreak").setHTML(data)
+	let mB = new Element("mBSource")
+	table = "<div class='flexTopRow'><div class='flexContainer mBStuffHeader'><b>Source</b>"
+	for (let i = 0; i < 40; i++) {
+		table += `<div id='mBS${i}' class='mBStuff'></div>`
+	}
+	table += "</div><div class='flexContainer'>"
+	mB.setHTML(table)
+
+	mB = new Element("mBEffect")
+	table = "<div class='flexTopRow'><div class='flexContainer mBStuffHeader'><b>Effect</b>"
+	for (let i = 0; i < 40; i++) {
+		table += `<div id='mBE${i}'class='mBStuff'></div>`
+	}
+	table += "</div><div class='flexContainer'>"
+	mB.setHTML(table)
+
+	mB = new Element("mBResult")
+	table = "<div class='flexTopRow'><div class='flexContainer mBStuffHeader'><b>Total</b>"
+	for (let i = 0; i < 40; i++) {
+		table += `<div id='mBR${i}'class='mBStuff'></div>`
+	}
+	table += "</div></div>"
+	mB.setHTML(table)
+
 	// Time Reversal Upgrade Table
 	let trTable = new Element("trTable");
 	table = "";
@@ -126,7 +180,7 @@ function setupHTML() {
 
 	// Pathogen Upgrade Pyramid
 	let pthUpgs = new Element("pthUpgs");
-	let data = "";
+	data = "";
 	let pID = 0;
 	for (let r = 1; r <= reverseTri(PTH_AMT); r++) {
 		data += "<table><tr>";
@@ -310,19 +364,6 @@ function setupHTML() {
 	// Rocket Upgrades (1000 mlt+)
 	setupRocketUPGs()
 
-	// Multiplier Breakdown
-	data = ``
-	for (i in multiBreakdown) {
-		data += `
-		<td>
-			<button class="btn tb rckt" onclick="showMultiBreakdown('${multiBreakdown[i].name}')">
-				${multiBreakdown[i].name}
-			</button>
-		</td>
-	`
-	}
-	new Element("multiBreak").setHTML(data)
-
 	// Version
 	let v = new Element("version")
 	v.setTxt(player.version)
@@ -336,7 +377,6 @@ function setupHTML() {
 	for (let i = 0; i < all.length; i++) {
 		let x = all[i]
 		tmp.el[x.id] = new Element(x, false)
-
 	}
 }
 

@@ -54,9 +54,18 @@ function loadPhotonEffects() {
 	if (!tmp.elm.bos.photonEff) tmp.elm.bos.photonEff = function (x) {
 		let bought = player.elementary.bosons.gauge.photons.upgrades[x - 1]||new ExpantaNum(0);
 		if (player.elementary.times.lt(1)) bought = new ExpantaNum(0);
-		if (x == 1) return ExpantaNum.pow(3, bought);
-		if (x == 2) return ExpantaNum.pow(1.5, bought);
-		if (x == 3||x == 4) return ExpantaNum.pow(2, bought);
+		switch (x) {
+			case 1:
+				return Decimal.pow(10, bought.mul(10).add(bought.mul(bought.sub(1)).div(2)));
+			case 2:
+				return Decimal.pow(2, bought.pow(1.5));
+			case 3:
+				return ExpantaNum.pow(bought.mul(0.005).add(2), bought);
+			case 4:
+				return ExpantaNum.pow(bought.mul(0.001).add(2), bought);
+			default:
+				throw new Error(`Photon Upgrade ID ${x} doesn't exist!`)
+		}
 	};
 }
 
@@ -103,11 +112,10 @@ function updateTempWZB(gaugeSpeed) {
 	if (player.elementary.foam.unl && tmp.elm.qf) tmp.elm.bos.wg = tmp.elm.bos.wg.mul(tmp.elm.qf.boost19)
 	tmp.elm.bos.w1 = player.elementary.bosons.gauge.w.add(1).log10().div(10).add(1);
 	if (player.inf.upgrades.includes("7;10")) tmp.elm.bos.w1 = player.elementary.bosons.gauge.w.add(1).pow(0.25).max(tmp.elm.bos.w1)
-	tmp.elm.bos.w2 = player.elementary.bosons.gauge.w.add(1).log10().sqrt().add(1);
+	tmp.elm.bos.w2 = player.elementary.bosons.gauge.w.add(1).pow(0.6);
 	tmp.elm.bos.zg = gaugeSpeed.mul(0.1).mul(tmp.elm.bos.w1);
 	if (player.elementary.foam.unl && tmp.elm.qf) tmp.elm.bos.zg = tmp.elm.bos.zg.mul(tmp.elm.qf.boost19)
-	tmp.elm.bos.z1 = player.elementary.bosons.gauge.z.add(1).pow(0.04);
-	if (tmp.elm.bos.z1.gte(1.4)) tmp.elm.bos.z1 = tmp.elm.bos.z1.logBase(1.4).mul(1.4).min(tmp.elm.bos.z1)
+	tmp.elm.bos.z1 = player.elementary.bosons.gauge.z.add(1).pow(0.2);
 	tmp.elm.bos.z2 = player.elementary.bosons.gauge.z.add(1).pow(2);
 }
 
@@ -144,14 +152,14 @@ function updateTempGluons(gaugeSpeed) {
 	}
 	if (!tmp.elm.bos.gluonCost) tmp.elm.bos.gluonCost = function (col, x) {
 		let bought = player.elementary.bosons.gauge.gluons[col].upgrades[x - 1]||new ExpantaNum(0);
-		if (x == 1) return ExpantaNum.pow(2, bought.pow(2.5).mul(2)).mul(100);
-		else if (x==2) return ExpantaNum.pow(3, ExpantaNum.pow(3, bought)).mul(1e3 / 3);
+		if (x == 1) return ExpantaNum.pow(1.1, bought.pow(1.5).mul(2)).mul(100);
+		else if (x==2) return ExpantaNum.pow(3, ExpantaNum.pow(1.4, bought)).mul(1e3 / 3);
 		else return ExpantaNum.pow(10, bought.pow(2)).mul(1e7)
 	};
 	if (!tmp.elm.bos.gluonTarg) tmp.elm.bos.gluonTarg = function (col, x) {
 		let amt = player.elementary.bosons.gauge.gluons[col].amount||new ExpantaNum(0);
-		if (x == 1) return amt.div(100).max(1).logBase(2).div(2).pow(1/2.5).add(1).floor();
-		else if (x==2) return amt.div(1e3 / 3).max(1).logBase(3).max(1).logBase(3).add(1).floor();
+		if (x == 1) return amt.div(100).max(1).logBase(1.1).div(2).root(1.5).add(1).floor();
+		else if (x==2) return amt.div(1e3 / 3).max(1).logBase(1.4).max(1).logBase(3).add(1).floor();
 		else return amt.div(1e7).max(1).log10().sqrt().add(1).floor();
 	};
 	tmp.elm.bos.buy = function (col, x, max=false) {
@@ -238,7 +246,6 @@ function updateHiggsUpgradeEffects() {
 	if (!tmp.elm.bos["higgs_0;0;4"]) tmp.elm.bos["higgs_0;0;4"] = function(disp=false) {
 		if (!disp) if (!tmp.elm.bos.hasHiggs("0;0;4")) return new ExpantaNum(1)
 		let ret = tmp.elm.pa.active?tmp.elm.pa.speedBoost.add(1):new ExpantaNum(1)
-		if (ret.gte(1e3)) ret = ret.pow(0.95).mul(Math.pow(1e3, 0.05)) // wtf is this softcap lmfao 
 		return ret
 	}
 	if (!tmp.elm.bos["higgs_1;3;0"]) tmp.elm.bos["higgs_1;3;0"] = function(disp=false) {

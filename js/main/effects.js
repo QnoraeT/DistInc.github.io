@@ -16,7 +16,7 @@ function ach63Eff() {
 	let sc = ach63SC();
 	let pow = ach63Pow();
 	let eff = tmp.timeSpeed ? tmp.timeSpeed.pow(0.025).pow(pow) : new ExpantaNum(1);
-	if (eff.gte(sc)) eff = ExpantaNum.pow(10, softcap(eff.log(10), "EP", 1, sc.log(10), 2.5)); // exponent^2 rooted by 2.5
+	if (eff.gte(sc)) eff = ExpantaNum.pow(10, softcap(eff.log(10), "EP", 1, sc.log(10), 4)); // exponent^2 rooted by 4
 	if (player.elementary.sky.unl && tmp.elm) eff = eff.pow(tmp.elm.sky.pionEff[9]);
 	return eff;
 }

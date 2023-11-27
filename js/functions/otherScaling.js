@@ -38,7 +38,7 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
     f = new ExpantaNum(f);
     g = new ExpantaNum(g);
     let temp;
-    switch(type) {
+    switch (type) {
         case "P":
             if (!inv)
                 temp = x.div(a).pow(ExpantaNum.pow(c, b)).mul(a).sub(a).div(ExpantaNum.pow(c, b)).add(a);
@@ -56,13 +56,13 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
                 temp = ExpantaNum.pow(ExpantaNum.pow(c, b), x.sub(a)).mul(a);
             else
                 temp = x.div(a).log(ExpantaNum.pow(c, b)).add(a);
-            return (inv)?(ExpantaNum.min(temp,x)):(ExpantaNum.max(temp,x)); 
+            return (inv) ? (ExpantaNum.min(temp, x)) : (ExpantaNum.max(temp, x));
         case "E":
             if (!inv)
                 temp = ExpantaNum.pow(ExpantaNum.pow(c, b), x.div(a).sub(1)).mul(a);
             else
                 temp = x.div(a).log(ExpantaNum.pow(c, b)).add(1).mul(a);
-            return (inv)?(ExpantaNum.min(temp,x)):(ExpantaNum.max(temp,x)); 
+            return (inv) ? (ExpantaNum.min(temp, x)) : (ExpantaNum.max(temp, x));
         case "EP": // a*b^(x+(cx)^2)) - exponential:polynomial
             if (!inv)
                 temp = b.pow(x.mul(c).pow(2).add(x)).mul(a);
@@ -72,19 +72,19 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
         case "EEP": // a*b^(xcd^((fx)^g)) - exponential^2:polynomial
             if (!inv)
                 temp = a.mul(b.pow(d.pow(x.mul(f).pow(g)).mul(c).mul(x)));
-            else 
+            else
                 temp = x.div(a).ln().pow(g).mul(d.ln()).mul(f.pow(g)).mul(g).div(c.pow(g).mul(b.ln().pow(g))).lambertw().root(g).div(g.root(g).mul(f).mul(d.ln().root(g)));
             return temp;
         case "ADt": // antimatter dimension's free tickspeed from time softcap (a = start [AD = 300000], b = normal base [AD = 1.33 or 1.25], c = scale base [AD = 1.000006])
-            if (!inv){
-                if (x.gte(a)){
+            if (!inv) {
+                if (x.gte(a)) {
                     temp = x.sub(a).add(1);
                     temp = b.pow(x).mul(c.pow(temp.sub(1).mul(temp).div(2)));
                 } else {
                     temp = b.pow(x);
                 }
             } else {
-                if (x.gte(b.pow(a))){
+                if (x.gte(b.pow(a))) {
                     b = b.ln();
                     c = c.ln();
                     //((2ac-2b-c)/2c)+(sqrt(4bc-8abc+4b^2+8ln(x)*c+c^2)/2c)
@@ -103,10 +103,9 @@ function cSC(type, amt, inv, a, b, c, d, f, g) {
 
 function softcap(amt, type, strength, start, powScale = 2) {
     let sta = new ExpantaNum(start);
-    if (amt.gte(sta)){
+    if (amt.gte(sta)) {
         let str = new ExpantaNum(strength);
-        let temp;
-        switch(type) {
+        switch (type) {
             case "D":
                 str = new ExpantaNum(powScale).pow(str);
                 return amt.div(str).add(sta.sub(sta.div(str)));
@@ -114,7 +113,7 @@ function softcap(amt, type, strength, start, powScale = 2) {
                 str = new ExpantaNum(powScale).pow(str);
                 return amt.div(sta).root(str).mul(sta).sub(sta).mul(str).add(sta);
             case "E": // exponential 
-                if (str.gt(1)) {console.warn("Softcap \"E\" cannot work correctly with strength > 1 !");str=new ExpantaNum(1)}
+                if (str.gt(1)) { console.warn("Softcap \"E\" cannot work correctly with strength > 1 !"); str = new ExpantaNum(1) }
                 str = ExpantaNum.sub(1, str);
                 return amt.log(sta.mul(amt.div(sta).pow(str))).add(1).pow(sta.mul(amt.div(sta).pow(str)).log(2));
             case "EP":
@@ -130,83 +129,38 @@ function softcap(amt, type, strength, start, powScale = 2) {
     return amt;
 }
 
-function doScaling(name, type, amt, inv, special = [2, 3, 1.01, 4, 5], special2 = ["P", "P", "AE", "P", "E"]){
+const DEFAULT_SCALE = {
+    scaled:        { id: 0, typ: "P",  str: 2 },
+    superscaled:   { id: 1, typ: "P",  str: 3 },
+    hyper:         { id: 2, typ: "AE", str: 1.01 },
+    atomic:        { id: 3, typ: "P",  str: 4 },
+    supercritical: { id: 4, typ: "E",  str: 5 },
+    meta:          { id: 5, typ: "SE", str: 6 },
+    exotic:        { id: 6, typ: "P",  str: 15 },
+    instant:       { id: 7, typ: "P",  str: 75 },
+    wtf:           { id: 8, typ: "E",  str: 100 },
+    utterlyFucked: { id: 9, typ: "SE", str: 60 },
+}
+
+const SCALE_LIST = ["scaled", "superscaled", "hyper", "atomic", "supercritical", "meta", "exotic", "instant", "wtf", "utterlyFucked"]
+
+function doScaling(name, type, amt, inv, special = [], special2 = []) {
+    if (DEFAULT_SCALE[type] === undefined) { throw new Error(`Scaling type ${type} does not exist!`) }
     let scaleSTR;
     let scaleTYP;
-    switch (type){
-        case "scaled":
-            scaleTYP = special2[0] !== undefined?special2[0]:"P";
-            scaleSTR = special[0] !== undefined?special[0]:2;
-            break;
-        case "superscaled":
-            scaleTYP = special2[1] !== undefined?special2[1]:"P";
-            scaleSTR = special[1] !== undefined?special[1]:3;
-            break;
-        case "hyper":
-            scaleTYP = special2[2] !== undefined?special2[2]:"AE";
-            scaleSTR = special[2] !== undefined?special[2]:1.01;
-            break;
-        case "atomic":
-            scaleTYP = special2[3] !== undefined?special2[3]:"P";
-            scaleSTR = special[3] !== undefined?special[3]:4;
-            break;
-        case "supercritical":
-            scaleTYP = special2[4] !== undefined?special2[4]:"E";
-            scaleSTR = special[4] !== undefined?special[4]:5;
-            break;  
-        case "meta":
-            scaleTYP = special2[5] !== undefined?special2[5]:"SE";
-            scaleSTR = special[5] !== undefined?special[5]:6;
-            break;
-        case "exotic":
-            scaleTYP = special2[6] !== undefined?special2[6]:"P";
-            scaleSTR = special[6] !== undefined?special[6]:15;
-            break;
-        case "instant":
-            scaleTYP = special2[7] !== undefined?special2[7]:"P";
-            scaleSTR = special[7] !== undefined?special[7]:75;
-            break;
-        case "wtf":
-            scaleTYP = special2[8] !== undefined?special2[8]:"E";
-            scaleSTR = special[8] !== undefined?special[8]:100;
-            break;
-        case "utterlyFucked":
-            scaleTYP = special2[9] !== undefined?special2[9]:"SE";
-            scaleSTR = special[9] !== undefined?special[9]:60;
-            break;
-        default:
-            throw new Error("type " + type + " doesn't exist!");
-    }
-    if ((SCALING_STARTS[type][name] !== undefined) && scalingActive(name, amt, type)){
+    let cur = DEFAULT_SCALE[type]
+    scaleTYP = special2[cur.id] ?? cur.typ
+    scaleSTR = special[cur.id] ?? cur.str
+    if ((SCALING_STARTS[type][name] !== undefined) && scalingActive(name, amt, type)) {
         return cSC(scaleTYP, amt, inv, getScalingStart(type, name), getScalingPower(type, name), scaleSTR);
     }
     return amt;
 }
 
-function doAllScaling(amt, name, inv, specialScale, specialType){
+function doAllScaling(amt, name, inv, specialScale, specialType) {
     let scalS = amt;
-    if (inv){
-        scalS = doScaling(name, "scaled", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "superscaled", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "hyper", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "atomic", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "supercritical", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "meta", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "exotic", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "instant", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "wtf", scalS, true, specialScale, specialType);
-        scalS = doScaling(name, "utterlyFucked", scalS, true, specialScale, specialType);
-    } else {
-        scalS = doScaling(name, "utterlyFucked", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "wtf", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "instant", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "exotic", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "meta", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "supercritical", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "atomic", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "hyper", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "superscaled", scalS, false, specialScale, specialType);
-        scalS = doScaling(name, "scaled", scalS, false, specialScale, specialType);
+    for (let i = 0; i < SCALE_LIST.length; i++) {
+        scalS = doScaling(name, SCALE_LIST[!inv ? SCALE_LIST.length - i - 1 : i], scalS, inv, specialScale, specialType);
     }
     return scalS;
 }

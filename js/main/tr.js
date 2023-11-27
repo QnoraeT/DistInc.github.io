@@ -9,25 +9,76 @@ function updateTempTR() {
 }
 
 function getTimeCubeGain() {
+	let thisName = "Time Cube Gain"
+	clearMultiList(thisName)
+	showMultiList(thisName, player.tr.unl)
+	let eff
 	let gain = new ExpantaNum(1);
-	if (modeActive("hard")) gain = gain.div(3);
-	if (modeActive("easy")) gain = gain.mul(5).mul(player.pathogens.amount.add(1));
-	if (player.tr.upgrades.includes(1) && !HCCBA("noTRU")) gain = gain.mul(tr1Eff());
-	if (player.tr.upgrades.includes(4) && !HCCBA("noTRU")) gain = gain.mul(tr4Eff());
-	if (tmp.ach[55].has) gain = gain.mul(1.1);
+	if (modeActive("hard")) {
+		gain = gain.div(3);
+		setMultiList(thisName, "Hard Mode Nerf", `${showNum(1/3)}x`, `${showNum(gain)}`)
+	}
+	if (modeActive("easy")) {
+		eff = player.pathogens.amount.add(1).mul(5)
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Easy Mode Buff", `${showNum(eff)}x`, `${showNum(gain)}`)
+	}
+	if (player.tr.upgrades.includes(1) && !HCCBA("noTRU")) {
+		eff = tr1Eff()
+		gain = gain.mul(eff);
+		let txt
+		if (player.rank.gt(7500)) {
+			txt = `(${showNum(1.1)} ^ (${showNum(player.rank)} / 7500)) ^ ((${showNum(player.rank)} + ${showNum(player.tier)}) ^ ((${showNum(player.rank)} / 7500) ^ ${showNum(1/2.35)}))`
+		} else {
+			txt = `${showNum(1.02)}^(${showNum(player.rank)} + ${showNum(player.tier)})`
+		}
+		setMultiList(thisName, "Time Reversal Upgrade 1", `${txt} = ${showNum(eff)}x`, `${showNum(gain)}`)
+	}
+	if (player.tr.upgrades.includes(4) && !HCCBA("noTRU")) {
+		eff = tr4Eff()
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Time Reversal Upgrade 4", `${showNum(eff)}x`, `${showNum(gain)}`)
+	}
+	if (tmp.ach[55].has) {
+		gain = gain.mul(1.1);
+		setMultiList(thisName, "Achievement 55 Reward", `${showNum(1.1)}x`, `${showNum(gain)}`)
+	}
 	if (tmp.ach[72].has && modeActive("extreme")) {
 		let exp = ExpantaNum.add(5, player.dc.cores.sqrt().mul(5));
-		gain = gain.mul(player.furnace.coal.add(1).log10().add(1).pow(exp));
+		eff = player.furnace.coal.add(1).log10().add(1).pow(exp)
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Achievement 72 Reward", `(1 + log(${showNum(player.furnace.coal.add(1))})) ^ 5(1 + sqrt(${showNum(player.dc.cores)})) = ${showNum(eff)}x`, `${showNum(gain)}`)
 	}
 	if (tmp.ach[86].has && modeActive("extreme+hikers_dream")) {
-		gain = gain.mul(player.pathogens.amount.add(1))
+		eff = player.pathogens.amount.add(1)
+		gain = gain.mul(eff)
+		setMultiList(thisName, "Achievement 86 Reward", `${showNum(eff)}x`, `${showNum(gain)}`)
 	}
-	if (player.tr.upgrades.includes(16) && !HCCBA("noTRU") && modeActive("extreme"))
-		gain = gain.mul(player.furnace.coal.add(1).log10().sqrt().add(1));
-	if (tmp.pathogens && player.pathogens.unl) gain = gain.mul(tmp.pathogens[3].eff());
-	if (tmp.dc) if (player.dc.unl) gain = gain.mul(tmp.dc.deEff);
-	if (tmp.dc) if (player.tr.upgrades.includes(11)) gain = gain.mul(tr11Eff()["cg"]);
-	if (tmp.inf) if (tmp.inf.upgs.has("2;3")) gain = gain.mul(INF_UPGS.effects["2;3"]()["cubes"]);
+	if (player.tr.upgrades.includes(16) && !HCCBA("noTRU") && modeActive("extreme")) {
+		eff = TR_UPGS[16].current().tc
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Time Reversal Upgrade 16", `${showNum(eff)}x`, `${showNum(gain)}`)
+	}
+	if (tmp.pathogens && player.pathogens.unl) {
+		eff = tmp.pathogens[3].eff()
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Pathogen Upgrade 3 Effect", `${showNum(eff)}x`, `${showNum(gain)}`)
+	}
+	if (tmp.dc) if (player.dc.unl) {
+		eff = tmp.dc.deEff
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Dark Energy Effect", `${showNum(eff)}x`, `${showNum(gain)}`)
+	}
+	if (tmp.dc) if (player.tr.upgrades.includes(11)) {
+		eff = tr11Eff()["cg"]
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Time Reversal Upgrade 11", `${showNum(eff)}x`, `${showNum(gain)}`)
+	}
+	if (tmp.inf) if (tmp.inf.upgs.has("2;3")) {
+		eff = INF_UPGS.effects["2;3"]()["cubes"]
+		gain = gain.mul(eff);
+		setMultiList(thisName, "Infinity Upgrade 2;3 Effect", `${showNum(eff)}x`, `${showNum(gain)}`)
+	}
 	return gain
 }
 
@@ -46,7 +97,7 @@ function buyTRUpg(n) {
 
 function tr1Eff() {
 	return !player.rank.gt(7500)
-		?ExpantaNum.pow(1.1, player.rank.add(player.tier))
+		?ExpantaNum.pow(modeActive("extreme")?1.02:1.1, player.rank.add(player.tier))
 		:ExpantaNum.pow(Decimal.pow(1.1, player.rank.div(7500).max(1)), player.rank.add(player.tier).pow(player.rank.div(7500).max(1).root(2.35)));
 }
 
@@ -66,7 +117,7 @@ function tr4Eff() {
 	let r = player.rockets
 	if (!player.rank.gt(7500)) if (r.gte(1e10)) r = softcap(r, "EP", 1, 1e10, 1.5) // exponent ^2/3 after 1e10
 	return !player.rank.gt(7500)
-			?ExpantaNum.pow(1.33, r.add(1).log10())
+			?ExpantaNum.pow(modeActive("extreme")?1.1:1.33, r.add(1).log10())
 			:ExpantaNum.pow(Decimal.pow(1.33, player.rank.div(7500).max(1)), r.add(1).log10())
 }
 
@@ -107,8 +158,7 @@ function tr11Pow() {
 
 function tr11Eff() {
 	return {
-		cg: tmp.dc ? softcap(tmp.dc.flow.pow(tmp.dc.flow.add(1).slog(2).mul(10).add(1)).pow(tr11Pow()).pow(player.rank.div(7500).max(1).pow(5)), "EP", 1, "ee9", 4) : new ExpantaNum(1),
-		// TODO: remove this slog
+		cg: tmp.dc ? softcap(tmp.dc.flow.pow(tmp.dc.flow.add(10).log10().add(1).log(2).mul(5)).pow(tr11Pow()).pow(player.rank.div(7500).max(1).pow(5)), "EP", 1, "ee9", 4) : new ExpantaNum(1),
 		dcf: player.tr.cubes.add(1).log10().div(75).add(1).pow(tr11Pow()).pow(player.rank.div(7500).max(1).pow(7.5))
 	}
 }

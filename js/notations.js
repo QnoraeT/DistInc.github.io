@@ -6,41 +6,41 @@ notations.scientific = function (val, places, locs) {
 
 notations.engineering = function(val, places=(player.options.sf - 1), locs) {
 	if (val.lt(0.001)) return notations.scientific(val, places, locs)
-	else if (val.lt(1e3)) return decimalPlaces(val, places, val.eq(val.round()))
+	else if (val.lt(1e3)) return decPlaces(val, places, val.eq(val.round()))
 	else if (val.lt("1e10000")) {
 		let back = val.logBase(1e3).floor().times(3)
 		let front = val.div(ExpantaNum.pow(10, back))
-		return decimalPlaces(front, places, val.eq(val.round()))+"e"+decimalPlaces(back, places, true)
+		return decPlaces(front, places, val.eq(val.round()))+"e"+decPlaces(back, places, true)
 	} else if (val.lt("ee1000")) {
 		let back = val.log10().logBase(1e3).floor().times(3)
 		let front = val.log10().div(ExpantaNum.pow(10, back))
-		return "e"+decimalPlaces(front, places)+"e"+decimalPlaces(back, places, true)
+		return "e"+decPlaces(front, places)+"e"+decPlaces(back, places, true)
 	} else if (val.lt("eee1000")) {
 		let back = val.log10().log10().logBase(1e3).floor().times(3)
 		let front = val.log10().log10().div(ExpantaNum.pow(10, back))
-		return "ee"+decimalPlaces(front, places)+"e"+decimalPlaces(back, places, false)
+		return "ee"+decPlaces(front, places)+"e"+decPlaces(back, places, false)
 	} else return disp(val, places, locs, 10)
 }
 
 notations.standard = function (val, places, locs) {
 	if (val.lt(0.001)) return notations.scientific(val, places, locs);
-	else if (val.lt(1e3)) return decimalPlaces(val, places, val.eq(val.round()));
+	else if (val.lt(1e3)) return decPlaces(val, places, val.eq(val.round()));
 	else if (val.lt(1e33)) {
 		return (
-			decimalPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places, val.eq(val.round())) +
+			decPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places, val.eq(val.round())) +
 			" " +
 			STANDARD_DATA.STARTS[val.log10().sub(3).div(3).floor().toNumber()]
 		);
 	} else if (val.lt(1e303)) {
 		return (
-			decimalPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places, val.eq(val.round())) +
+			decPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places, val.eq(val.round())) +
 			" " +
 			STANDARD_DATA.ONES[val.log10().sub(3).div(3).mod(10).floor().toNumber()] +
 			STANDARD_DATA.TENS[val.log10().sub(3).div(30).floor().toNumber()]
 		);
 	} else if (val.lt("1e3003")) {
 		return (
-			decimalPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places) +
+			decPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places) +
 			" " +
 			STANDARD_DATA.ONES[val.log10().sub(3).div(3).mod(10).floor().toNumber()] +
 			STANDARD_DATA.TENS[val.log10().sub(3).div(30).mod(10).floor().toNumber()] +
@@ -49,7 +49,7 @@ notations.standard = function (val, places, locs) {
 	} else if (val.lt(ExpantaNum.pow(10, ExpantaNum.pow(10, 63).times(3)).times(1e3))) {
 		let highest = val.log10().sub(3).div(3).log10().div(3).floor().toNumber();
 		let size = Math.min(locs, highest);
-		let mag = decimalPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places);
+		let mag = decPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places);
 		if (mag === undefined) mag = "1";
 		let txt = mag+" ";
 		for (let x = highest; x > Math.max(highest - size, 0); x--) {
@@ -67,7 +67,7 @@ notations.standard = function (val, places, locs) {
 		return txt;
 	} else if (val.lt(ExpantaNum.pow(10, ExpantaNum.pow(10, 303).times(3)).times(1e3))) {
 		let x = val.log10().sub(3).div(3).log10().div(3).floor().toNumber();
-		let mag = decimalPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places);
+		let mag = decPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places);
 		if (mag === undefined) mag = "1";
 		let txt = mag;
 		let m = ExpantaNum.pow(1000, x);
@@ -84,7 +84,7 @@ notations.standard = function (val, places, locs) {
 		return txt;
 	} else if (val.lt(ExpantaNum.pow(10, ExpantaNum.pow(10, 3003).times(3)).times(1e3))) {
 		let x = val.log10().sub(3).div(3).log10().div(3).floor().toNumber();
-		let mag = decimalPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places);
+		let mag = decPlaces(val.div(ExpantaNum.pow(10, val.log10().div(3).floor().times(3))), places);
 		if (mag === undefined) mag = "1";
 		let txt = mag;
 		let m = ExpantaNum.pow(1000, x);

@@ -192,7 +192,7 @@ function updateRocketsHTML(){
 						(((tmp.ach[95].has||hasCollapseMilestone(9))&&!nerfActive("noRockets")) ? "" + formatGain(player.rockets, tmp.rockets.layer.gain.div(tmp.ach[95].has?1:100)) : "")
 				);
 				tmp.el.rocketsEff.setTxt(showNum(getRocketEffect()));
-				let tt = `Formula: (${formatDistance(player.distance)} / ${formatDistance(LAYER_REQS['rockets'][1])})^${showNum(0.4)} x ${showNum(getRocketGainMult())}`
+				let tt = `Formula: (${formatDistance(player.distance)} / ${formatDistance(LAYER_REQS['rockets'][1])})^${showNum(LAYER_FP.rockets)} x ${showNum(getRocketGainMult())}`
 				tmp.el.rocketsAmt.setAttr("widetooltip", tt);
 				tt = `Maximum Velocity: ${showNum(tmp.rockets.mvPow)}x \nAcceleration: ${showNum(tmp.rockets.accPow)}x`;
 				if (tmp.accEn.gte(1) && tmp.rockets.accEnPow) { tt += `\nAccelerational Energy: ${showNum(tmp.rockets.accEnPow)}x` }
@@ -338,7 +338,7 @@ function updateTimeReversalHTML(){
 		tmp.el.frf.setTxt(showNum(tmp.tr.eff));
 		for (let i = 1; i <= TR_UPG_AMT; i++) {
 			let upg = TR_UPGS[i];
-			let desc = upg.desc;
+			let desc = upg.desc();
 			if (!tr2Pow().eq(1) && i == 2) desc += "<span class='grossminitxt'>(^" + showNum(tr2Pow()) + ")</span>";
 			if (!tr11Pow().eq(1) && i == 11)
 				desc += "<span class='grossminitxt'>(^" + showNum(tr11Pow()) + ")</span>";
@@ -364,6 +364,7 @@ function updateCollapseHTML(){
 	if (player.tab == "collapse") {
 		tmp.el.collapseReset.setClasses({ btn: true, locked: !tmp.collapse.can, btndd: tmp.collapse.can });
 		tmp.el.cadaverGain.setTxt(showNum(tmp.collapse.layer.gain));
+		tmp.el.lifeEssGain.setTxt(showNum(getLifeEssenceAmt()))
 		tmp.el.cadavers.setHTML(
 			"<span class='dead'>" +
 				showNum(player.collapse.cadavers) +
@@ -371,6 +372,8 @@ function updateCollapseHTML(){
 				(((tmp.ach[96].has||tmp.inf.upgs.has("2;4"))&&!nerfActive("noCadavers"))?(formatGain(player.collapse.cadavers, tmp.collapse.layer.gain.div(tmp.ach[96].has?1:100))):"")+
 				"</span>"
 		);
+		let tt = `Formula: (${formatDistance(player.distance)} / ${formatDistance(LAYER_REQS.collapse[1])})^${showNum(LAYER_FP.collapse)} x ${showNum(getCadaverGainMult())}`
+		tmp.el.cadavers.setAttr("widetooltip", tt);
 		tmp.el.cadaverEff.setTxt(showNum(getCadaverEff()));
 		tmp.el.sacrificeCadavers.setClasses({
 			btn: true,
@@ -1047,7 +1050,25 @@ function updateStatisticsHTML(){
 			}
 		}
 		if (statTab == "statBreak") {
-			
+			for (i in multiBreakdown) {
+				tmp.el["multiB"+i].setDisplay(multiBreakdown[i].show);
+			}
+			for (let i=0;i<40;i++) {
+				if (currentMB !== "") {
+					tmp.el["mBS"+i].setDisplay(i < multiBreakdown[currentMB].data.length);
+					tmp.el["mBE"+i].setDisplay(i < multiBreakdown[currentMB].data.length);
+					tmp.el["mBR"+i].setDisplay(i < multiBreakdown[currentMB].data.length);
+					if (i < multiBreakdown[currentMB].data.length) {
+						tmp.el["mBS"+i].setTxt(multiBreakdown[currentMB].data[i].name);
+						tmp.el["mBE"+i].setTxt(multiBreakdown[currentMB].data[i].format);
+						tmp.el["mBR"+i].setTxt(multiBreakdown[currentMB].data[i].now);
+					}
+				} else {
+					tmp.el["mBS"+i].setDisplay(false);
+					tmp.el["mBE"+i].setDisplay(false);
+					tmp.el["mBR"+i].setDisplay(false);
+				}
+			}
 		}
 	}
 }

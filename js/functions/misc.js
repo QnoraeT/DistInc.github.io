@@ -450,16 +450,22 @@ function nerfOfflineProg(time) {
 	return time.mul(1000).max(0);
 }
 
-function toMultiList(id, name, text, now) {
-	multiBreakdown[id].data.push( { name: name, format: text, now: now} )
+function clearMultiList(id) {
+	multiBreakdown[id].data = []
 }
 
-function setMultilist(id, dataID, name, text, now) {
-	multiBreakdown[id].data[dataID].name = name
-	multiBreakdown[id].data[dataID].text = text
-	multiBreakdown[id].data[dataID].now = now
+function addToMultiList(id, name, text, now) {
+	multiBreakdown[id] = { 
+		show: false, 
+		data: []
+	}
+	setMultiList(id, name, text, now)
 }
 
-function setMultiList(id, show) {
+function setMultiList(id, name, text, now) {
+	multiBreakdown[id].data.push({ name: name, format: text, now: now })
+}
+
+function showMultiList(id, show) {
 	multiBreakdown[id].show = show
 }

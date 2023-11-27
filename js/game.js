@@ -16,57 +16,199 @@ let saveTimer = 0;
 let showContainer = true;
 let infActive = false;
 let currentMB = ""
-let multiBreakdown = [
-	{
-		name: "Acceleration",
+let multiBreakdown = {
+	"Acceleration": {
 		show: true,
 		data: [
 			{
 				name: "Base Value",
-				format: `${showNum(new Decimal(0.1))}`,
-				now: ``
+				format: `${showNum(0.1)}`,
+				now: `${showNum(0.1)}`
 			}
 		]
 	},
-	{
-		name: "Coal",
+	"Rocket Gain Multi": {
 		show: false,
 		data: [
 			{
 				name: "Base Value",
-				format: `${showNum(new Decimal(1))}`,
-				now: ``
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
 			}
 		]
 	},
-	{
-		name: "Pathogens",
+	"Time Speed": {
 		show: false,
 		data: [
 			{
-				name: "Base Gain",
-				format: `(${showNum(new Decimal(0))} * ${showNum(new Decimal(0))}) ^ 0.5`,
-				now: ``
-			},
-			{
-				name: "Gain Softcap 1",
-				format: `/${showNum(new Decimal(1))}`,
-				now: ``
-			},
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
 		]
 	},
-	{
-		name: "Pathogen Upgrade Power",
+	"Coal Gain": {
 		show: false,
 		data: [
 			{
-				name: "Base Power",
-				format: `${showNum(new Decimal(100))}%`,
-				now: ``
-			},
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
 		]
-	}
-];
+	},
+	"Time Cube Gain": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Cadaver Gain Multi": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Cadaver Effect": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Pathogens": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `(${showNum(0)} * ${showNum(0)}) ^ 0.5`,
+				now: `${showNum(0)}`
+			}
+		]
+	},
+	"Pathogen Upgrade Power": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(100)}%`,
+				now: `${showNum(100)}`
+			}
+		]
+	},
+	"Dark Flow": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Knowledge Gain": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Ascension Power Gain": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Perk Time": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Perk Strength": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Heavenly Chips": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Demonic Souls": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Purge Power Multi": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"Derivative Boost": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+	"EP Gain": {
+		show: false,
+		data: [
+			{
+				name: "Base Value",
+				format: `${showNum(1)}`,
+				now: `${showNum(1)}`
+			}
+		]
+	},
+}
+
 let fnTab = "nfn";
 let rcTab = "mrc";
 let infTab = "infinity";
@@ -90,7 +232,7 @@ let betaID = ""; //beta2.0
 let completedModeCombos = [];
 let needUpdate = true
 let updating = false
-let visUpdTicks = 1/0
+let visUpdTicks = 1 / 0
 let robotActives = {}
 let correctLink = ""
 let outerShiftDown = false
@@ -121,11 +263,11 @@ function tickWithoutTS(diff) {
 	if (!nerfActive("noLifeEssence")) {
 		if (tmp.ach[97].has) {
 			player.collapse.lifeEssence = player.collapse.lifeEssence.plus(
-				player.collapse.cadavers.times(tmp.collapse.sacEff).max(1).times(diff)
+				getLifeEssenceAmt().times(diff)
 			);
 		} else if (tmp.inf.upgs.has("5;3")) {
 			player.collapse.lifeEssence = player.collapse.lifeEssence.plus(
-				player.collapse.cadavers.times(tmp.collapse.sacEff).max(1).times(diff.div(10))
+				getLifeEssenceAmt().times(diff.div(10))
 			);
 		}
 	}
@@ -134,10 +276,10 @@ function tickWithoutTS(diff) {
 		player.pathogens.amount = player.pathogens.amount.plus(
 			adjustGen(tmp.pathogens.gain, "pathogens").times(diff)
 		);
-	
+
 	if (player.dc.unl) tmp.dc.tick(diff);
 	if (player.inf.unl) infTick(diff);
-	if (modeActive("extreme")?tmp.fn.enh.unl:false) {
+	if (modeActive("extreme") ? tmp.fn.enh.unl : false) {
 		player.furnace.enhancedCoal = player.furnace.enhancedCoal.plus(adjustGen(tmp.fn.enh.gain, "fn").times(diff));
 	}
 	if (player.elementary.times.gt(0) || player.mlt.times.gt(0)) elTick(diff);
@@ -146,7 +288,7 @@ function tickWithoutTS(diff) {
 		if (player.inf.endorsements.gte(10)) player.energy = player.energy.plus(tmp.hd.energyGen.times(diff)).min(getEnergyLim())
 		player.bestMotive = player.bestMotive.max(tmp.hd.motive)
 	}
-	if (modeActive("extreme")&&player.elementary.sky.unl) {
+	if (modeActive("extreme") && player.elementary.sky.unl) {
 		if (tmp.fn.pl.exp.gte(1)) player.plasma.amount = player.plasma.amount.root(tmp.fn.pl.exp).plus(diff).pow(tmp.fn.pl.exp);
 		player.plasma.whiteFlame = player.plasma.whiteFlame.plus(adjustGen(tmp.fn.pl.wfGain, "plasma").times(diff));
 	}
@@ -157,7 +299,7 @@ function tickWithTR(diff) {
 		.plus(adjustGen(tmp.acc, "vel").times(diff))
 		.min(nerfActive("maxVelActive") ? tmp.maxVel : 1 / 0)
 		.max(0);
-	player.distance = player.distance.plus(adjustGen(player.velocity, "dist").times(modeActive("hikers_dream")?tmp.hd.enEff:1).times(diff)).max(0);
+	player.distance = player.distance.plus(adjustGen(player.velocity, "dist").times(modeActive("hikers_dream") ? tmp.hd.enEff : 1).times(diff)).max(0);
 	let fc = multiverseCapped()
 	if (fc) {
 		player.velocity = player.velocity.min(DISTANCES.mlt)
@@ -170,7 +312,7 @@ function tickWithTR(diff) {
 	autoTick(diff);
 	if (modeActive("extreme")) {
 		if (player.rf.gt(0)) {
-			player.furnace.coal = player.furnace.coal.plus(adjustGen(tmp.fn.gain, "fn").times(ExpantaNum.div(diff, (inFC(5)?tmp.timeSpeed:1)))).max(0);
+			player.furnace.coal = player.furnace.coal.plus(adjustGen(tmp.fn.gain, "fn").times(ExpantaNum.div(diff, (inFC(5) ? tmp.timeSpeed : 1)))).max(0);
 		}
 	}
 }

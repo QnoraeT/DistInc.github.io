@@ -173,16 +173,15 @@ const MLT_1_STADIUM_REWARDS = {
 	effects: {
 		spaceon: function () {
 			let mult = tmp.inf.pantheon.chipBoost;
-			let ret = player.rockets.plus(1).log10().plus(1).log().pow(2.25).plus(1);
-			if (ret.gte(30)) ret = ret.logBase(30).mul(30).min(ret);
+			let ret = player.rockets.gte(1e100)
+						? k.log10().log10().log(2).mul(40).add(10)
+						: k.add(1).log10().mul(0.99).add(1).log10().mul(20).pow(1.0550142249214265).add(1)
 			ret = ret.mul(mult);
-			if (player.modes.includes("extreme")) ret = ret.plus(1).log10().plus(1).log10().div(10).plus(1)
 			return ret.mul(player.rf.mul(10).plus(1));
 		},
 		solaris: function () {
 			let mult = tmp.inf.pantheon.chipBoost;
-			let ret = player.collapse.cadavers.plus(1).log10().plus(1).log10().pow(3.25);
-			if (ret.gte(15)) ret = ret.logBase(15).mul(15).min(ret);
+			let ret = player.collapse.cadavers.add(1).log10().root(2).mul(player.collapse.cadavers.add(10).log10().root(6)).div(3)
 			ret = ret.mul(mult);
 			return ret;
 		},
@@ -191,8 +190,6 @@ const MLT_1_STADIUM_REWARDS = {
 			let base = player.inf.endorsements.plus(1).mul(player.inf.ascension.power.plus(1).log10().plus(1).sqrt());
 			let exp = player.inf.endorsements.div(10).plus(1).logBase(1.75).plus(1).pow(9);
 			let totalExp = base.pow(exp);
-			if (totalExp.gte("1e50000"))
-				totalExp = softcap(totalExp, "EP", 1, "1e50000", 3)
 			let ret = player.rank.pow(totalExp.logBase(2));
 			ret = ret.pow(mult);
 			return ret.mul("ee6").max(1);

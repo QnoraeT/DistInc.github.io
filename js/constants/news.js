@@ -675,13 +675,25 @@ const NEWS_DATA = {
 	m105() { return { msg: "Some people say that each multiverse does not have its own High Gods. Those people tend not to survive very long around here.", if: true } },
 	m106() { return { msg: "Some people say that there is only one set of High Gods. Those people tend not to survive very long around here.", if: true } },
 	m107() { return { msg: "What in the world is this mod?", if: true } },
-	m108() { return { msg: "It has become a tradition to mod Distance Incremental", if: true } },
+	m108() { return { msg: "It has become a tradition to mod Distance Incremental (no it hasn't)", if: true } },
 	m109() { return { msg: "SuperLog is a bad thing !!!!", if: true } },
 	m110() { return { msg: "Unfortunately, Pelle wasn't so good at decision making. During the final stage of Antimatter Dimensions, The [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] [Spoiler] ... And then you get a lot of antimatter and you win!", if: true } },
 	m111() { return { msg: "🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔎🔍🔍🔍🔍🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍🔎🔍 - Almost every single BadBoyHalo donation back in 2019-2020", if: true } },
 	m112() { return { msg: "Not like other lore based incrementals.", if: true } },
-	m113() { return { msg: "You have been " + ["Scaled", "Superscaled", "Hyper Scaled", "Atomic Scaled", "Trolled"][Math.floor(Math.random()*5)] + ".", if: true } },
-	m114() { return { msg: "Hey at least its not like Incremental Mass Rewritten (and it's forks) where its like: \"Due to Massive Meme overflow, we've decided to take away your admin powers, reducing your meme exponent count by ^0.74590.\"  Wait. Why am I making news? ", if: true } },
+	m113() { return { msg: "You have been " + ["Scaled", "Superscaled", "Hyper Scaled", "Atomic Scaled", "Trolled"][Math.floor(Math.random()*5.1)] + ".", if: true } },
+	m114() { 
+		return { 
+			msg: `Hey at least its not like Incremental Mass Rewritten (and it's forks) where its like: \"Due to ${
+				["Massive Meme Overflow, we've decided to take away your admin powers, reducing your meme exponent count by "
+				, "Extreme Trolling, your server list count is decreased by "
+				, "Horrific Undertakings, your Sisyphus strength is reduced by "
+				, "Something caused by your massive amounts of mass that totally isn't here to balance the game lol ;3, Your mass count is silated by "
+				, "yourself"
+				, "Super Hyper Ultra Meta Supercritical Exotic Instant fu-, your Mass Upgrade levels are raised to the "
+				, "Rated M, your viewer count is reduced by"
+				, "Isn't this like a 1 in 1e-20 chance newsticker? How?"][Math.floor(Math.random()*7)]} ^${Math.random() > 0.5?showNum(Math.random()):showNum(Decimal.div(1, player.distance.add(1).log10().add(1).log10().add(1).log10().add(1).slog(10).add(1)))}.\"  Wait. Why am I making news?`,
+			if: true } 
+		},
 	m115() { return { msg: "Oh hey! I can swear here! f*ck f*ck f*ck!", if: true } },
 	m116() { return { msg: "STOP SPAMMING STUPID SOFTCAPS AND SLOGS YOU... AAAAAAAAAAAAAAAAA  NEVER DO THIS IN YOUR INCREMENTALS!! unless if you're already at an F-level stage in your game, but PLEASE USE INDICATED SCALINGS INSTEAD", if: true } },
 	custom1() {
@@ -695,15 +707,15 @@ const NEWS_DATA = {
 	},
 	custom2() {
 		return { 
-			msg: ["You haven't ran at all!", "You suck! (No you don't pls don't hurt)", "I guess you're getting somewhere", "Hey you at least traveled farther than me", "Oh dear god", "You see, when I was making this mod, I was always trying to play with whatever bs I made when modifying the original contents. The news was one of them. Unfortunately, I wasn't able to be as creative as the people who made Exotic Matter Dimensions' news, but I can still do something... I guess."][player.distance.add(1).log10().log10().max(0).min(5).toNumber()], 
+			msg: ["You haven't ran at all!", "You suck! (No you don't pls don't hurt)", "I guess you're getting somewhere", "Hey you at least traveled farther than me", "Oh dear god", "You see, when I was making this mod, I was always trying to play with whatever bs I made when modifying the original contents. The news was one of them. Unfortunately, I wasn't able to be as creative as the people who made Exotic Matter Dimensions' news, but I can still do something... I guess."][player.distance.add(1).log10().log10().max(0).min(5).floor().toNumber()], 
 			if: true 
 		}
 	},
 	custom3() {
-		let msg = `You have travelled ${formatDistance(player.distance)}. (Softcapped to ${formatDistance(Decimal.pow(10, softcap(player.distance.log(10), "EP", 1, 3, 4.5)))})`
-		if (player.rockets.gte(1)) msg += `You have ${showNum(player.rockets)} rockets. (Softcapped to ${showNum(softcap(player.rockets, "EP", 1, 10, 5))})`
-		if (player.tr.cubes.gte(1)) msg += `You have ${showNum(player.tr.cubes)} time cubes. (Softcapped to ${showNum(player.tr.cubes.log(2).root(8).div(64))})`
-		if (player.cadavers && player.cadavers.gte(1)) msg += `You have ${showNum(player.cadavers)} cadavers. (Softcapped to ${showNum(player.cadavers.root(128))})`
+		let msg = `You have travelled ${formatDistance(player.distance)}. (Softcapped to ${formatDistance(Decimal.pow(10, softcap(player.distance.log(10), "EP", 1, 3, 4.5)))}) `
+		if (player.rockets.gte(1)) msg += `You have ${showNum(player.rockets)} rockets. (Softcapped to ${showNum(softcap(player.rockets, "EP", 1, 10, 5))}) `
+		if (player.tr.cubes.gte(1)) msg += `You have ${showNum(player.tr.cubes)} time cubes. (Softcapped to ${showNum(player.tr.cubes.log(2).root(8).div(64))}) `
+		if (player.cadavers && player.cadavers.gte(1)) msg += `You have ${showNum(player.cadavers)} cadavers. (Softcapped to ${showNum(player.cadavers.root(128))}) `
 		
 		return { msg: msg, if: true }
 	},
@@ -740,7 +752,7 @@ const NEWS_DATA = {
 	d6() {
 		return {
 			msg: `Stop grinding or youll go insane within the next 5 hours!`,
-			if: player.distance.gte(ExpantaNum.mul(DISTANCES.uni, 1e2000000))
+			if: player.distance.gte(ExpantaNum.mul(DISTANCES.uni, "1e2000000"))
 		}
 	},
 	d7() {
@@ -752,7 +764,7 @@ const NEWS_DATA = {
 	d8() {
 		return {
 			msg: `Welcome to the Fome Club...`,
-			if: player.distance.gte(ExpantaNum.mul(DISTANCES.uni, 1e42000000))
+			if: player.distance.gte(ExpantaNum.mul(DISTANCES.uni, "1e42000000"))
 		}
 	},
 	d9() {
@@ -980,7 +992,7 @@ const NEWS_DATA = {
 	s12() {
 		return {
 			msg: `To elementary, and beyond! - Buzz e600k uni`,
-			if: player.distance.gte(1e600027)
+			if: player.distance.gte("1e600027")
 		}
 	},
 	s13() {
@@ -1076,7 +1088,7 @@ const NEWS_DATA = {
 	s28() {
 		return {
 			msg: `Believe it or not, the news ticker is this games only source of RNG.`,
-			if: player.distance.gte(1e86)&&player.distance.lte(1e10000)
+			if: player.distance.gte(1e86)&&player.distance.lte("1e10000")
 		}
 	},
 	s29() {

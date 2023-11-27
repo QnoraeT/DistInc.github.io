@@ -4,7 +4,7 @@
 	<link rel="icon" href="images/game_icon.ico" type="image/icon type" />
 </head>
 <body id="body" onload="loadGame()">
-	<div id="loading">
+	<div id="loading" >
 		<br><br><br><br>
 		<img src="images/game_icon.ico" style="width: 200px; height: 200px;"></img>
 		<span class="centered" style="color: white">Loading...<br><span style="font-size: 20px !important;"><a href="https://discord.gg/wwQfgPa" target="_blank">Help</a></span></span>
@@ -428,13 +428,16 @@
 			<div id="statBreak" class="stattab" style="display: none;">
 				<div class="band">
 					<table>
-						<tr id="multiBreak">
-							<div class="flexContainer">
+						<tr id="multiBreakButtons">
 
-							</div>
 						</tr>
 					</table>
 				</div>
+				<table>
+					<tr id="multiBreak">
+
+					</tr>
+				</table>
 			</div>
 		</div>
 		<div id="achievements" class="tab" style="display: none;">
@@ -965,7 +968,7 @@
 			You have <span id="cadavers"></span>, which make time go <span id="cadaverEff" class="dead"></span>x faster
 			<span id="cadaverEffSC"></span><br /><br />
 			<button id="sacrificeCadavers" class="btn locked" onclick="sacrificeToLifeEssence()">
-				Sacrifice all your cadavers into life essence.</button
+				Sacrifice all your cadavers into <span id="lifeEssGain" class="dead"></span> life essence.</button
 			><br /><br />
 			You have <span id="lifeEssence"></span>.<br /><br />
 			<table id="cmTable"></table>
@@ -2423,6 +2426,7 @@
 	
 	<!-- Functions -->
 	<script type="text/javascript" src="js/functions/formatting.js"></script>
+	<script type="text/javascript" src="js/functions/format-omeganum.js"></script>
 	<script type="text/javascript" src="js/functions/tabs.js"></script>
 	<script type="text/javascript" src="js/functions/achievements.js"></script>
 	<script type="text/javascript" src="js/functions/important.js"></script>
@@ -2464,6 +2468,8 @@
 	<script type="text/javascript" src="js/game.js"></script>
 
 	<!-- File Data -->
+	<script type="text/javascript" src="js/main/options.js"></script>
+	<script type="text/javascript" src="js/main/rocketUPG.js"></script>
 	<script type="text/javascript" src="js/main/multiverse/quilts.js"></script>
 	<script type="text/javascript" src="js/main/multiverse/mlt.js"></script>
 	<script type="text/javascript" src="js/main/elementary/bosons.js"></script>
@@ -2474,7 +2480,6 @@
 	<script type="text/javascript" src="js/main/elementary/skyrmion.js"></script>
 	<script type="text/javascript" src="js/main/elementary/theory.js"></script>
 	<script type="text/javascript" src="js/main/elements.js"></script>
-	<script type="text/javascript" src="js/main/options.js"></script>
 	<script type="text/javascript" src="js/main/nerfs.js"></script>
 	<script type="text/javascript" src="js/main/scaling.js"></script>
 	<script type="text/javascript" src="js/main/effects.js"></script>
@@ -2493,7 +2498,6 @@
 	<script type="text/javascript" src="js/main/misc.js"></script>
 	<script type="text/javascript" src="js/main/timeSpeed.js"></script>
 	<script type="text/javascript" src="js/main/hd.js"></script>
-	<script type="text/javascript" src="js/main/rocketUPG.js"></script>
 
 	<!-- Extreme Mode File Data -->
 

@@ -6,19 +6,20 @@ function disp(val, places, locs, base) {
 	var s="";
 	if (val.array.length>=2){
 		for (var i=val.array.length-1;i>=2;--i){
-			var q=i>=5?"{"+decimalPlaces(i, places, true, base)+"}":"^".repeat(i);
-			if (val.array[i]>1) s+="10"+decimalPlaces(q, places, true, base)+"^"+decimalPlaces(val.array[i], places, true, base)+" ";
-			else if (val.array[i]==1) s+="10"+decimalPlaces(q, places, true, base);
+			var q=i>=5?"{"+decPlaces(i, places, true, base)+"}":"^".repeat(i);
+			if (val.array[i]>1) s+="10"+decPlaces(q, places, true, base)+"^"+decPlaces(val.array[i], places, true, base)+" ";
+			else if (val.array[i]==1) s+="10"+decPlaces(q, places, true, base);
 		}
 	}
-	if (!val.array[1]) s+=decimalPlaces(val.toNumber(), places, val.eq(val.round()), base);
-	else if (val.array[1]<3) s+="e".repeat(val.array[1]-1)+decimalPlaces(Math.pow(10,val.array[0]-Math.floor(val.array[0])), places, false, base)+"e"+decimalPlaces(Math.floor(val.array[0]), places, true, base);
-	else if (val.array[1]<8) s+="e".repeat(val.array[1])+decimalPlaces(val.array[0], places, false, base);
-	else s+="10^^"+decimalPlaces(val.array[1], places, true, base)+" "+decimalPlaces(val.array[0], places, false, base);
+	if (!val.array[1]) s+=decPlaces(val.toNumber(), places, val.eq(val.round()), base);
+	else if (val.array[1]<3) s+="e".repeat(val.array[1]-1)+decPlaces(Math.pow(10,val.array[0]-Math.floor(val.array[0])), places, false, base)+"e"+decPlaces(Math.floor(val.array[0]), places, true, base);
+	else if (val.array[1]<8) s+="e".repeat(val.array[1])+decPlaces(val.array[0], places, false, base);
+	else s+="10^^"+decPlaces(val.array[1], places, true, base)+" "+decPlaces(val.array[0], places, false, base);
 	return s;
 }
 
 function showNum(val, notation = true) {
+	if (notation?player.options.not:"scientific" === "mixed") return formatMixed(val, (notation?player.options.sf:5) - 1)
 	val = new ExpantaNum(val);
 	if (val.eq(NaN)) return "NaN";
 	if (val.gte(1/0)) return "Infinity";
@@ -50,7 +51,7 @@ function addZeroes(orig, num, digits, roundWhole=false) {
 	return result
 }
 
-function decimalPlaces(value, places, roundWhole=false, base = 10) {
+function decPlaces(value, places, roundWhole=false, base = 10) {
 	// Taken from ExpantaNum.js (but altered slightly)
 	var len = places + 1;
 	var numDigits = Math.ceil(Math.log10(Math.max(Math.abs(value), 1)));
@@ -60,13 +61,13 @@ function decimalPlaces(value, places, roundWhole=false, base = 10) {
 			if (value<=1e-100) return "0"
 			let e = Math.floor(-1*Math.log10(value))
 			let m = value*Math.pow(10, e+1)
-			return decimalPlaces(m, places, false, base)+"e-"+decimalPlaces(e, places, true, base)
+			return decPlaces(m, places, false, base)+"e-"+decPlaces(e, places, true, base)
 		} else if (value<Math.pow(10, places)||value<1000) {
 			return addZeroes(value, parseFloat(rounded.toFixed(Math.min(Math.max(len - numDigits, 0), places))), len - numDigits, roundWhole);
 		} else {
 			let e = Math.floor(Math.log10(value))
 			let m = value/Math.pow(10, e)
-			return decimalPlaces(m, places, roundWhole, base)+"e"+e
+			return decPlaces(m, places, roundWhole, base)+"e"+e
 		}
 	} else {
 		if (value.toString(base).split(".")[0].length < places + 2) {

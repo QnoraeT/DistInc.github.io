@@ -1,6 +1,10 @@
-// format-omeganum.js by cloudytheconqueror
+const abbSuffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc",
+                            "UDc", "DDc", "TDc", "QaDc", "QiDc", "SxDc", "SpDc", "OcDc", "NoDc", "Vg"];
+const abbExp = new ExpantaNum(1e66)
+
+// format-Decimal.js by cloudytheconqueror
 // Code snippets from NumberFormating.js of ducdat0507's The Communitree,
-// which is based on The Modding Tree by Acamaeda (and ported to OmegaNum by upvoid),
+// which is based on The Modding Tree by Acamaeda (and ported to Decimal by upvoid),
 // in turn based on The Prestige Tree by Jacorb and Aarex
 
 // Set to 1 to print debug information to console
@@ -27,13 +31,13 @@ function regularFormat(num, precision) {
     if (zeroCheck < 0.001) return (0).toFixed(precision)
     let fmt = num.toString()
     let f = fmt.split(".")
-    if (precision == 0) return commaFormat(num.floor ? num.floor() : Math.floor(num))
+    if (precision == 0 || Decimal.isint(num)) return commaFormat(num.floor ? num.floor() : Math.floor(num))
     else if (f.length == 1) return fmt + "." + "0".repeat(precision)
     else if (f[1].length < precision) return fmt + "0".repeat(precision - f[1].length)
     else return f[0] + "." + f[1].substring(0, precision)
 }
 
-// Basically does the opposite of what standardize in OmegaNum does
+// Basically does the opposite of what standardize in Decimal does
 // Set smallTop to true to force the top value in the result below 10
 function polarize(array, smallTop=false) {
     if (FORMAT_DEBUG >= 1) console.log("Begin polarize: "+JSON.stringify(array)+", smallTop "+smallTop)
@@ -86,21 +90,23 @@ function polarize(array, smallTop=false) {
     return {bottom: bottom, top: top, height: height}
 }
 
-function format(num, precision=2, small=false) {
-    if (OmegaNum.isNaN(num)) return "NaN"
+function formatMixed(num, precision=2, small=false) {
+    if (Decimal.isNaN(num)) return "NaN"
     let precision2 = Math.max(3, precision) // for e
     let precision3 = Math.max(4, precision) // for F, G, H
     let precision4 = Math.max(6, precision) // for J
-    num = new OmegaNum(num)
+    num = new Decimal(num)
     let array = num.array
     if (num.abs().lt(1e-308)) return (0).toFixed(precision)
-    if (num.sign < 0) return "-" + format(num.neg(), precision)
+    if (num.sign < 0) return "-" + formatMixed(num.neg(), precision)
     if (num.isInfinite()) return "Infinity"
-    if (num.lt("0.0001")) { return format(num.rec(), precision) + "⁻¹" }
+    if (num.lt(0.0001)) return "1/" + formatMixed(num.rec(), precision)
     else if (num.lt(1)) return regularFormat(num, precision + (small ? 2 : 0))
     else if (num.lt(1000)) return regularFormat(num, precision)
     else if (num.lt(1e9)) return commaFormat(num)
-    else if (num.lt(1e66)) return 
+    else if (num.lt(abbExp)) {
+        return Math.pow(10, (((array[1]||0) == 0) ? Math.log10(array[0]) : array[0]) % 3).toFixed(precision) + " " + abbSuffixes[Math.floor(((array[1]||0) == 0) ? Math.log10(array[0]) / 3 : array[0] / 3)]
+    }
     else if (num.lt("10^^5")) { // 1e9 ~ 1F5
         let rep = (array[1]||0)-1
         if (array[0] >= 1e9) {
@@ -120,11 +126,11 @@ function format(num, precision=2, small=false) {
         if ((array[2]||0) >= 1) {
             let rep = array[2]
             array[2] = 0
-            return "F".repeat(rep) + format(array, precision)
+            return "F".repeat(rep) + formatMixed(array, precision)
         }
         let n = array[1] + 1
         if (num.gte("10^^" + (n + 1))) n += 1
-        return "F" + format(n, precision)
+        return "F" + formatMixed(n, precision)
     }
     else if (num.lt("10^^^1000000")) { // 1G5 ~ G1,000,000
         let pol = polarize(array)
@@ -134,11 +140,11 @@ function format(num, precision=2, small=false) {
         if ((array[3]||0) >= 1) {
             let rep = array[3]
             array[3] = 0
-            return "G".repeat(rep) + format(array, precision)
+            return "G".repeat(rep) + formatMixed(array, precision)
         }
         let n = array[2] + 1
         if (num.gte("10^^^" + (n + 1))) n += 1
-        return "G" + format(n, precision)
+        return "G" + formatMixed(n, precision)
     }
     else if (num.lt("10^^^^1000000")) { // 1H5 ~ H1,000,000
         let pol = polarize(array)
@@ -148,11 +154,11 @@ function format(num, precision=2, small=false) {
         if ((array[4]||0) >= 1) {
             let rep = array[4]
             array[4] = 0
-            return "H".repeat(rep) + format(array, precision)
+            return "H".repeat(rep) + formatMixed(array, precision)
         }
         let n = array[3] + 1
         if (num.gte("10^^^^" + (n + 1))) n += 1
-        return "H" + format(n, precision)
+        return "H" + formatMixed(n, precision)
     }
     // 5J4 and beyond
     let pol = polarize(array, true)
@@ -160,9 +166,9 @@ function format(num, precision=2, small=false) {
 }
 
 function formatWhole(num) {
-    return format(num, 0)
+    return formatMixed(num, 0)
 }
 
 function formatSmall(num, precision=2) { 
-    return format(num, precision, true)    
+    return formatMixed(num, precision, true)    
 }

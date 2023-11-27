@@ -613,7 +613,7 @@
       if (Math.abs(wn-w)<tol*Math.abs(wn)) return wn;
       w=wn;
     }
-    throw Error("Iteration failed to converge: "+z);
+    throw Error(omegaNumError + "Iteration failed to converge: "+z);
     //return Number.NaN;
   };
   //from https://github.com/scipy/scipy/blob/8dba340293fe20e62e173bdf2c10ae208286692f/scipy/special/lambertw.pxd
@@ -641,7 +641,7 @@
       if (OmegaNum.abs(wn.sub(w)).lt(OmegaNum.abs(wn).mul(tol))) return wn;
       w = wn;
     }
-    throw Error("Iteration failed to converge: "+z);
+    throw Error(omegaNumError + "Iteration failed to converge: "+z);
     //return Decimal.dNaN;
   };
   //The Lambert W function, also called the omega function or product logarithm, is the solution W(x) === x*e^x.
@@ -650,7 +650,7 @@
   P.lambertw=function (){
     var x=this.clone();
     if (x.isNaN()) return x;
-    if (x.lt(-0.3678794411710499)) throw Error("lambertw is unimplemented for results less than -1, sorry!");
+    if (x.lt(-0.3678794411710499)) throw Error(omegaNumError + `LambertW(0) cannot calculate ${x}! (Limit: -0.3678794411710499)`);
     if (x.gt(OmegaNum.TETRATED_MAX_SAFE_INTEGER)) return x;
     if (x.gt(OmegaNum.EE_MAX_SAFE_INTEGER)){
       x.array[1]--;
@@ -1055,11 +1055,6 @@
     if (!x.array.length) x.array=[0];
     return x;
   };
-  var standardizeMessageSent=false;
-  P.standardize=function (){
-    if (!standardizeMessageSent) console.warn(omegaNumError+"'standardize' method is being deprecated in favor of 'normalize' and will be removed in the future!"),standardizeMessageSent=true;
-    return this.normalize();
-  }
   P.toNumber=function (){
     //console.log(this.array);
     if (this.sign==-1) return -1*this.abs();
@@ -1172,7 +1167,7 @@
     return r;
   };
   Q.fromNumber=function (input){
-    if (typeof input!="number") throw Error(invalidArgument+"Expected Number");
+    if (typeof input!="number") throw Error(omegaNumError + invalidArgument+"Expected Number");
     var x=new OmegaNum();
     x.array[0]=Math.abs(input);
     x.sign=input<0?-1:1;
@@ -1193,7 +1188,7 @@
     return Math.log10(Number(firstbits))+Math.LOG10E/Math.LOG2E*Number(cutbits);
   }
   Q.fromBigInt=function (input){
-    if (typeof input!="bigint") throw Error(invalidArgument+"Expected BigInt");
+    if (typeof input!="bigint") throw Error(omegaNumError + invalidArgument+"Expected BigInt");
     var x=new OmegaNum();
     var abs=input<BigInt(0)?-input:input;
     x.sign=input<BigInt(0)?-1:1;
@@ -1207,7 +1202,7 @@
     return Math.log10(Number(str.substring(0,LONG_STRING_MIN_LENGTH)))+(str.length-LONG_STRING_MIN_LENGTH);
   }
   Q.fromString=function (input){
-    if (typeof input!="string") throw Error(invalidArgument+"Expected String");
+    if (typeof input!="string") throw Error(omegaNumError + invalidArgument+"Expected String");
     var isJSON=false;
     if (typeof input=="string"&&(input[0]=="["||input[0]=="{")){
       try {
@@ -1347,7 +1342,7 @@
       array=input2;
       sign=input1;
     }else{
-      throw Error(invalidArgument+"Expected an Array [and Boolean]");
+      throw Error(omegaNumError + invalidArgument+"Expected an Array [and Boolean]");
     }
     var x=new OmegaNum();
     x.array=array.slice(0);
@@ -1357,12 +1352,12 @@
     return x;
   };
   Q.fromObject=function (input){
-    if (typeof input!="object") throw Error(invalidArgument+"Expected Object");
+    if (typeof input!="object") throw Error(omegaNumError + invalidArgument+"Expected Object");
     if (input===null) return OmegaNum.ZERO.clone();
     if (input instanceof Array) return OmegaNum.fromArray(input);
     if (input instanceof OmegaNum) return new OmegaNum(input);
-    if (!(input.array instanceof Array)) throw Error(invalidArgument+"Expected that property 'array' exists");
-    if (input.sign!==undefined&&typeof input.sign!="number") throw Error(invalidArgument+"Expected that property 'sign' is Number");
+    if (!(input.array instanceof Array)) throw Error(omegaNumError + invalidArgument+"Expected that property 'array' exists");
+    if (input.sign!==undefined&&typeof input.sign!="number") throw Error(omegaNumError + invalidArgument+"Expected that property 'sign' is Number");
     var x=new OmegaNum();
     x.array=input.array.slice(0);
     x.sign=Number(input.sign)||1;
@@ -1371,13 +1366,13 @@
   };
   Q.fromJSON=function (input){
     if (typeof input=="object") return OmegaNum.fromObject(parsedObject);
-    if (typeof input!="string") throw Error(invalidArgument+"Expected String");
+    if (typeof input!="string") throw Error(omegaNumError + invalidArgument+"Expected String");
     var parsedObject,x;
     try{
       parsedObject=JSON.parse(input);
     }catch(e){
       parsedObject=null;
-      throw e;
+      throw (omegaNumError + e);
     }finally{
       x=OmegaNum.fromObject(parsedObject);
     }
@@ -1385,7 +1380,7 @@
     return x;
   };
   Q.fromHyperE=function (input){
-    if (typeof input!="string") throw Error(invalidArgument+"Expected String");
+    if (typeof input!="string") throw Error(omegaNumError + invalidArgument+"Expected String");
     var x=new OmegaNum();
     x.array=[0];
     if (!/^[-\+]*(0|[1-9]\d*(\.\d*)?|Infinity|NaN|E[1-9]\d*(\.\d*)?(#[1-9]\d*)*)$/.test(input)){
@@ -1557,7 +1552,7 @@
     for (i = 0; i < ps.length; i += 3) {
       if ((v = obj[p = ps[i]]) !== void 0) {
         if (Math.floor(v) === v && v >= ps[i + 1] && v <= ps[i + 2]) this[p] = v;
-        else throw Error(invalidArgument + p + ': ' + v);
+        else throw Error(omegaNumError + invalidArgument + p + ': ' + v);
       }
     }
 

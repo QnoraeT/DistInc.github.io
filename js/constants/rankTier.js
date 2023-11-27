@@ -227,7 +227,7 @@ const RANK_DESCS = {
 		effectType: "% weaker",
 	},
 	45: {
-		text: "every Hyper Scaling pre-multiverse is 10% weaker.",
+		text: "all Hyper Scalings in pre-multiverse is 10% weaker.",
 		req: new ExpantaNum(200000),
 		effectType: "x",
 	},
