@@ -194,7 +194,13 @@ function adjustGen(val, type) {
 		if (extremeStadiumActive("spectra")) e = e.pow(2)
 		exp = exp.mul(e);
 	}
-	if (modeActive("extreme") && post_elm && type!="scalar") exp = exp.mul(ExpantaNum.gte(player.elementary.theory.tree.upgrades[37]||0, 1)?.95:.9)
+	if (modeActive("extreme") && post_elm && type!="scalar") {
+		let b = player.elementary.theory.tree.upgrades[37]||0
+		if (ExpantaNum.gte(b, 1)) {
+			exp = exp.mul(TREE_UPGS[37].effect(b))
+		}
+
+	}
 	let newVal = val.pow(exp);
 	if (modeActive("hard") && (type=="inflatons"||type=="foam"||type=="sky")) newVal = newVal.div(5)
 	else if (modeActive("hard") && !modeActive("extreme")) newVal = newVal.div(3.2)

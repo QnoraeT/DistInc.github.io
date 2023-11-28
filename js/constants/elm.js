@@ -612,8 +612,8 @@ const TREE_UPGS = {
 		target: function(points) { return Decimal.pow(2, points.log(2.3e6).log(2).root(1.5)).floor() },
 		cap: new ExpantaNum(5),
 		desc: "The Extreme mode reduction to post-Elementary resource generation is nerfed.",
-		effect: function(bought) { return i.gte(5)
-											? new Decimal(bought)
+		effect: function(bought) { return bought.gte(5)
+											? new Decimal(1)
 											: Decimal.sub(1, Decimal.pow(0.5, bought)).div(10).add(0.9) },
 		effD: function(e) { return `^0.9 -> ^${showNum(e)}` },
 	},

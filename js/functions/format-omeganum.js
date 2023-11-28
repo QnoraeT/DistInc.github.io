@@ -97,7 +97,7 @@ function formatMixed(num, precision=2, small=false) {
     let precision4 = Math.max(6, precision) // for J
     num = new Decimal(num)
     let array = num.array
-    if (num.abs().lt(1e-308)) return (0).toFixed(precision)
+    if (num.abs().lt(1e-308)) return 0
     if (num.sign < 0) return "-" + formatMixed(num.neg(), precision)
     if (num.isInfinite()) return "Infinity"
     if (num.lt(0.0001)) return "1/" + formatMixed(num.rec(), precision)

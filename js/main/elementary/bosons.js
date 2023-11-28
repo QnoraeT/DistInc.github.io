@@ -132,8 +132,8 @@ function updateTempGluons(gaugeSpeed) {
 	tmp.elm.bos.updateTabs();
 	if (!tmp.elm.bos.gluonEff) tmp.elm.bos.gluonEff = function (col, x) {
 		let bought = player.elementary.bosons.gauge.gluons[col].upgrades[x - 1]||new ExpantaNum(0);
-		if (x == 1) return ExpantaNum.pow(2, bought);
-		else if (x==2) return ExpantaNum.pow(1.1, bought);
+		if (x == 1) return ExpantaNum.pow(2, bought.pow(1.3));
+		else if (x==2) return ExpantaNum.pow(bought.mul(0.05).add(1.1), bought); 
 		else return bought.mul(10)
 	};
 	tmp.elm.bos.rg = gaugeSpeed.div(2.5).mul(tmp.elm.bos.gluonEff("ar", 1)).mul(tmp.elm.bos.photonEff(3).max(1));
@@ -152,14 +152,14 @@ function updateTempGluons(gaugeSpeed) {
 	}
 	if (!tmp.elm.bos.gluonCost) tmp.elm.bos.gluonCost = function (col, x) {
 		let bought = player.elementary.bosons.gauge.gluons[col].upgrades[x - 1]||new ExpantaNum(0);
-		if (x == 1) return ExpantaNum.pow(1.1, bought.pow(1.5).mul(2)).mul(100);
+		if (x == 1) return ExpantaNum.pow(1.3, bought.pow(1.5).mul(2)).mul(100);
 		else if (x==2) return ExpantaNum.pow(3, ExpantaNum.pow(1.4, bought)).mul(1e3 / 3);
 		else return ExpantaNum.pow(10, bought.pow(2)).mul(1e7)
 	};
 	if (!tmp.elm.bos.gluonTarg) tmp.elm.bos.gluonTarg = function (col, x) {
 		let amt = player.elementary.bosons.gauge.gluons[col].amount||new ExpantaNum(0);
-		if (x == 1) return amt.div(100).max(1).logBase(1.1).div(2).root(1.5).add(1).floor();
-		else if (x==2) return amt.div(1e3 / 3).max(1).logBase(1.4).max(1).logBase(3).add(1).floor();
+		if (x == 1) return amt.div(100).max(1).logBase(1.3).div(2).root(1.5).add(1).floor();
+		else if (x==2) return amt.div(1e3 / 3).max(1).logBase(3).max(1).logBase(1.4).add(1).floor();
 		else return amt.div(1e7).max(1).log10().sqrt().add(1).floor();
 	};
 	tmp.elm.bos.buy = function (col, x, max=false) {
