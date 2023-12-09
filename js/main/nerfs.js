@@ -213,7 +213,7 @@ function adjustGen(val, type) {
 		let mlt500 = ExpantaNum.pow(DISTANCES.mlt, 500);
 		newVal = softcap(newVal, "EP", 1, mlt500, 2)
 	}
-	if (newVal.gte("ee14")) newVal = Decimal.pow(10, softcap(newVal.log(10), "EP", 1, "1e14", 3))
+	if (newVal.gte("ee14")) newVal = Decimal.pow(10, softcap(newVal.log(10), "EP", 1, 1e14, 3))
 	if (modeActive("hard") && (type=="pathogens"||(extremeStadiumComplete("aqualon") && preinf))) newVal = newVal.mul(3)
 	if (extremeStadiumActive("aqualon") && preinf) newVal = newVal.div(9e15)
 	return newVal;

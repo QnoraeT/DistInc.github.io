@@ -226,7 +226,7 @@ function updateTempTimeSpeed() {
 		eff = tmp.timeSpeed
 		let mlt300 = ExpantaNum.pow(DISTANCES.mlt, 300);
 		tmp.timeSpeed = softcap(tmp.timeSpeed, "EP", 1, mlt300, 5)
-		setMultiList(thisName, "Extreme Mode Harsh Softcap 1", `exponential softcap(${showNum(eff)} at ${showNum(mlt300)}, ${showNum(20)}% Power)`, `${showNum(tmp.timeSpeed)}`)
+		setMultiList(thisName, "Extreme Mode Softcap 2", `${showNum(eff)} at ${showNum(mlt300)} is raised by ${showNum(eff.log(tmp.timeSpeed))} with ${showNum(100)}% power`, `${showNum(tmp.timeSpeed)}`)
 	}
 	showMultiList(thisName, !tmp.timeSpeed.eq(1))
 }

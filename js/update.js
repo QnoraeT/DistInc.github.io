@@ -124,7 +124,7 @@ function setupHTML() {
 	new Element("multiBreak").setHTML(data)
 	let mB = new Element("mBSource")
 	table = "<div class='flexTopRow'><div class='flexContainer mBStuffHeader'><b>Source</b>"
-	for (let i = 0; i < 40; i++) {
+	for (let i = 0; i < amtOfMB; i++) {
 		table += `<div id='mBS${i}' class='mBStuff'></div>`
 	}
 	table += "</div><div class='flexContainer'>"
@@ -132,7 +132,7 @@ function setupHTML() {
 
 	mB = new Element("mBEffect")
 	table = "<div class='flexTopRow'><div class='flexContainer mBStuffHeader'><b>Effect</b>"
-	for (let i = 0; i < 40; i++) {
+	for (let i = 0; i < amtOfMB; i++) {
 		table += `<div id='mBE${i}'class='mBStuff'></div>`
 	}
 	table += "</div><div class='flexContainer'>"
@@ -140,7 +140,7 @@ function setupHTML() {
 
 	mB = new Element("mBResult")
 	table = "<div class='flexTopRow'><div class='flexContainer mBStuffHeader'><b>Total</b>"
-	for (let i = 0; i < 40; i++) {
+	for (let i = 0; i < amtOfMB; i++) {
 		table += `<div id='mBR${i}'class='mBStuff'></div>`
 	}
 	table += "</div></div>"

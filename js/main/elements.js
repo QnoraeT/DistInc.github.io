@@ -181,6 +181,8 @@ function updateMainHTML(){
 
 function updateRocketsHTML(){
 	if (player.tab == "rockets") {
+		tmp.el.mrc.setDisplay(rcTab === "mrc")
+		tmp.el.upgrc.setDisplay(rcTab === "upgrc")
 		switch (rcTab) {
 			case "mrc":
 				// Rockets
@@ -1053,7 +1055,7 @@ function updateStatisticsHTML(){
 			for (i in multiBreakdown) {
 				tmp.el["multiB"+i].setDisplay(multiBreakdown[i].show);
 			}
-			for (let i=0;i<40;i++) {
+			for (let i=0;i<amtOfMB;i++) {
 				if (currentMB !== "") {
 					tmp.el["mBS"+i].setDisplay(i < multiBreakdown[currentMB].data.length);
 					tmp.el["mBE"+i].setDisplay(i < multiBreakdown[currentMB].data.length);

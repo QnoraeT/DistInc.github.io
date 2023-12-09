@@ -205,7 +205,7 @@ function getScalingPower(type, name) {
 		} else if (type=="superscaled") {
 			if (tmp.inf) if (tmp.inf.upgs.has("10;1")) power = power.mul(ExpantaNum.sub(1, INF_UPGS.effects["10;1"]("pth")))
 		} else if (type=="hyper") {
-			if (tmp.ach[185].has) power = power.mul(0.9); // sub by 0.1 might cause issues
+			if (tmp.ach[185].has) power = power.mul(0.9); 
 			if (player.rank.gte(4e4)) power = power.div(rankEffects(4e4))
 		}
 	} else if (name=="darkCore") {
@@ -218,7 +218,11 @@ function getScalingPower(type, name) {
 	} else if (name=="endorsements") {
 		if (type=="scaled") {
 			if (tmp.pathogens) power = power.div(tmp.pathogens[15].eff())
-		}
+			if (player.tier.gt(200)) power = power.mul(0.5)
+		} else 	if (type=="superscaled") {
+			if (player.tier.gt(200)) power = power.mul(0.75)
+		} 
+
 	} else if (name=="dervBoost") {
 		if (type=="scaled") {
 			if (player.tier.gt(100)) power = power.div(tierEffects(100))

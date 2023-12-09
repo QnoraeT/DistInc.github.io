@@ -359,13 +359,13 @@ const TIER_DESCS = {
 		effectType: "% weaker",
 	},
 	24: {
-		text: "non-free Pathogen Upgrade purchases are 40x stronger.",
-		req: new ExpantaNum(667),
+		text: "non-free Pathogen Upgrade purchases are 100x stronger.",
+		req: new ExpantaNum(200),
 		effectType: "x",
 	},
 	25: {
 		text: "scaled and Superscaled Endorsements are 50% and 25% weaker, respectively.",
-		req: new ExpantaNum(1000),
+		req: new ExpantaNum(300),
 		effectType: "x",
 	},
 };

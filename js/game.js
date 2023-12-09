@@ -16,6 +16,7 @@ let saveTimer = 0;
 let showContainer = true;
 let infActive = false;
 let currentMB = ""
+let amtOfMB = 65
 let multiBreakdown = {
 	"Acceleration": {
 		show: true,

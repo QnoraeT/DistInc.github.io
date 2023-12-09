@@ -2,18 +2,12 @@ function updatePathogensGain() {
 	let thisName = "Pathogens"
 	let eff
 	let softcapPow = player.rank.gt(70000) ? 0.3 : 1
-	tmp.pathogens.st = new ExpantaNum(1.25);
 	clearMultiList(thisName)
 	showMultiList(thisName, player.pathogens.unl)
 	tmp.pathogens.gainLEpart = player.collapse.lifeEssence.add(1).log10().add(1).pow(0.1).sub(1);
 	tmp.pathogens.gainPTHpart = player.pathogens.amount.add(1).log10().add(1);
 	tmp.pathogens.gain = tmp.pathogens.gainLEpart.mul(tmp.pathogens.gainPTHpart).sqrt();
 	setMultiList(thisName, "Base Gain", `(((1 + log(${showNum(player.collapse.lifeEssence.add(1))}))^0.1 - 1) * (1 + log(${showNum(player.pathogens.amount.add(1))}))) ^ 0.5`, `${showNum(tmp.pathogens.gain)}`)
-	if (tmp.pathogens.gain.gte(tmp.pathogens.st)) {
-		eff = tmp.pathogens.gain
-		tmp.pathogens.gain = softcap(tmp.pathogens.gain, "P", softcapPow, tmp.pathogens.st, 2)
-		setMultiList(thisName, "Softcap 1", `softcap(${showNum(eff)} at ${showNum(tmp.pathogens.st)}, ${showNum(Decimal.mul(100, Decimal.div(1, Decimal.pow(2, softcapPow))))}% Power)`, `${showNum(tmp.pathogens.gain)}`)
-	}
 	tmp.pathogens.baseGain = new ExpantaNum(tmp.pathogens.gain); // what why
 	if (tmp.ach) if (tmp.ach[63].has) {
 		eff = ach63Eff()
@@ -125,7 +119,7 @@ function updatePathogensGain() {
 function nonFreePathogenStrength() {
 	let ret = new ExpantaNum(1)
 	if (player.tier.gt(80)) ret = ret.mul(20)
-	if (player.tier.gt(667)) ret = ret.mul(40)
+	if (player.tier.gt(200)) ret = ret.mul(100)
 	return ret
 }
 

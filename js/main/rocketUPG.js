@@ -26,6 +26,8 @@ function rUPGstrength(x, type = 0) {
 
 function setupRocketUPGs() {
 /**
+ * 					<td id="rcupg1" class="furnChall"><br><b>Blue Flame does nothing.</b><br>Goal: <span id="fnc1goal"></span> Blue Flame<br><button id="fns1" class="btn fn" onclick="startFurnChall(1)"></button><br><br>Reward: Superscaled & Hyper Furnace Upgrade scalings are 90% weaker.<br><br></td>
+ * 
  * 
  * 
  * function setupMltMilestoneTable() {

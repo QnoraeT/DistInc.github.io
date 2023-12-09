@@ -174,8 +174,8 @@ const MLT_1_STADIUM_REWARDS = {
 		spaceon: function () {
 			let mult = tmp.inf.pantheon.chipBoost;
 			let ret = player.rockets.gte(1e100)
-						? k.log10().log10().log(2).mul(40).add(10)
-						: k.add(1).log10().mul(0.99).add(1).log10().mul(20).pow(1.0550142249214265).add(1)
+						? player.rockets.log10().log10().log(2).mul(40).add(10)
+						: player.rockets.add(1).log10().mul(0.99).add(1).log10().mul(20).pow(1.0550142249214265).add(1)
 			ret = ret.mul(mult);
 			return ret.mul(player.rf.mul(10).plus(1));
 		},
