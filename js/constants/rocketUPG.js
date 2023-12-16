@@ -3,11 +3,11 @@ const ROCKET_UPGS = {
         constC: new Decimal("e1.000e15"),
         linearC: new Decimal("e0.075e15"),
         quadC: new Decimal("e0.001e15"),
-        extra: function () {
+        extra() {
             let extra = new Decimal(0)
             return extra
         },
-        eff: function () {
+        eff() {
             let effA, effB, effC
             let eff = getRUPGEffective(1)
             effA = (true)
@@ -21,7 +21,7 @@ const ROCKET_UPGS = {
                 :new Decimal(1)
             return [Decimal.div(1.1, effA).max(0.1), effB, effC]
         },
-        desc: function (e) {
+        desc(e) {
             let desc = "Decrease RF's cost exponent from " + showNum(new Decimal(1.1)) + " to " + showNum(ROCKET_UPGS[1].eff()[0])
             if (player.rocketUPG[1].ascension.gte(1)) desc += ". <br> Rocket fuel is " + showNum(ROCKET_UPGS[1].eff()[1].sub(1).mul(100)) + "% stronger"
             if (player.rocketUPG[1].ascension.gte(2)) desc += 
@@ -35,11 +35,11 @@ const ROCKET_UPGS = {
         constC: new Decimal("e1.500e15"),
         linearC: new Decimal("e0.200e15"),
         quadC: new Decimal("e0.0002e15"),
-        extra: function () {
+        extra() {
             let extra = new Decimal(0)
             return extra
         },
-        eff: function () {
+        eff() {
             let effA, effB, effC
             effA = (true)
                 ?5
@@ -52,7 +52,7 @@ const ROCKET_UPGS = {
                 :new Decimal(1)
             return [effA, effB, effC]
         },
-        desc: function (e) {
+        desc(e) {
             let desc = "Rocket gain is raised to the power of ^" + showNum(ROCKET_UPGS[2].eff()[0])
             if (player.rocketUPG[2].ascension.gte(1)) desc += 
                 (!ROCKET_UPGS[2].eff()[1].gte(1000))
